@@ -60,7 +60,7 @@ The output will be a structured record containing relevant information about a f
 
 - **Baseline(s):**
 
-  We're planning to use pretrained models and see how well they work on the messages we create. Since we do not have access to the real dataset and are planning to create our own synthetic data, we are starting with pretrained models instead of training our own from scratch. We're going to start by converting audio messages to text and checking whether each message is relevant. We're also going to try to remove any kind of personal info before extracting the details that we need. For now, we're mainly trying to get these steps working together. Once we have something running, we can look at where it's making mistakes and improve those parts.
+We're planning to use pretrained models and see how well they work on the messages we create. Since we do not have access to the real dataset and are planning to create our own synthetic data, we are starting with pretrained models instead of training our own from scratch. We're going to start by converting audio messages to text and checking whether each message is relevant. We're also going to try to remove any kind of personal info before extracting the details that we need. For now, we're mainly trying to get these steps working together. Once we have something running, we can look at where it's making mistakes and improve those parts.
 
 - **Proposed models/tools:** 
 
@@ -76,9 +76,9 @@ sentence-transformers/all-MiniLM-L6-v2 (https://huggingface.co/sentence-transfor
 
 - **Alternative approach:**
 
-  If the classification model isn't doing well, we can try labeling some of our synthetic messages ourselves and using them to fine-tune a smaller model to help it recognize the kinds of messages we're working with.
-   For anonymization, we're concerned that the NER model might miss some names or personal details, especially if the messages have spelling mistakes or are written informally, but we can try adding more rules for those cases and compare a few different models if needed. We also have to make sure we're not taking out any important information.
-   If the extraction model doesn't work with longer or unclear messages, we can lessen the number of fields and use easier rules where possible. But it will be easier to figure out what needs to change once we've tested the whole pipeline on some examples so the plan we have right now is a good starting point that can be edited later.
+If the classification model isn't doing well, we can try labeling some of our synthetic messages ourselves and using them to fine-tune a smaller model to help it recognize the kinds of messages we're working with.
+For anonymization, we're concerned that the NER model might miss some names or personal details, especially if the messages have spelling mistakes or are written informally, but we can try adding more rules for those cases and compare a few different models if needed. We also have to make sure we're not taking out any important information.
+If the extraction model doesn't work with longer or unclear messages, we can lessen the number of fields and use easier rules where possible. But it will be easier to figure out what needs to change once we've tested the whole pipeline on some examples so the plan we have right now is a good starting point that can be edited later.
 
 ### 3. Proposed data
 | Dataset/source | Link or access instructions | Purpose | Size / languages | Privacy or usage considerations |
