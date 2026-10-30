@@ -29,14 +29,35 @@ def score(predictions, record):
     # Predictions that didn't hit any real PII
     false_positives = [p for p in predictions if not any(overlaps(p, e) for e in should_redact)]
 
-    return {
-        "TP": len(true_positives),
-        "FP": len(false_positives),
-        "FN": len(false_negatives),
-        "TN": len(true_negatives),
-    }
+
+    return ConfusionMatrix(len(true_positives), len(false_positives), len(false_negatives), len(true_negatives))
 
 
+
+class ConfusionMatrix:
+    def __init__(self, TP, FP, FN, TN):
+        self.TP = TP
+        self.FP = FP
+        self.FN = FN
+        self.TN = TN
+    
+    def __add__(self, other):
+        return ConfusionMatrix(self.TP+other.TP, self.FP+other.FP, self.FN+other.FN, self.TN+other.TN)
+    
+    def __str__(self):
+        return f"TP: {self.TP}  FP: {self.FP}   FN: {self.FN}   TN: {self.TN}"
+    
+    def recall(self):
+        return self.TP/(self.TP+self.FN)
+    
+    def precision(self):
+        return self.TP/(self.TP+self.FP)
+    
+    def F1(self):
+        p = self.precision()
+        r = self.recall()
+        
+        return 2*p*r/(p+r)
 
 
 def analyze_data(data: dict):
@@ -45,7 +66,7 @@ def analyze_data(data: dict):
     
     ner = pipeline("token-classification", model="dslim/bert-base-NER", aggregation_strategy="simple")
 
-    total_score = {"TP": 0, "FP": 0, "FN": 0, "TN": 0}
+    matrix = ConfusionMatrix(0,0,0,0)
 
     print(f"Loaded {len(data["records"])} records!")
     
@@ -54,22 +75,21 @@ def analyze_data(data: dict):
         
         result = ner(message)
         
-        score_result = score(result, record)
-        print(score_result)
+        result_matrix = score(result, record)
         
-        for entry in total_score:
-            total_score[entry] += score_result[entry]
+        matrix = matrix + result_matrix
         
         
-        # print(result)
+        print(result_matrix)
 
-    return total_score
+    return matrix
     
 
 with open("synthetic_unanonymized.json", "r") as file:
     data = json.loads(file.read())
 
 
-total_score = analyze_data(data)
+matrix = analyze_data(data)
 
-print(f"Total Score: {total_score}")
+print(f"Total Score: {matrix}")
+print(f"{matrix.recall() = }    {matrix.precision() = }     {matrix.F1() =}")
