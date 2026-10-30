@@ -28,11 +28,39 @@
 - **Constraints and risks:** [e.g., privacy, missing data, hallucinations, language coverage, human verification]
 
 ### 2. Proposed technical approach
-- **Pipeline:** [List the main steps from input to output.]
-- **Baseline(s):** [Describe the simplest end-to-end method you can implement.]
-- **Proposed models/tools:** [Name, purpose, and link to each Hugging Face model or other resource.]
-  - [Model name](https://huggingface.co/models) — [What it will do; why selected]
-- **Alternative approach:** [What will you try if the baseline underperforms?]
+- **Pipeline:**
+1) Start with WhatsApp text or audio messages.
+
+2) Convert audio messages into text.
+
+3) Look for personal information like names, phone numbers, locations, etc, and anonymize it.
+
+4) Check whether each message has useful info about field activities or is just regular conversation messages.
+
+5) For the relevant messages, pull out important details like what happened, where it happened, when it happened, and how many people were involved.
+
+6) Compare messages to check if any are talking about the same activity.
+
+7) Put everything into a structured record/database that someone can review and fix if needed.
+
+- **Baseline(s):**
+  For our first version, we're planning to use pretrained models and see how well they work on the messages we create. We don't have much data to work with yet so training our own models from scratch probably would be hard. We're going to start by converting audio messages to text and checking whether each message is relevant. We're also going to try to remove any kind of personal info before extracting the details that we need. For now, we're mainly trying to get these steps working together. Once we have something running, we can look at where it's making mistakes and improve those parts.
+
+- **Proposed models/tools:** 
+distil-whisper/distil-small.en - We want to use this to turn audio messages into text. We chose a smaller Whisper model because it should be easier to run with the resources we have.
+
+facebook/bart-large-mnli - We're going to try this for figuring out whether a message is relevant or irrelevant.
+
+dslim/bert-base-NER - We're going to use this to look for names and locations that need to be anonymized. We'll also look for phone numbers and email addresses using patterns (phone numbers are usually separately by hyphens and emails have patterns like something@xyz.com) in case the AI model misses them.
+
+google/flan-t5-base - We're going to test this for pulling out information like activity type, date, location, and participant count from the relevant messages.
+
+sentence-transformers/all-MiniLM-L6-v2 - We want to see if this can help us find messages that are talking about the same event even if they're worded differently.
+
+- **Alternative approach:**
+  If the classification model isn't doing well, we can try labeling some of our synthetic messages ourselves and using them to fine-tune a smaller model to help it recognize the kinds of messages we're working with.
+   For anonymization, we're a little concerned that the NER model might miss some names or personal details, especially if the messages have spelling mistakes or are written informally, but we can try adding more rules for those cases and compare a few different models if needed. We also have to make sure we're not taking out any important information.
+   If the extraction model doesn't work with longer or unclear messages, we can lessen the number of fields and use easier rules where possible. But it will be easier to figure out what needs to change once we've tested the whole pipeline on some examples so the plan we have right now is a good starting point that can be edited later.
 
 ### 3. Proposed data
 | Dataset/source | Link or access instructions | Purpose | Size / languages | Privacy or usage considerations |
