@@ -37,10 +37,13 @@
 ### 3. Proposed data
 | Dataset/source | Link or access instructions | Purpose | Size / languages | Privacy or usage considerations |
 |---|---|---|---|---|
-| [Name] | [URL](https://huggingface.co/datasets) or other instructions] | [Training/development/evaluation] | [Details] | [Notes] |
+| Team-created synthetic Dandelion WhatsApp messages | Created by the team | Main development and evaluation data for relevance classification, extraction, event grouping, and deduplication | Initial target: ~100-200 messages; English | Synthetic or anonymized, no real private information |
+| Team records synthetic WhatsApp audio | Created by team members | Speech-to-text testing and realistic audio inputs | Initial target: ~20-40 clips in English | Recordings will use invented field activity content, no private conversations included |
+| Public English accent dataset | Hugging Face or public dataset | Test speech-to-text performance across different English speaking accents | multiple English speakers/accents | Has to follow dataset license and the rules |
+| AI-generated paraphrasing or synthetic messages | Generated from existing synthetic examples | Data augmentation and testing variation in the wording | Dependent on the starting dataset size | Generated examples will be reviewed by team before using | 
 
-- **Data preparation:** [Cleaning, anonymization, annotation, splitting, deduplication, etc.]
-- **Data limitations:** [What is missing, noisy, or uncertain?]
+- **Data preparation:** We will create a set of realistic Dandelion kind of messages based on the types of field activities the organization has described on their website, like health outreach, youth programs, livelihood programs for women, trainings, and other community activities. We will include relevant and irrelevant messages so that the classifier has realistic examples. We also will intentionally have repeated reports, incomplete messages, messages about planning, and those about the same activity but written in a different format. Each message will have ground-truth labels from the team. The labels could include: relevant or irrelevant, activity type, date, location, participant count, service or outcome, if personal information is present, whether the message is a duplicate or related to a different message. For audio examples, we will keep the correctly written transcript so we can compare the model transcription against the ground truth we chose. We will divide the data into separate development and test sets so we don't evaluate only on examples we used while designing the system. A possible starting split would be 80% development/training data and 20% held-out testing data. 
+- **Data limitations:** Our largest limitation is that our synthetic data might not be a perfect representation of real Dandelion Africa WhatsApp conversations. Real messages could have other vocabulary, accents, background noise, or communication patterns that we aren't able to reproduce. Our starting dataset could be too small too. Therefore, we need to treat the first dataset as a starting point and then expand while we learn which types of examples are too difficult for the system. 
 
 ### 4. Proposed evaluation
 | Metric / test | What it measures | How it will be calculated | Target / success criterion |
