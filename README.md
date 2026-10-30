@@ -115,6 +115,16 @@ sentence-transformers/all-MiniLM-L6-v2 (https://huggingface.co/sentence-transfor
 | Oliver Ortiz | Extraction + Evaluation + Integration | Define structured output and evaluation metrics and our research extraction approach | Implement starting structured extraction and connect the pipeline components |
 
 ### 6. Goals for each week
+- **Week 7:**
+  - Test the baseline using our development and test data.
+  - Measure precision, recall, F1, transcription accuracy, and extraction.
+  - Find examples where the system does good or makes mistakes.
+  - Find which components need the most improvement.
+- **Week 8**:
+  - Test the system on the hidden test set.
+  - Compare the results with our own tests.
+  - Look at least 3 failure cases and possible causes.
+  - Decide what to improve based on the results.
 - **Week 9:**
   - Test another team's system and receive peer feedback on ours.
   - Evaluate privacy, hallucination, robustness, bias/fairness, and usability concerns.
