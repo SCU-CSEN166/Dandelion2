@@ -94,7 +94,6 @@ If the extraction model doesn't work with longer or unclear messages, we can les
 ### 4. Proposed evaluation
 | Metric / test | What it measures | How it will be calculated | Target / success criterion |
 |---|---|---|---|
-| [Metric - e.g Accuracy, F1, AoC] | [Quality dimension] | [Method/ Formula] | [Target] |
 |Recall| Can be used for anonymization as we will want to know how good we are at completely anonomyzing a source | TP/(TP+FN) where TP is the number of successful anonymizations, and FN is data that should be anonymized but wasn't. | Ideally we want as close to 100% accuracy as possible because we do not want to let personal information into our data.
 | Precision | Of the data we extracted, how much was correct and not extracted accidentally | TP / (TP+FP) where TP is data successfully extracted and FP is data extracted that should not have been extracted | We want this to perform better than trying to trivially match keywords in the text
 | F1 | Can use to determine how well we classify activities in messages | 2pr/(p+r) where p = precision and r = recall | We will want this to perform significantly better than checking for just checking for certain keywords in the messages
@@ -115,6 +114,14 @@ If the extraction model doesn't work with longer or unclear messages, we can les
 | Oliver Ortiz | Extraction + Evaluation + Integration | Define structured output and evaluation metrics and our research extraction approach | Implement starting structured extraction and connect the pipeline components |
 
 ### 6. Goals for each week
+- **Week 5:**
+  - Complete project plan
+  - Decide what data we want to use and how it should be stored in the database
+  - Decide what models we will use and create synthetic data to test
+- **Week 6:**
+  - Make many datasets to use to test
+  - Basic extraction and/or anonymization system
+  - Run our system given an example message.
 - **Week 7:**
   - Test the baseline using our development and test data.
   - Measure precision, recall, F1, transcription accuracy, and extraction.
