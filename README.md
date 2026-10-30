@@ -57,7 +57,10 @@
 ### 5. Team responsibilities
 | Member | Primary responsibility | Specific Weekly contribution | Planned next task |
 |---|---|---|---|
-| [Name] | [Data / models / evaluation / integration / etc.] | [Actual work completed] | [Next action] |
+| Risha Desai | Data Collection/synthetic data | Research and create initial synthetic WhatsApp text examples and define ground-truth labels | Build on dataset and create the training and testing split |
+| Priyanka Ganguly | Speech-to-text and audio | Research speech datasets and proposed Whisper baseline, while also collecting or creating sample audio clips | Implement Distil-Whisper baseline and continue evaluating sample transcriptions |
+| Prableen Kakar | Classification and anonymization | Research relevance classification and NER scores | Implement initial relevant & irrelevant classifier and anonymization baseline |
+| Oliver Ortiz | Extraction + Evaluation + Integration | Define structured output and evaluation metrics and our research extraction approach | Implement starting structured extraction and connect the pipeline components |
 
 ---
 
