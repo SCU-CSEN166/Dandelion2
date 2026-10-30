@@ -1,0 +1,1355 @@
+{
+  "dataset_info": {
+    "name": "dandelion_africa_anonymization_test",
+    "version": "1.0",
+    "description": "Synthetic field records modelled on the kinds of text a rural Kenyan women's-health NGO produces (CHP visit notes, savings-group minutes, youth mentorship logs, GBV referrals, SMS, registration forms, donor reports), annotated for evaluating PII detection and anonymization.",
+    "synthetic_data_notice": "All people, phone numbers, ID numbers, emails, dates of birth, transaction codes and record numbers are fictional. Organization names, counties, towns and public hospitals are real and appear as should-not-redact distractors. No content is taken from Dandelion Africa's records.",
+    "offsets": "Character offsets into 'text', zero-based, end-exclusive: text[start:end] == entity text.",
+    "created": "2026-10-30"
+  },
+  "label_definitions": {
+    "PERSON": {
+      "should_redact": true,
+      "bert_ner_label": "PER",
+      "category": "direct_identifier",
+      "description": "Any person's name, full or partial, including nicknames and teknonyms such as 'Mama Shiro'. Applies to staff and CHPs as well as beneficiaries."
+    },
+    "LOCATION_SPECIFIC": {
+      "should_redact": true,
+      "bert_ner_label": "LOC",
+      "category": "quasi_identifier",
+      "description": "Village, ward, estate, market or landmark: small enough to help single someone out."
+    },
+    "ORG_IDENTIFYING": {
+      "should_redact": true,
+      "bert_ner_label": "ORG",
+      "category": "quasi_identifier",
+      "description": "Small organizations that narrow down who a person is, such as a specific school or savings group."
+    },
+    "PHONE": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "Personal phone numbers in any Kenyan format."
+    },
+    "EMAIL": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "Personal email addresses."
+    },
+    "NATIONAL_ID": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "Kenyan national ID numbers (7-8 digits)."
+    },
+    "DATE_OF_BIRTH": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "Dates of birth in any format."
+    },
+    "MPESA_CODE": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "M-Pesa transaction codes (10 alphanumeric characters), traceable to an account holder."
+    },
+    "HEALTH_RECORD_NO": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "Patient or clinic record numbers."
+    },
+    "CASE_NUMBER": {
+      "should_redact": true,
+      "bert_ner_label": null,
+      "category": "direct_identifier",
+      "description": "Police OB numbers and case reference numbers."
+    },
+    "LOCATION_PUBLIC": {
+      "should_redact": false,
+      "bert_ner_label": "LOC",
+      "category": "distractor",
+      "description": "Country, county, sub-county or large town: too broad to identify anyone."
+    },
+    "ORG_PUBLIC": {
+      "should_redact": false,
+      "bert_ner_label": "ORG",
+      "category": "distractor",
+      "description": "Public institutions, government bodies, large hospitals and NGOs, including Dandelion Africa itself."
+    },
+    "ORG_CONTACT": {
+      "should_redact": false,
+      "bert_ner_label": null,
+      "category": "distractor",
+      "description": "Published organizational contact details and public hotlines; not personal."
+    },
+    "PROGRAM_NAME": {
+      "should_redact": false,
+      "bert_ner_label": "MISC",
+      "category": "distractor",
+      "description": "Names of programs."
+    },
+    "COMMON_WORD": {
+      "should_redact": false,
+      "bert_ner_label": null,
+      "category": "distractor",
+      "description": "Words that double as names (Faith, Hope, Mercy, imani) but are not used as names here."
+    },
+    "AGE": {
+      "should_redact": false,
+      "bert_ner_label": null,
+      "category": "distractor",
+      "description": "Ages are retained under most de-identification standards (HIPAA Safe Harbor only removes ages over 89). Flip should_redact if your policy is stricter."
+    },
+    "DATE_GENERAL": {
+      "should_redact": false,
+      "bert_ner_label": null,
+      "category": "distractor",
+      "description": "Dates not tied to an individual, such as stock expiry dates."
+    },
+    "NON_PII_NUMBER": {
+      "should_redact": false,
+      "bert_ner_label": null,
+      "category": "distractor",
+      "description": "Numbers shaped like IDs or phone numbers that are not personal, such as lot numbers."
+    }
+  },
+  "field_definitions": {
+    "should_redact": "Ground truth. true = PII that must be removed; false = a distractor that must be kept.",
+    "bert_ner_label": "The tag a correct dslim/bert-base-NER prediction would carry (PER, ORG, LOC, MISC). null = outside that model's label set, so catching it needs a regex or another detector. Compare this with should_redact to tell detection errors apart from redaction-policy errors (e.g. BERT correctly tags 'Kenya' as LOC, but redacting every LOC makes it a FP).",
+    "contains_pii": "true if the record has at least one should_redact entity.",
+    "expected_redacted_text": "Reference output with each should_redact span replaced by [LABEL]."
+  },
+  "evaluation": {
+    "unit": "Entity level, using character offsets.",
+    "matching_modes": {
+      "strict": "A predicted span matches a gold entity only if start and end are identical.",
+      "partial": "A predicted span matches a gold entity if they overlap by at least one character. Recommended for anonymization, where removing 'Mr. Kipkemboi' instead of 'Kipkemboi' still prevents the leak."
+    },
+    "true_positive": "A should_redact=true entity that your system redacted.",
+    "false_negative": "A should_redact=true entity your system left in the text. In anonymization this is a privacy leak.",
+    "false_positive": "Any span your system redacted that does not match a should_redact=true entity. This includes annotated should_redact=false distractors and any unannotated text.",
+    "true_negative": "A should_redact=false entity your system left untouched. At entity level, only these annotated distractors are countable TNs.",
+    "record_level": {
+      "TP": "contains_pii=true and the system redacted at least one span.",
+      "FN": "contains_pii=true and the system redacted nothing.",
+      "FP": "contains_pii=false and the system redacted at least one span.",
+      "TN": "contains_pii=false and the system redacted nothing.",
+      "leak_free": "A stricter pass/fail: every should_redact entity in the record was caught."
+    },
+    "metrics": {
+      "precision": "TP / (TP + FP)",
+      "recall": "TP / (TP + FN). Usually the priority, since every FN is a leak.",
+      "f1": "2 * precision * recall / (precision + recall)",
+      "specificity": "TN / (TN + FP), computed over the annotated distractors."
+    }
+  },
+  "summary": {
+    "records": 20,
+    "records_with_pii": 14,
+    "records_without_pii": 6,
+    "entities_should_redact": 66,
+    "entities_should_keep": 36,
+    "entities_by_label": {
+      "AGE": 2,
+      "CASE_NUMBER": 1,
+      "COMMON_WORD": 4,
+      "DATE_GENERAL": 1,
+      "DATE_OF_BIRTH": 2,
+      "EMAIL": 2,
+      "HEALTH_RECORD_NO": 1,
+      "LOCATION_PUBLIC": 11,
+      "LOCATION_SPECIFIC": 12,
+      "MPESA_CODE": 1,
+      "NATIONAL_ID": 2,
+      "NON_PII_NUMBER": 1,
+      "ORG_CONTACT": 3,
+      "ORG_IDENTIFYING": 3,
+      "ORG_PUBLIC": 10,
+      "PERSON": 35,
+      "PHONE": 7,
+      "PROGRAM_NAME": 4
+    }
+  },
+  "records": [
+    {
+      "id": "rec_001",
+      "source_type": "chp_household_visit",
+      "program": "health",
+      "language": "en",
+      "test_focus": "Baseline: full names, a repeated first name, a national ID and a phone number.",
+      "text": "CHP Mercy Wanjiku visited the household of Esther Jepkoech in Kiptoim village, Baringo County. Esther (ID No. 29845107) received a 3-month injectable, and her son Brian Kiprotich was screened for malnutrition. Follow-up phone: 0721 448 903.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_001_e01",
+          "text": "Mercy Wanjiku",
+          "start": 4,
+          "end": 17,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_001_e02",
+          "text": "Esther Jepkoech",
+          "start": 43,
+          "end": 58,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_001_e03",
+          "text": "Kiptoim village",
+          "start": 62,
+          "end": 77,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_001_e04",
+          "text": "Baringo County",
+          "start": 79,
+          "end": 93,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_001_e05",
+          "text": "Esther",
+          "start": 95,
+          "end": 101,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER",
+          "note": "Second mention: first name only."
+        },
+        {
+          "id": "rec_001_e06",
+          "text": "29845107",
+          "start": 110,
+          "end": 118,
+          "label": "NATIONAL_ID",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_001_e07",
+          "text": "Brian Kiprotich",
+          "start": 163,
+          "end": 178,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_001_e08",
+          "text": "0721 448 903",
+          "start": 227,
+          "end": 239,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "CHP [PERSON] visited the household of [PERSON] in [LOCATION_SPECIFIC], Baringo County. [PERSON] (ID No. [NATIONAL_ID]) received a 3-month injectable, and her son [PERSON] was screened for malnutrition. Follow-up phone: [PHONE]."
+    },
+    {
+      "id": "rec_002",
+      "source_type": "savings_group_minutes",
+      "program": "womens_livelihood",
+      "language": "en",
+      "test_focus": "Group name as a quasi-identifier, mobile money codes, and the NGO's own name as a distractor.",
+      "text": "Minutes of the Tumaini Women Self-Help Group meeting held at Emining market shed. Chairlady Naomi Chepkemoi reported total savings of KES 184,500. A loan of KES 20,000 was disbursed to Rose Kibet via M-Pesa, transaction SCK7H2LQ9D. Treasurer Alice Cheruiyot will follow up with members who missed contributions. A Dandelion Africa field officer attended.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_002_e01",
+          "text": "Tumaini Women Self-Help Group",
+          "start": 15,
+          "end": 44,
+          "label": "ORG_IDENTIFYING",
+          "should_redact": true,
+          "bert_ner_label": "ORG",
+          "note": "'Tumaini' means 'hope' in Swahili; a small group name narrows down its members."
+        },
+        {
+          "id": "rec_002_e02",
+          "text": "Emining",
+          "start": 61,
+          "end": 68,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_002_e03",
+          "text": "Naomi Chepkemoi",
+          "start": 92,
+          "end": 107,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_002_e04",
+          "text": "Rose Kibet",
+          "start": 185,
+          "end": 195,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_002_e05",
+          "text": "SCK7H2LQ9D",
+          "start": 220,
+          "end": 230,
+          "label": "MPESA_CODE",
+          "should_redact": true,
+          "bert_ner_label": null,
+          "note": "Not detectable by NER; needs a pattern such as [A-Z0-9]{10}."
+        },
+        {
+          "id": "rec_002_e06",
+          "text": "Alice Cheruiyot",
+          "start": 242,
+          "end": 257,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_002_e07",
+          "text": "Dandelion Africa",
+          "start": 314,
+          "end": 330,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        }
+      ],
+      "expected_redacted_text": "Minutes of the [ORG_IDENTIFYING] meeting held at [LOCATION_SPECIFIC] market shed. Chairlady [PERSON] reported total savings of KES 184,500. A loan of KES 20,000 was disbursed to [PERSON] via M-Pesa, transaction [MPESA_CODE]. Treasurer [PERSON] will follow up with members who missed contributions. A Dandelion Africa field officer attended."
+    },
+    {
+      "id": "rec_003",
+      "source_type": "youth_mentorship_log",
+      "program": "youth",
+      "language": "en",
+      "test_focus": "A minor's record: the school is the strongest quasi-identifier. 'Faith' is a real name here (contrast with rec_008). The honorific 'Mr.' sits outside the gold span.",
+      "text": "Mentor Faith Nasieku met with Form 2 student Linet Chebet, aged 15, from Kapkures Girls Secondary School. Linet has been missing school during her periods and was given reusable sanitary pads under the Youth Program. Her guardian, Mr. Kipkemboi, can be reached on +254 733 905 217.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_003_e01",
+          "text": "Faith Nasieku",
+          "start": 7,
+          "end": 20,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_003_e02",
+          "text": "Linet Chebet",
+          "start": 45,
+          "end": 57,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_003_e03",
+          "text": "15",
+          "start": 64,
+          "end": 66,
+          "label": "AGE",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_003_e04",
+          "text": "Kapkures Girls Secondary School",
+          "start": 73,
+          "end": 104,
+          "label": "ORG_IDENTIFYING",
+          "should_redact": true,
+          "bert_ner_label": "ORG"
+        },
+        {
+          "id": "rec_003_e05",
+          "text": "Linet",
+          "start": 106,
+          "end": 111,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_003_e06",
+          "text": "Youth Program",
+          "start": 202,
+          "end": 215,
+          "label": "PROGRAM_NAME",
+          "should_redact": false,
+          "bert_ner_label": "MISC"
+        },
+        {
+          "id": "rec_003_e07",
+          "text": "Kipkemboi",
+          "start": 235,
+          "end": 244,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER",
+          "note": "Gold span excludes 'Mr.'; partial matching will still count 'Mr. Kipkemboi' as a hit."
+        },
+        {
+          "id": "rec_003_e08",
+          "text": "+254 733 905 217",
+          "start": 264,
+          "end": 280,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "Mentor [PERSON] met with Form 2 student [PERSON], aged 15, from [ORG_IDENTIFYING]. [PERSON] has been missing school during her periods and was given reusable sanitary pads under the Youth Program. Her guardian, Mr. [PERSON], can be reached on [PHONE]."
+    },
+    {
+      "id": "rec_004",
+      "source_type": "gbv_referral",
+      "program": "advocacy",
+      "language": "en",
+      "test_focus": "Highest-sensitivity record type: both the survivor and the alleged perpetrator must be removed.",
+      "text": "Case referral: Purity Naserian, DOB 04/11/1998, reported domestic violence by her husband Daniel ole Sankale of Olkiramatian, Kajiado County. She was escorted to Kajiado County Referral Hospital for medical care, and the matter was reported at the local police station under OB 37/09/2026.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_004_e01",
+          "text": "Purity Naserian",
+          "start": 15,
+          "end": 30,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_004_e02",
+          "text": "04/11/1998",
+          "start": 36,
+          "end": 46,
+          "label": "DATE_OF_BIRTH",
+          "should_redact": true,
+          "bert_ner_label": null,
+          "note": "DD/MM/YYYY, the Kenyan convention."
+        },
+        {
+          "id": "rec_004_e03",
+          "text": "Daniel ole Sankale",
+          "start": 90,
+          "end": 108,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER",
+          "note": "Maasai name with a lowercase 'ole' (son of); NER may split it into two entities."
+        },
+        {
+          "id": "rec_004_e04",
+          "text": "Olkiramatian",
+          "start": 112,
+          "end": 124,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_004_e05",
+          "text": "Kajiado County",
+          "start": 126,
+          "end": 140,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_004_e06",
+          "text": "Kajiado County Referral Hospital",
+          "start": 162,
+          "end": 194,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        },
+        {
+          "id": "rec_004_e07",
+          "text": "OB 37/09/2026",
+          "start": 275,
+          "end": 288,
+          "label": "CASE_NUMBER",
+          "should_redact": true,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "Case referral: [PERSON], DOB [DATE_OF_BIRTH], reported domestic violence by her husband [PERSON] of [LOCATION_SPECIFIC], Kajiado County. She was escorted to Kajiado County Referral Hospital for medical care, and the matter was reported at the local police station under [CASE_NUMBER]."
+    },
+    {
+      "id": "rec_005",
+      "source_type": "sms_inbound",
+      "program": "health",
+      "language": "sw+en",
+      "test_focus": "Informal lowercase SMS in Swahili/English. Cased models like bert-base-NER often miss lowercase names.",
+      "text": "habari, ni wanjiru kutoka mau narok. dawa ya family planning imeisha, naweza pata appointment kesho? namba yangu ni 0712345098",
+      "translation_en": "hello, it's wanjiru from mau narok. my family planning supply has run out, can I get an appointment tomorrow? my number is 0712345098",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_005_e01",
+          "text": "wanjiru",
+          "start": 11,
+          "end": 18,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER",
+          "note": "All lowercase."
+        },
+        {
+          "id": "rec_005_e02",
+          "text": "mau narok",
+          "start": 26,
+          "end": 35,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC",
+          "note": "Ward in Nakuru County; contains the county name 'Narok' but is a different, much smaller place."
+        },
+        {
+          "id": "rec_005_e03",
+          "text": "0712345098",
+          "start": 116,
+          "end": 126,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "habari, ni [PERSON] kutoka [LOCATION_SPECIFIC]. dawa ya family planning imeisha, naweza pata appointment kesho? namba yangu ni [PHONE]"
+    },
+    {
+      "id": "rec_006",
+      "source_type": "beneficiary_registration",
+      "program": "womens_livelihood",
+      "language": "en",
+      "test_focus": "Form-style export with little sentence context; NER is weaker without surrounding prose. Ward is redacted, sub-county is kept.",
+      "text": "Name: Joyce Achieng Otieno | ID: 31207764 | DOB: 1991-07-23 | Phone: +254 711 902 384 | Email: joyce.otieno91@example.com | Ward: Lare | Sub-county: Njoro | Program: Women's Livelihood",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_006_e01",
+          "text": "Joyce Achieng Otieno",
+          "start": 6,
+          "end": 26,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_006_e02",
+          "text": "31207764",
+          "start": 33,
+          "end": 41,
+          "label": "NATIONAL_ID",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_006_e03",
+          "text": "1991-07-23",
+          "start": 49,
+          "end": 59,
+          "label": "DATE_OF_BIRTH",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_006_e04",
+          "text": "+254 711 902 384",
+          "start": 69,
+          "end": 85,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_006_e05",
+          "text": "joyce.otieno91@example.com",
+          "start": 95,
+          "end": 121,
+          "label": "EMAIL",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_006_e06",
+          "text": "Lare",
+          "start": 130,
+          "end": 134,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_006_e07",
+          "text": "Njoro",
+          "start": 149,
+          "end": 154,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_006_e08",
+          "text": "Women's Livelihood",
+          "start": 166,
+          "end": 184,
+          "label": "PROGRAM_NAME",
+          "should_redact": false,
+          "bert_ner_label": "MISC"
+        }
+      ],
+      "expected_redacted_text": "Name: [PERSON] | ID: [NATIONAL_ID] | DOB: [DATE_OF_BIRTH] | Phone: [PHONE] | Email: [EMAIL] | Ward: [LOCATION_SPECIFIC] | Sub-county: Njoro | Program: Women's Livelihood"
+    },
+    {
+      "id": "rec_007",
+      "source_type": "donor_report_excerpt",
+      "program": "health",
+      "language": "en",
+      "test_focus": "True-negative record: every entity is public. Any redaction here is a false positive.",
+      "text": "In 2025, Dandelion Africa supported community health promoters across Nakuru, Baringo, Kajiado and Narok counties, working alongside the Ministry of Health. Over 50,000 women and youth have received contraceptives through the Health Program.",
+      "contains_pii": false,
+      "entities": [
+        {
+          "id": "rec_007_e01",
+          "text": "Dandelion Africa",
+          "start": 9,
+          "end": 25,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        },
+        {
+          "id": "rec_007_e02",
+          "text": "Nakuru",
+          "start": 70,
+          "end": 76,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_007_e03",
+          "text": "Baringo",
+          "start": 78,
+          "end": 85,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_007_e04",
+          "text": "Kajiado",
+          "start": 87,
+          "end": 94,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_007_e05",
+          "text": "Narok",
+          "start": 99,
+          "end": 104,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_007_e06",
+          "text": "Ministry of Health",
+          "start": 137,
+          "end": 155,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        },
+        {
+          "id": "rec_007_e07",
+          "text": "Health Program",
+          "start": 226,
+          "end": 240,
+          "label": "PROGRAM_NAME",
+          "should_redact": false,
+          "bert_ner_label": "MISC"
+        }
+      ],
+      "expected_redacted_text": "In 2025, Dandelion Africa supported community health promoters across Nakuru, Baringo, Kajiado and Narok counties, working alongside the Ministry of Health. Over 50,000 women and youth have received contraceptives through the Health Program."
+    },
+    {
+      "id": "rec_008",
+      "source_type": "field_notes",
+      "program": "womens_livelihood",
+      "language": "en+sw",
+      "test_focus": "True-negative record: name-like words used as ordinary words. Sentence-initial capitals ('Faith', 'Hope') are the likeliest FPs.",
+      "text": "Faith in the program grew after the first clinic day. Hope is high that the harvest will improve, and members asked for mercy on late repayments. Wamama wana imani kubwa na mradi huu.",
+      "translation_en": "(last sentence) The mothers have great faith in this project.",
+      "contains_pii": false,
+      "entities": [
+        {
+          "id": "rec_008_e01",
+          "text": "Faith",
+          "start": 0,
+          "end": 5,
+          "label": "COMMON_WORD",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_008_e02",
+          "text": "Hope",
+          "start": 54,
+          "end": 58,
+          "label": "COMMON_WORD",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_008_e03",
+          "text": "mercy",
+          "start": 120,
+          "end": 125,
+          "label": "COMMON_WORD",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_008_e04",
+          "text": "imani",
+          "start": 158,
+          "end": 163,
+          "label": "COMMON_WORD",
+          "should_redact": false,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "Faith in the program grew after the first clinic day. Hope is high that the harvest will improve, and members asked for mercy on late repayments. Wamama wana imani kubwa na mradi huu."
+    },
+    {
+      "id": "rec_009",
+      "source_type": "success_story_draft",
+      "program": "womens_livelihood",
+      "language": "en",
+      "test_focus": "Narrative prose with quotes, an apostrophe in a place name, and 'Grace' used as a real name.",
+      "text": "When Sarah Nkoitiko joined a savings group in Ololulung'a, she had never run a business. Today she keeps 200 chickens and sells eggs to two hotels in Narok town. \"I used to wait for my husband to give me money,\" Sarah says. Her daughter Grace is now in Form 4 at Nkoben Mixed Day Secondary School.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_009_e01",
+          "text": "Sarah Nkoitiko",
+          "start": 5,
+          "end": 19,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_009_e02",
+          "text": "Ololulung'a",
+          "start": 46,
+          "end": 57,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC",
+          "note": "Apostrophe inside the token can break tokenization."
+        },
+        {
+          "id": "rec_009_e03",
+          "text": "Narok",
+          "start": 150,
+          "end": 155,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_009_e04",
+          "text": "Sarah",
+          "start": 212,
+          "end": 217,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_009_e05",
+          "text": "Grace",
+          "start": 237,
+          "end": 242,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_009_e06",
+          "text": "Nkoben Mixed Day Secondary School",
+          "start": 263,
+          "end": 296,
+          "label": "ORG_IDENTIFYING",
+          "should_redact": true,
+          "bert_ner_label": "ORG"
+        }
+      ],
+      "expected_redacted_text": "When [PERSON] joined a savings group in [LOCATION_SPECIFIC], she had never run a business. Today she keeps 200 chickens and sells eggs to two hotels in Narok town. \"I used to wait for my husband to give me money,\" [PERSON] says. Her daughter [PERSON] is now in Form 4 at [ORG_IDENTIFYING]."
+    },
+    {
+      "id": "rec_010",
+      "source_type": "staff_email",
+      "program": "operations",
+      "language": "en",
+      "test_focus": "Staff and CHPs are people too: employee names and contacts must be removed, not just beneficiaries'.",
+      "text": "Hi Kevin, please send the CHP stipend list to m.wambui@example.org before Friday. Peter Mutai (CHP, Loboi) has changed his M-Pesa number to 0790-112-457. Thanks, Margaret Wambui, Programs Officer, Dandelion Africa",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_010_e01",
+          "text": "Kevin",
+          "start": 3,
+          "end": 8,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_010_e02",
+          "text": "m.wambui@example.org",
+          "start": 46,
+          "end": 66,
+          "label": "EMAIL",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_010_e03",
+          "text": "Peter Mutai",
+          "start": 82,
+          "end": 93,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_010_e04",
+          "text": "Loboi",
+          "start": 100,
+          "end": 105,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_010_e05",
+          "text": "0790-112-457",
+          "start": 140,
+          "end": 152,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_010_e06",
+          "text": "Margaret Wambui",
+          "start": 162,
+          "end": 177,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_010_e07",
+          "text": "Dandelion Africa",
+          "start": 197,
+          "end": 213,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        }
+      ],
+      "expected_redacted_text": "Hi [PERSON], please send the CHP stipend list to [EMAIL] before Friday. [PERSON] (CHP, [LOCATION_SPECIFIC]) has changed his M-Pesa number to [PHONE]. Thanks, [PERSON], Programs Officer, Dandelion Africa"
+    },
+    {
+      "id": "rec_011",
+      "source_type": "clinic_outreach_log",
+      "program": "health",
+      "language": "en",
+      "test_focus": "Patient record numbers and a child's name; the referral hospital is public.",
+      "text": "Mobile clinic at Kabarak chief's camp served 47 clients. Client Lucy Jerotich, patient no. NKR-MCH-004512, received a 5-year implant. Child Ethan Kiprono, under 5, was given vitamin A and dewormed. One client was referred to Rongai Sub-County Hospital.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_011_e01",
+          "text": "Kabarak",
+          "start": 17,
+          "end": 24,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_011_e02",
+          "text": "Lucy Jerotich",
+          "start": 64,
+          "end": 77,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_011_e03",
+          "text": "NKR-MCH-004512",
+          "start": 91,
+          "end": 105,
+          "label": "HEALTH_RECORD_NO",
+          "should_redact": true,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_011_e04",
+          "text": "Ethan Kiprono",
+          "start": 140,
+          "end": 153,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_011_e05",
+          "text": "Rongai Sub-County Hospital",
+          "start": 225,
+          "end": 251,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        }
+      ],
+      "expected_redacted_text": "Mobile clinic at [LOCATION_SPECIFIC] chief's camp served 47 clients. Client [PERSON], patient no. [HEALTH_RECORD_NO], received a 5-year implant. Child [PERSON], under 5, was given vitamin A and dewormed. One client was referred to Rongai Sub-County Hospital."
+    },
+    {
+      "id": "rec_012",
+      "source_type": "survey_free_text",
+      "program": "health",
+      "language": "en",
+      "test_focus": "No name at all; the only PII is a quasi-identifying location.",
+      "text": "I am a mother of four from Kisanana. The CHP comes every month and my children are healthier now. Please add more family planning options.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_012_e01",
+          "text": "Kisanana",
+          "start": 27,
+          "end": 35,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        }
+      ],
+      "expected_redacted_text": "I am a mother of four from [LOCATION_SPECIFIC]. The CHP comes every month and my children are healthier now. Please add more family planning options."
+    },
+    {
+      "id": "rec_013",
+      "source_type": "training_attendance",
+      "program": "advocacy",
+      "language": "en",
+      "test_focus": "Name formats: initials, apostrophes, hyphens, trailing initials.",
+      "text": "Attendance: J. Kiplagat, M. Chepng'etich, Anne-Marie Nyokabi and Sammy K. attended the Advocacy Program training on GBV referral pathways at Nakuru County Referral Hospital.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_013_e01",
+          "text": "J. Kiplagat",
+          "start": 12,
+          "end": 23,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_013_e02",
+          "text": "M. Chepng'etich",
+          "start": 25,
+          "end": 40,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_013_e03",
+          "text": "Anne-Marie Nyokabi",
+          "start": 42,
+          "end": 60,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_013_e04",
+          "text": "Sammy K.",
+          "start": 65,
+          "end": 73,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_013_e05",
+          "text": "Advocacy Program",
+          "start": 87,
+          "end": 103,
+          "label": "PROGRAM_NAME",
+          "should_redact": false,
+          "bert_ner_label": "MISC"
+        },
+        {
+          "id": "rec_013_e06",
+          "text": "Nakuru County Referral Hospital",
+          "start": 141,
+          "end": 172,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        }
+      ],
+      "expected_redacted_text": "Attendance: [PERSON], [PERSON], [PERSON] and [PERSON] attended the Advocacy Program training on GBV referral pathways at Nakuru County Referral Hospital."
+    },
+    {
+      "id": "rec_014",
+      "source_type": "referral_summary",
+      "program": "health",
+      "language": "en",
+      "test_focus": "True-negative record: institutions named after people. NER may tag 'Moi' or 'Kenyatta' as PER.",
+      "text": "Two complicated pregnancies from Baringo were referred to Moi Teaching and Referral Hospital in Eldoret. Two nurses also attended a refresher course at Kenyatta National Hospital.",
+      "contains_pii": false,
+      "entities": [
+        {
+          "id": "rec_014_e01",
+          "text": "Baringo",
+          "start": 33,
+          "end": 40,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_014_e02",
+          "text": "Moi Teaching and Referral Hospital",
+          "start": 58,
+          "end": 92,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG",
+          "note": "Named after a person; tagging 'Moi' as PER is a FP."
+        },
+        {
+          "id": "rec_014_e03",
+          "text": "Eldoret",
+          "start": 96,
+          "end": 103,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_014_e04",
+          "text": "Kenyatta National Hospital",
+          "start": 152,
+          "end": 178,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG",
+          "note": "Named after a person; tagging 'Kenyatta' as PER is a FP."
+        }
+      ],
+      "expected_redacted_text": "Two complicated pregnancies from Baringo were referred to Moi Teaching and Referral Hospital in Eldoret. Two nurses also attended a refresher course at Kenyatta National Hospital."
+    },
+    {
+      "id": "rec_015",
+      "source_type": "stock_update",
+      "program": "health",
+      "language": "en",
+      "test_focus": "True-negative record: numbers that look like IDs, dates and phone numbers but aren't personal.",
+      "text": "Stock update: received 300 doses of DMPA-SC, lot no. 25110487, expiry 08/2028. Survivors of violence can call the national toll-free GBV helpline 1195.",
+      "contains_pii": false,
+      "entities": [
+        {
+          "id": "rec_015_e01",
+          "text": "25110487",
+          "start": 53,
+          "end": 61,
+          "label": "NON_PII_NUMBER",
+          "should_redact": false,
+          "bert_ner_label": null,
+          "note": "8 digits, the same shape as a Kenyan ID; a naive ID regex will flag it."
+        },
+        {
+          "id": "rec_015_e02",
+          "text": "08/2028",
+          "start": 70,
+          "end": 77,
+          "label": "DATE_GENERAL",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_015_e03",
+          "text": "1195",
+          "start": 146,
+          "end": 150,
+          "label": "ORG_CONTACT",
+          "should_redact": false,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "Stock update: received 300 doses of DMPA-SC, lot no. 25110487, expiry 08/2028. Survivors of violence can call the national toll-free GBV helpline 1195."
+    },
+    {
+      "id": "rec_016",
+      "source_type": "org_contact_block",
+      "program": "operations",
+      "language": "en",
+      "test_focus": "True-negative record: the organization's published contact details. An email regex will flag the address.",
+      "text": "For questions, contact Dandelion Africa, P.O. Box 13226-20100, Nakuru, or email info@dandelionafrica.org.",
+      "contains_pii": false,
+      "entities": [
+        {
+          "id": "rec_016_e01",
+          "text": "Dandelion Africa",
+          "start": 23,
+          "end": 39,
+          "label": "ORG_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "ORG"
+        },
+        {
+          "id": "rec_016_e02",
+          "text": "P.O. Box 13226-20100",
+          "start": 41,
+          "end": 61,
+          "label": "ORG_CONTACT",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_016_e03",
+          "text": "Nakuru",
+          "start": 63,
+          "end": 69,
+          "label": "LOCATION_PUBLIC",
+          "should_redact": false,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_016_e04",
+          "text": "info@dandelionafrica.org",
+          "start": 80,
+          "end": 104,
+          "label": "ORG_CONTACT",
+          "should_redact": false,
+          "bert_ner_label": null,
+          "note": "Organizational, not personal. Keeping it is a policy choice."
+        }
+      ],
+      "expected_redacted_text": "For questions, contact Dandelion Africa, P.O. Box 13226-20100, Nakuru, or email info@dandelionafrica.org."
+    },
+    {
+      "id": "rec_017",
+      "source_type": "chp_household_visit",
+      "program": "youth",
+      "language": "en",
+      "test_focus": "Kenyan naming conventions: teknonyms ('Mama X') and the elder title 'Mzee'.",
+      "text": "Mama Shiro sells vegetables near the Bondeni stage and asked whether Mzee Kibet's granddaughter could join the youth club.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_017_e01",
+          "text": "Mama Shiro",
+          "start": 0,
+          "end": 10,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER",
+          "note": "Teknonym ('mother of Shiro'); identifies her as surely as a full name, so 'Mama' is part of the span."
+        },
+        {
+          "id": "rec_017_e02",
+          "text": "Bondeni",
+          "start": 37,
+          "end": 44,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_017_e03",
+          "text": "Kibet",
+          "start": 74,
+          "end": 79,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER",
+          "note": "'Mzee' is an honorific for an elder, excluded like 'Mr.'."
+        }
+      ],
+      "expected_redacted_text": "[PERSON] sells vegetables near the [LOCATION_SPECIFIC] stage and asked whether Mzee [PERSON]'s granddaughter could join the youth club."
+    },
+    {
+      "id": "rec_018",
+      "source_type": "chp_household_visit",
+      "program": "health",
+      "language": "en",
+      "test_focus": "Multiple people in one note, coreference ('Ruth's'), and a multi-word place name.",
+      "text": "Ruth Jelagat, 28, delivered at home last month with help from her neighbour Agnes. CHP Joseph Lemayian visited three days later and found the baby underweight. Ruth's husband, Wycliffe, is a boda boda rider in Kampi ya Moto. Contact via husband: 0745 210 663.",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_018_e01",
+          "text": "Ruth Jelagat",
+          "start": 0,
+          "end": 12,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_018_e02",
+          "text": "28",
+          "start": 14,
+          "end": 16,
+          "label": "AGE",
+          "should_redact": false,
+          "bert_ner_label": null
+        },
+        {
+          "id": "rec_018_e03",
+          "text": "Agnes",
+          "start": 76,
+          "end": 81,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_018_e04",
+          "text": "Joseph Lemayian",
+          "start": 87,
+          "end": 102,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_018_e05",
+          "text": "Ruth",
+          "start": 160,
+          "end": 164,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_018_e06",
+          "text": "Wycliffe",
+          "start": 176,
+          "end": 184,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_018_e07",
+          "text": "Kampi ya Moto",
+          "start": 210,
+          "end": 223,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC",
+          "note": "Multi-word place name with a lowercase 'ya'."
+        },
+        {
+          "id": "rec_018_e08",
+          "text": "0745 210 663",
+          "start": 246,
+          "end": 258,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "[PERSON], 28, delivered at home last month with help from her neighbour [PERSON]. CHP [PERSON] visited three days later and found the baby underweight. [PERSON]'s husband, [PERSON], is a boda boda rider in [LOCATION_SPECIFIC]. Contact via husband: [PHONE]."
+    },
+    {
+      "id": "rec_019",
+      "source_type": "spreadsheet_export",
+      "program": "womens_livelihood",
+      "language": "en",
+      "test_focus": "ALL CAPS, surname-first, and a phone number with country code but no '+' or spaces.",
+      "text": "BENEFICIARY: CHEPTOO JANET | WARD: TENGES | PHONE: 254722380915 | STATUS: ACTIVE",
+      "contains_pii": true,
+      "entities": [
+        {
+          "id": "rec_019_e01",
+          "text": "CHEPTOO JANET",
+          "start": 13,
+          "end": 26,
+          "label": "PERSON",
+          "should_redact": true,
+          "bert_ner_label": "PER"
+        },
+        {
+          "id": "rec_019_e02",
+          "text": "TENGES",
+          "start": 35,
+          "end": 41,
+          "label": "LOCATION_SPECIFIC",
+          "should_redact": true,
+          "bert_ner_label": "LOC"
+        },
+        {
+          "id": "rec_019_e03",
+          "text": "254722380915",
+          "start": 51,
+          "end": 63,
+          "label": "PHONE",
+          "should_redact": true,
+          "bert_ner_label": null
+        }
+      ],
+      "expected_redacted_text": "BENEFICIARY: [PERSON] | WARD: [LOCATION_SPECIFIC] | PHONE: [PHONE] | STATUS: ACTIVE"
+    },
+    {
+      "id": "rec_020",
+      "source_type": "meeting_notice",
+      "program": "womens_livelihood",
+      "language": "sw",
+      "test_focus": "True-negative record with no entities at all. Any redaction is a false positive.",
+      "text": "Mkutano wa wanachama utafanyika Jumamosi saa nne asubuhi. Tafadhali leteni michango yenu ya mwezi.",
+      "translation_en": "The members' meeting will be held on Saturday at 10 a.m. Please bring your monthly contributions.",
+      "contains_pii": false,
+      "entities": [],
+      "expected_redacted_text": "Mkutano wa wanachama utafanyika Jumamosi saa nne asubuhi. Tafadhali leteni michango yenu ya mwezi."
+    }
+  ]
+}
