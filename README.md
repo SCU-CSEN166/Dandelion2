@@ -143,6 +143,13 @@ If the extraction model doesn't work with longer or unclear messages, we can les
 
 ## Week 6 — Build: Working Baseline
 
+Considerations
+knowledgator/gliner-pii-base-v1.0
+
+End Considerations
+
+
+
 **Deliverable during Week 7 Lab:** A runnable baseline, setup/run instructions, and 1–2 example inputs and outputs. Update this section with what worked, what failed, and individual contributions.
 
 ### Implementation status
