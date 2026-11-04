@@ -107,39 +107,10 @@ If the extraction model doesn't work with longer or unclear messages, we can les
 ### 5. Team responsibilities
 | Member | Primary responsibility | Specific Weekly contribution | Planned next task |
 |---|---|---|---|
-| Risha Desai | Data Collection/synthetic data | Research and create initial synthetic WhatsApp text examples and define ground-truth labels | Build on dataset and create the training and testing split |
-| Priyanka Ganguly | Speech-to-text and audio | Research speech datasets and proposed Whisper baseline, while also collecting or creating sample audio clips | Implement Distil-Whisper baseline and continue evaluating sample transcriptions |
-| Prableen Kakar | Classification and anonymization | Research relevance classification and NER scores | Implement initial relevant & irrelevant classifier and anonymization baseline |
-| Oliver Ortiz | Extraction + Evaluation + Integration | Define structured output and evaluation metrics and our research extraction approach | Implement starting structured extraction and connect the pipeline components |
-
-### 6. Goals for each week
-- **Week 5:**
-  - Complete project plan
-  - Decide what data we want to use and how it should be stored in the database
-  - Decide what models we will use and create synthetic data to test
-- **Week 6:**
-  - Make many datasets to use to test
-  - Basic extraction and/or anonymization system
-  - Run our system given an example message.
-- **Week 7:**
-  - Test the baseline using our development and test data.
-  - Measure precision, recall, F1, transcription accuracy, and extraction.
-  - Find examples where the system does good or makes mistakes.
-  - Find which components need the most improvement.
-- **Week 8**:
-  - Test the system on the hidden test set.
-  - Compare the results with our own tests.
-  - Look at least 3 failure cases and possible causes.
-  - Decide what to improve based on the results.
-- **Week 9:**
-  - Test another team's system and receive peer feedback on ours.
-  - Evaluate privacy, hallucination, robustness, bias/fairness, and usability concerns.
-  - Improve the system based on the most important
-- **Week 10:**
-  - Finalize the runnable system.
-  - Complete the README with results, limitations, lessons learned, and individual contributions.
-  - Prepare the final demo and presentation.
----
+| Risha Desai | Data collection & analysis | Collect and test data from HuggingFace, Claude/AI, and team-made | Continue building out dataset with realistic data with audio. |
+| Priyanka Ganguly | TTS from audio in dataset | Evaluate the speech dataset and models using precision, recall, and T1 | Experiment with other TTS models and evaluate their performance. |
+| Prableen Kakar | Classification and anonymization | Evaluate dataset using anonymization and classification models | Experiment with different models on different datasets and sources. |
+| Oliver Ortiz | Extraction & Integration | Primary Python implementation, input, and output, and addition work on extraction | Build out complete end to end pipeline of work. |
 
 ## Week 6 — Build: Working Baseline
 
