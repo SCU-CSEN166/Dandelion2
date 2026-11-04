@@ -48,3 +48,43 @@ tmpl = json.dumps({"activity": ["family planning", "youth session", "savings gro
 text = proc.tokenizer.apply_chat_template([{"role": "user", "content": "Done! 28 women served at Mogotio, 3 referred"}], template=tmpl, tokenize=False, add_generation_prompt=True)
 inp = proc(text=[text], return_tensors="pt"); out = nx.generate(**inp, max_new_tokens=128, do_sample=False)
 print(proc.batch_decode(out[:, inp["input_ids"].shape[1]:], skip_special_tokens=True)[0])
+
+
+
+
+"""
+TODO: Presenting Week 6
+1) Parse WhatsApp data
+2) Transcribe when necessary
+3) Anonymize Data
+4) Determine Relevance
+5) Extract to JSON
+
+
+# AND SETUP GUIDE
+
+
+
+
+# Test data (synthetic, human, WhatsApp, AfriSpeech data from Hugginface)
+# Input that (capable of accepting WhatsApp primarily)
+# GO THROUGH PIPELINE:
+    1) Parse WhatsApp data
+    2) Transcribe when necessary
+    3) Anonymize Data
+    4) Determine Relevance
+    5) Extract to JSON
+# Show processed and filtered output (in like a .json)
+# Show results from confusion matrix where applicable
+# Install guide
+# Models used, models tried
+# Attempts
+# Contributions
+
+
+
+
+Running Baseline &
+Results: metrics: accuracy, recall, 
+
+"""
