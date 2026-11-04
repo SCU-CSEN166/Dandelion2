@@ -22,24 +22,16 @@
 
 ### 1. Problem formulation and social impact
 - **Problem:** What specific task are you solving?
-  - Dandelion Africa uses WhatsApp messages, including both text and audio messages, to communicate information about field activities and outcomes. Our goal is to build an Al pipeline that can take these unstructured messages and turn them into structured, verifiable records. For our final project, we want to integrate this system into a WhatsApp bot that can automatically read and process these messages, anonymizing personal information, extracting important details, and organizing messages.
+  - The specific task we are solving with Dandelion Africa is using WhatsApp text and transcribed audio to share field updates. Our group aims to build an AI pipeline, which we want to eventually integrate into a WhatsApp bot, that converts these WhatsApp messages into organized records and removes personal information for privacy purposes.
 - **Intended users:** Who would use the system, and for what decisions or activities?
-  - The intended users are Dandelion Africa staff who need to review, organize, or report information coming from field activities. The system could help reduce the amount of time spent manually going through WhatsApp conversations while still allowing staff to verify the information before it is used.
+  - Dandelion Africa staff would use the system to review and organize field reports more quickly and support reporting. Staff should definitely verify records before relying on them.
 - **Inputs and outputs:** What will the system receive and produce? Give one concrete example.
-  - The system will receive WhatsApp text messages and audio messages that will be converted into text.
-The output will be a structured record containing relevant information about a field activity, such as the activity type, date, location, number of participants, services provided, and other outcomes when that information is available.
-    - For example:
-        - Input: "Today we held a reproductive health session in Nakuru with 35 women. Three women were referred to the clinic for follow-up."
-        - Possible output:
-            - Activity: Reproductive health session
-            - Location: Nakuru
-            - Participants: 35
-            - Referrals: 3
+- The system will recieve WhatsApp text and audio, and it will transcribe the audio first. It will produce structured records with specific details such as activity type, date, location, participant count, services provided, referrals, and outcomes when stated in the text/audio.
+- Example: “Today we held a reproductive health session in Nakuru with 35 women. Three women were referred to the clinic.” → Activity: reproductive health session; Location: Nakuru; Participants: 35; Referrals: 3.
 - **Success criteria:** What would make the system useful and reliable?
-  - A successful system should accurately identify useful field information without adding unsupported details. It should correctly remove or mask personal information, perform well on text and transcribed audio, and preserve enough evidence for a staff member to verify where each extracted record came from. The system should also be able to recognize when it is uncertain instead of treating every prediction as equally reliable.
+  - The system would be useful and reliable if if is accurate. This means it should be able to extract the stated details properly, work with text and audio which will be transcribed, and provide source evidence for the staff to review. It should flag things it is uncertain about and not assume everything is reliable, so errors can be prevented while processing the data. 
 - **Constraints and risks:** [e.g., privacy, missing data, hallucinations, language coverage, human verification]
-  - One major constraint is that Dandelion Africa's real WhatsApp data cannot be shared with us, so we will need to create and collect realistic synthetic data. The data may include different English accents, informal wording, incomplete sentences, background noise, and repeated information.
-  - Privacy is also an important concern because WhatsApp conversations may contain names, phone numbers, ages, locations, or other personal information. Other risks include incorrectly combining separate activities, treating planned activities as completed activities, missing important information, and generating information that was not actually stated. Human verification will therefore remain part of the system rather than assuming that every Al output is correct.
+- The biggest constraint we are facing is the fact that we are unable to use Dandelion Africa's real WhatsApp data, so in order to fix this, we are creating realistic synethic examples. Since we are creating them and they are synthetic, they may not fully reflect real messages. There are certain things we may not be able to replicate such as background noise, possible informal words being used, varied accents, etc. The system could also miss things such as names, phone numbers and personal details. Human review will definitely be necessary to ensure that everything makes sense and is accurate.
 
 ### 2. Proposed technical approach
 - **Pipeline:**
