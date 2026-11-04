@@ -26,7 +26,7 @@
 - **Intended users:** Who would use the system, and for what decisions or activities?
   - Dandelion Africa staff would use the system to review and organize field reports more quickly and support reporting. Staff should definitely verify records before relying on them.
 - **Inputs and outputs:** What will the system receive and produce? Give one concrete example.
-- The system will recieve WhatsApp text and audio, and it will transcribe the audio first. It will produce structured records with specific details such as activity type, date, location, participant count, services provided, referrals, and outcomes when stated in the text/audio.
+  - The system will recieve WhatsApp text and audio, and it will transcribe the audio first. It will produce structured records with specific details such as activity type, date, location, participant count, services provided, referrals, and outcomes when stated in the text/audio.
 - Example: “Today we held a reproductive health session in Nakuru with 35 women. Three women were referred to the clinic.” → Activity: reproductive health session; Location: Nakuru; Participants: 35; Referrals: 3.
 - **Success criteria:** What would make the system useful and reliable?
   - The system would be useful and reliable if if is accurate. This means it should be able to extract the stated details properly, work with text and audio which will be transcribed, and provide source evidence for the staff to review. It should flag things it is uncertain about and not assume everything is reliable, so errors can be prevented while processing the data. 
