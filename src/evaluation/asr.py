@@ -28,12 +28,16 @@ MODELS = [
     "openai/whisper-small.en",
 ]
 
-# Our own WhatsApp voice notes: path -> exact words spoken.
+# Our own WhatsApp voice notes: path -> exact words spoken (from data/test_results.md).
 # Leave a reference as "" to transcribe the clip without scoring it.
 LOCAL_CLIPS = {
     "WhatsAppExports/export/00000010-AUDIO-2026-11-03-00-44-54.opus": "",
-    "WhatsAppExports/export2/00003084-AUDIO-2026-11-04-16-05-11.opus": "",
-    "WhatsAppExports/export2/00003085-AUDIO-2026-11-04-16-05-26.opus": "",
+    "WhatsAppExports/export2/00003084-AUDIO-2026-11-04-16-05-11.opus":
+        "lowkey me too im really stressed about what my grade is gonna be and i mean she said "
+        "she's not gonna curve so im really nervous",
+    "WhatsAppExports/export2/00003085-AUDIO-2026-11-04-16-05-26.opus":
+        "wait yeah i was like losing so much sleep like oh my god guys before tuesdays class "
+        "and then we had the quiz i was tweaking out",
 }
 
 OUTPUT = Path("output/asr_comparison.csv")
