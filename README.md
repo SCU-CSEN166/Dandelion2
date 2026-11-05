@@ -105,11 +105,13 @@ If the classification model is doing bad, we can try labeling some of our synthe
 ## Week 6 — Build: Working Baseline
 
 Considerations
-knowledgator/gliner-pii-base-v1.0
-
+We considered an alternaitve PII model: knowledgator/gliner-pii-base-v1.0. Our current anonymization baseline uses dslim/bert-base-NER plus regex. Our current relevance model uses facebook/bart-large-mnli. For audio testing we are currently using Distil-Whisper and Whisper Small. The structured extraction uses numind/NuExtract-2.0-2B. We used Synthetic WhatsApp data since the real Dandelion data couldn't be exported and worked with. 
+So our dataset includes:
+-31 labeled WhatsApp messages
+-3 WhatsApp voice notes
+-20-record synthetic PII testing dataset
+-10 accented English audio clips for automatic speech recognition evaluation and testing 
 End Considerations
-
-
 
 **Deliverable during Week 7 Lab:** A runnable baseline, setup/run instructions, and 1–2 example inputs and outputs. Update this section with what worked, what failed, and individual contributions.
 
@@ -117,8 +119,9 @@ End Considerations
 - **What runs end-to-end now?** [Describe exactly.]
 - **How to run it:** [Commands, dependencies, configuration; refer to Setup below.]
 - **Model(s) and data actually used:** [Names, versions, links, and any changes from the plan.]
-- **Example 1:** Input: [non-sensitive example] → Output: [result]
-- **Example 2:** Input: [non-sensitive example] → Output: [result]
+- **Example 1:** Input: Grace Wanjiru is handling them. Her number is 0712 345 678 if the clinic needs to reach her. → Output: [PERSON] is handling them. Her number is [PHONE] if the clinic needs to reach her.
+- Example 1 was classified as relevant 
+- **Example 2:** Input: Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up. → Output: The input was classified as relevant with a relevance score of 0.92 and there was no personal PII removed from the message. 
 
 ![WhatsApp predictions part 1](screenshots/whatsapp_predictions_1.jpg)
 ![WhatsApp predictions part 2](screenshots/whatsapp_predictions_2.jpg)
@@ -127,13 +130,16 @@ End Considerations
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
 |---|---|---|---|
 | [Attempt] | [Status] | [Evidence] | [Learning] |
+| Trying to do PII anonymization on the 31 message set we have from WhatsApp | Yes | TP 11, FP 0, FN 1, Precision 1.00, Recall 0.9167, F1 0.9565 | performed decently but one PII section was missed |
+| Classifying relevance on 31 already labeled messages | Partly | Accuracy 0.7097, Precision 0.9091, Recall 0.7407, F1 0.8163 | The precision was high so this is good but some relevant messages were missed | 
 
 ![Evaluation results](screenshots/evaluation_results.jpg)
 
 ### Individual contributions during that week
 | Member | What I personally implemented/tested | Result (worked / partly / failed) | Evidence (commit, PR, experiment) | Blocker / next step |
 |---|---|---|---|---|
-| Priyanka Ganguly | I streamed 10 test clips from the Nigerian-accented English dataset through Distil-Whisper. I compared it's transcripts with the references and calculated WER. | Partly because the transcription run completed and WER was 0.423. I saw that the accuracy varied in the sense that short clips were transcribed closely while I saw some erros in some names and longer clips.  Since I only used 10 clips, the result is preliminary for now. | https://colab.research.google.com/drive/1Ba0hFutu98B9gEcrXRTVKFOdV_9Z3mNd?usp=sharing | The result is only from 10 clips, so I want to test more data/examples (maybe 50+ more clips with short and longer recordings). I will compare another speech to text model on the same clips to see if I can get better accuracy in my results.  |
+| Priyanka Ganguly | I streamed 10 test clips from the Nigerian-accented English dataset through Distil-Whisper. I compared it's transcripts with the references and calculated WER. | Partly because the transcription run completed and WER was 0.423. I saw that the accuracy varied in the sense that short clips were transcribed closely while I saw some errors in some names and longer clips.  Since I only used 10 clips, the result is preliminary for now. | https://colab.research.google.com/drive/1Ba0hFutu98B9gEcrXRTVKFOdV_9Z3mNd?usp=sharing | The result is only from 10 clips, so I want to test more data/examples (maybe 50+ more clips with short and longer recordings). I will compare another speech to text model on the same clips to see if I can get better accuracy in my results.  |
+| Risha Desai | I helped create four synthetic WhatsApp conversations. I included completed events, planned events, irrelevant messages, PII, not completed details messages, and almost duplicate reports. I exported the WhatsApp chat with audio too. This was then added to the repo and I created whatsapp_labels.json. This was where the ground-truth laid as the 31 labeled messages. The labels included relevance, event status, activity type, location, counts, referrals, PII, event IDs, and if there was a duplicate relationship. I created audio_ground_truth.json, as well as adding the ground-truth transcripts for the 3 WhatsApp voice notes. Then this labeled dataset was used for model evaluation. | Creating the data: worked, Labeling: worked Anonymization testing: worked great on our WhatsApp set, Relevance testing: partly worked since some of the relevant messages were missed, Audio transcription: partly worked since I observed slang and individual words were incorrectly transcribed | whatsapp_labels.json, audio_ground_truth.json, exported WhatsApp data, test_results.md | Next steps are to add duplicate-events and test/evaluate that. I want to test more audio too and try to find different accents. Comparing Distil-Whisper with Whisper Small is important too. I also want to improve the relevance recall since this is significant for Dandelion themselves. Lastly, I want to evaluate extraction on more already labeled messages. |
 
 ---
 
