@@ -18,25 +18,27 @@ Scoring per field (null must match null):
 """
 
 import json
-from pathlib import Path
 
 from src.anonymize import Anonymizer, anonymize
-from src.extract import CONTEXT_MESSAGES, EXTRACTION_MODEL, Extractor, context_for
+from src.config import LABELED_CHAT, OUTPUT_DIR, PUBLIC_ENTITIES, WHATSAPP_LABELS
+from src.extract import CONTEXT_MESSAGES, EXTRACTION_MODEL, NEEDS_REVIEW, Extractor, context_for
 from src.ingest import Message, load
+from src.utils import JSON_INDENT, write_json
 
-DATASET = Path("data/whatsapp_labels.json")
-CHAT = Path("WhatsAppExports/export2")
-OUTPUT = Path("output/extraction_whatsapp_labels.json")
-PUBLIC_ENTITIES: list[str] = []  # keep in sync with main.py
+OUTPUT = OUTPUT_DIR / "extraction_whatsapp_labels.json"
+NO_STATUS = "neither"  # gold label for messages that are neither completed nor planned
+LOCATION_DETECTED = "location_detected"
 
 
 def field_correct(field: str, predicted, gold) -> bool:
     if field == "status":
-        return (predicted or "neither") == gold
+        return (predicted or NO_STATUS) == gold
     if predicted is None or gold is None:
         return predicted is None and gold is None
     if field == "activity_type":
-        return set(predicted.casefold().split()) <= set(gold.casefold().replace("'s", "").split())
+        predicted_words = set(predicted.casefold().split())
+        gold_words = set(gold.casefold().replace("'s", "").split())  # "women's" -> "women"
+        return predicted_words <= gold_words
     if field == "location":
         return predicted.casefold() == gold.casefold()
     return predicted == gold
@@ -45,35 +47,39 @@ def field_correct(field: str, predicted, gold) -> bool:
 def evaluate(labels: list[dict], messages: list[Message], extractor: Extractor,
              context_size: int = CONTEXT_MESSAGES) -> dict:
     """messages: the anonymized chat the labels refer to, in order."""
-    index_by_line = {m.metadata["line"]: i for i, m in enumerate(messages)}
+    index_by_line = {message.metadata["line"]: index for index, message in enumerate(messages)}
     fields = list(extractor.template)
-    correct = dict.fromkeys(fields + ["location_detected"], 0)
+    correct_counts = dict.fromkeys(fields + [LOCATION_DETECTED], 0)
     outputs = []
     for label in labels:
-        i = index_by_line[label["source_line"]]
-        text = messages[i].anonymized_text
-        predicted = extractor.extract(text, context_for(messages, i, context_size) if context_size else "")
+        index = index_by_line[label["source_line"]]
+        text = messages[index].anonymized_text
+        predicted = extractor.extract(text, context_for(messages, index, context_size))
         outputs.append({"id": label["message_id"], "text": text, "predicted": predicted,
-                        "gold": {f: label[f] for f in fields}})
+                        "gold": {field: label[field] for field in fields}})
         for field in fields:
-            correct[field] += field_correct(field, predicted[field], label[field])
-        correct["location_detected"] += (predicted["location"] is None) == (label["location"] is None)
-    n = len(labels)
+            correct_counts[field] += field_correct(field, predicted[field], label[field])
+        correct_counts[LOCATION_DETECTED] += (predicted["location"] is None) == (label["location"] is None)
+
+    total = len(labels)
     return {"records": outputs, "metrics": {
-        "records": n,
+        "records": total,
         "context_messages": context_size,
-        "accuracy": {field: count / n if n else None for field, count in correct.items()},
-        "needs_review": sum(bool(o["predicted"]["needs_review"]) for o in outputs)}}
+        "accuracy": {field: count / total if total else None for field, count in correct_counts.items()},
+        NEEDS_REVIEW: sum(bool(output["predicted"][NEEDS_REVIEW]) for output in outputs)}}
+
+
+def main() -> None:
+    labels = json.loads(WHATSAPP_LABELS.read_text(encoding="utf-8"))
+    messages = [message for message in load(LABELED_CHAT) if not message.is_system]
+    anonymize(messages, Anonymizer(public_entities=PUBLIC_ENTITIES))
+    report = evaluate(labels, messages, Extractor())
+    report["dataset"] = str(WHATSAPP_LABELS)
+    report["model"] = EXTRACTION_MODEL
+    write_json(OUTPUT, report)
+    print(f"{EXTRACTION_MODEL} on {WHATSAPP_LABELS} -> {OUTPUT}")
+    print(json.dumps(report["metrics"], indent=JSON_INDENT))
 
 
 if __name__ == "__main__":
-    labels = json.loads(DATASET.read_text(encoding="utf-8"))
-    messages = [m for m in load(CHAT) if not m.is_system]
-    anonymize(messages, Anonymizer(public_entities=PUBLIC_ENTITIES))
-    report = evaluate(labels, messages, Extractor())
-    report["dataset"] = str(DATASET)
-    report["model"] = EXTRACTION_MODEL
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"{EXTRACTION_MODEL} on {DATASET} -> {OUTPUT}")
-    print(json.dumps(report["metrics"], indent=2))
+    main()

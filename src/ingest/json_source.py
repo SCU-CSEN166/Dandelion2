@@ -44,9 +44,9 @@ class JsonSource(Source):
     def load(self, path: Path) -> list[Message]:
         path = Path(path)
         records = _read_records(path)
-        return [self._to_message(r, i, path) for i, r in enumerate(records)]
+        return [self._to_message(record, index, path) for index, record in enumerate(records)]
 
-    def _to_message(self, record: dict[str, Any], i: int, path: Path) -> Message:
+    def _to_message(self, record: dict[str, Any], index: int, path: Path) -> Message:
         rest = dict(record)
 
         def take(field: str) -> Any:
@@ -63,13 +63,10 @@ class JsonSource(Source):
         # Hugging Face audio columns look like {"path": ..., "array": [...], "sampling_rate": ...}
         if isinstance(audio, dict):
             audio = audio.get("path")
-        attachments = []
-        if isinstance(audio, str):
-            file = Path(audio) if Path(audio).is_absolute() else path.parent / audio
-            attachments.append(Attachment(kind_from_filename(audio), Path(audio).name, str(file) if file.is_file() else None))
+        attachments = [_audio_attachment(audio, path.parent)] if isinstance(audio, str) else []
 
         return Message(
-            id=f"{self.name}:{path.stem}:{record_id if record_id is not None else i}",
+            id=f"{self.name}:{path.stem}:{record_id if record_id is not None else index}",
             source=self.name,
             text=str(text or ""),
             sender=take("sender"),
@@ -80,11 +77,18 @@ class JsonSource(Source):
         )
 
 
+def _audio_attachment(audio_path: str, base_dir: Path) -> Attachment:
+    """An attachment for `audio_path` (relative paths are relative to the dataset file)."""
+    file = Path(audio_path) if Path(audio_path).is_absolute() else base_dir / audio_path
+    local_path = str(file) if file.is_file() else None
+    return Attachment(kind_from_filename(audio_path), Path(audio_path).name, local_path)
+
+
 def _read_records(path: Path) -> list[dict[str, Any]]:
-    with open(path, encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as file:
         if path.suffix.lower() == ".jsonl":
-            return [json.loads(line) for line in f if line.strip()]
-        data = json.load(f)
+            return [json.loads(line) for line in file if line.strip()]
+        data = json.load(file)
     if isinstance(data, list):
         return data
     if isinstance(data, dict):

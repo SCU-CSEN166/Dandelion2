@@ -11,9 +11,9 @@ def fake_extractor(output):
 
 class ExtractTests(unittest.TestCase):
     def test_valid_output(self):
-        e = fake_extractor({'status': 'completed', 'activity_type': 'youth health session',
-                            'location': 'Nakuru', 'participant_count': 42, 'referrals': '2'})
-        result = e.extract('youth session in Nakuru, 42 students, 2 referrals')
+        extractor = fake_extractor({'status': 'completed', 'activity_type': 'youth health session',
+                                    'location': 'Nakuru', 'participant_count': 42, 'referrals': '2'})
+        result = extractor.extract('youth session in Nakuru, 42 students, 2 referrals')
         self.assertEqual(result, {'status': 'completed', 'activity_type': 'youth health session',
                                   'location': 'Nakuru', 'participant_count': 42, 'referrals': 2,
                                   'needs_review': []})

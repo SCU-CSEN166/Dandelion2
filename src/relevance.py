@@ -6,18 +6,32 @@ From Prableen's Week 6 baseline. Runs on anonymized text only.
 from functools import cached_property
 
 from .ingest import Message
+from .utils import require_anonymized
 
 CLASSIFIER_MODEL = "facebook/bart-large-mnli"
 
-RELEVANT = "a report of completed community health, outreach, training or livelihood activities and outcomes"
-IRRELEVANT = "casual conversation, greetings, unrelated information or plans for future activities"
+# Hypotheses the zero-shot model scores each message against.
+RELEVANT_HYPOTHESIS = "a report of completed community health, outreach, training or livelihood activities and outcomes"
+IRRELEVANT_HYPOTHESIS = "casual conversation, greetings, unrelated information or plans for future activities"
+
+# Labels stored in Message.relevance["label"].
+RELEVANT = "relevant"
+IRRELEVANT = "irrelevant"
+
+DEFAULT_THRESHOLD = 0.5  # minimum relevant-hypothesis score; uncalibrated
+# BART accepts 1024 tokens including the hypothesis; 180 words stays well under that.
+MAX_WORDS_PER_CHUNK = 180
+
+
+def is_relevant(message: Message) -> bool:
+    return message.relevance is not None and message.relevance["label"] == RELEVANT
 
 
 class RelevanceClassifier:
-    def __init__(self, classifier=None, threshold: float = 0.5):
+    def __init__(self, classifier=None, threshold: float = DEFAULT_THRESHOLD):
         """
         classifier: a zero-shot-classification pipeline (tests inject a fake one).
-        threshold: minimum RELEVANT score; uncalibrated.
+        threshold: minimum relevant-hypothesis score; uncalibrated.
         """
         if not 0 <= threshold <= 1:
             raise ValueError("threshold must be between 0 and 1")
@@ -29,26 +43,29 @@ class RelevanceClassifier:
         if self._classifier is not None:
             return self._classifier
         from transformers import pipeline
-        return pipeline("zero-shot-classification", model=CLASSIFIER_MODEL, device=-1)
+        return pipeline("zero-shot-classification", model=CLASSIFIER_MODEL, device="cpu")
+
+    def _relevant_score(self, text: str) -> float:
+        result = self.classifier(text, candidate_labels=[RELEVANT_HYPOTHESIS, IRRELEVANT_HYPOTHESIS],
+                                 multi_label=False)
+        score_by_hypothesis = dict(zip(result["labels"], result["scores"]))
+        return float(score_by_hypothesis[RELEVANT_HYPOTHESIS])
 
     def classify(self, text: str) -> dict:
         """Scores are model scores, not calibrated confidence."""
         if not text.strip():
-            return {"label": "irrelevant", "score": 0.0, "reason": "empty_message"}
+            return {"label": IRRELEVANT, "score": 0.0, "reason": "empty_message"}
         # Chunk rather than silently dropping the tail of long messages.
-        tokens = text.split()
-        scores = []
-        for offset in range(0, len(tokens), 180):
-            result = self.classifier(" ".join(tokens[offset:offset + 180]),
-                                     candidate_labels=[RELEVANT, IRRELEVANT], multi_label=False)
-            scores.append(float(dict(zip(result["labels"], result["scores"]))[RELEVANT]))
-        score = max(scores)
-        return {"label": "relevant" if score >= self.threshold else "irrelevant", "score": score}
+        words = text.split()
+        chunks = [" ".join(words[offset:offset + MAX_WORDS_PER_CHUNK])
+                  for offset in range(0, len(words), MAX_WORDS_PER_CHUNK)]
+        score = max(self._relevant_score(chunk) for chunk in chunks)
+        return {"label": RELEVANT if score >= self.threshold else IRRELEVANT, "score": score}
+
 
 def classify(messages: list[Message], classifier: RelevanceClassifier | None = None) -> None:
     """Fill in `relevance` for each message. Requires anonymize() to have run."""
+    require_anonymized(messages)
     classifier = classifier or RelevanceClassifier()
-    for m in messages:
-        if m.anonymized_text is None:
-            raise ValueError(f"{m.id} has not been anonymized; run anonymize() first")
-        m.relevance = classifier.classify(m.anonymized_text)
+    for message in messages:
+        message.relevance = classifier.classify(message.anonymized_text)

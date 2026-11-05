@@ -12,22 +12,34 @@ model; it loads on first use.
 import json
 import re
 from functools import cached_property
+from typing import Any
 
 from .ingest import Message
+from .relevance import is_relevant
+from .utils import require_anonymized, torch_device
 
 EXTRACTION_MODEL = "numind/NuExtract-2.0-2B"
+MAX_NEW_TOKENS = 128  # the filled-in template is a short JSON object
+TEMPLATE_INDENT = 4   # NuExtract's examples use 4-space template JSON
 
-# NuExtract template: a list means "one of these", other values are types.
+# NuExtract field types. A list in the template means "one of these".
+INTEGER = "integer"
+VERBATIM_STRING = "verbatim-string"  # must be copied from the text
+
 TEMPLATE = {
     "status": ["completed", "planned", "neither"],
     "activity_type": ["family planning outreach", "youth health session", "savings group meeting",
                       "business training", "community health visit", "other"],
-    "location": "verbatim-string",
-    "participant_count": "integer",
-    "referrals": "integer",
+    "location": VERBATIM_STRING,
+    "participant_count": INTEGER,
+    "referrals": INTEGER,
 }
 CONTEXT_FIELDS = ("status",)  # read with earlier messages as context
 CONTEXT_MESSAGES = 5
+
+# Key in each extraction listing what a human should check, and the flag for bad model output.
+NEEDS_REVIEW = "needs_review"
+UNPARSEABLE_OUTPUT = "unparseable_output"
 
 
 class Extractor:
@@ -43,18 +55,20 @@ class Extractor:
         import torch
         from transformers import AutoModelForImageTextToText, AutoProcessor
 
-        device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
+        device = torch_device()
         dtype = torch.float32 if device == "cpu" else torch.bfloat16
         processor = AutoProcessor.from_pretrained(EXTRACTION_MODEL, padding_side="left")
         model = AutoModelForImageTextToText.from_pretrained(EXTRACTION_MODEL, dtype=dtype).to(device)
-        template = json.dumps(self.template, indent=4)
+        template = json.dumps(self.template, indent=TEMPLATE_INDENT)
 
         def generate(text: str) -> str:
             prompt = processor.tokenizer.apply_chat_template(
                 [{"role": "user", "content": text}], template=template, tokenize=False, add_generation_prompt=True)
             inputs = processor(text=[prompt], return_tensors="pt").to(device)
-            output = model.generate(**inputs, max_new_tokens=128, do_sample=False)
-            return processor.batch_decode(output[:, inputs["input_ids"].shape[1]:], skip_special_tokens=True)[0]
+            output = model.generate(**inputs, max_new_tokens=MAX_NEW_TOKENS, do_sample=False)
+            prompt_length = inputs["input_ids"].shape[1]
+            new_tokens = output[:, prompt_length:]
+            return processor.batch_decode(new_tokens, skip_special_tokens=True)[0]
 
         return generate
 
@@ -69,45 +83,56 @@ class Extractor:
             with_context = self._extract(f"Earlier messages:\n{context}\n\nMessage:\n{text}")
             for field in CONTEXT_FIELDS:
                 result[field] = with_context[field]
-            if "unparseable_output" in with_context["needs_review"]:
-                result["needs_review"].append("unparseable_output")
+            if UNPARSEABLE_OUTPUT in with_context[NEEDS_REVIEW]:
+                result[NEEDS_REVIEW].append(UNPARSEABLE_OUTPUT)
         return result
 
     def _extract(self, text: str) -> dict:
-        result = dict.fromkeys(self.template)
-        result["needs_review"] = []
+        result: dict[str, Any] = dict.fromkeys(self.template)
+        result[NEEDS_REVIEW] = []
         if not text.strip():
             return result
         try:
             raw = json.loads(self.generate(text))
         except json.JSONDecodeError:
-            result["needs_review"].append("unparseable_output")
+            result[NEEDS_REVIEW].append(UNPARSEABLE_OUTPUT)
+            return result
+        if not isinstance(raw, dict):
             return result
 
-        for field, kind in self.template.items():
-            value = raw.get(field) if isinstance(raw, dict) else None
-            if value is None:
-                continue
-            if isinstance(kind, list):
-                result[field] = value if value in kind else None
-            elif kind == "integer":
-                try:
-                    result[field] = int(value)
-                except (TypeError, ValueError):
-                    continue
-                if not re.search(rf"(?<!\d){result[field]}(?!\d)", text):
-                    result["needs_review"].append(field)
-            else:
-                result[field] = str(value)
-                if kind == "verbatim-string" and result[field].casefold() not in text.casefold():
-                    result["needs_review"].append(field)
+        for field, field_type in self.template.items():
+            value, needs_review = _coerce(raw.get(field), field_type, text)
+            result[field] = value
+            if needs_review:
+                result[NEEDS_REVIEW].append(field)
         return result
 
 
-def context_for(messages: list[Message], i: int, size: int = CONTEXT_MESSAGES) -> str:
-    """The `size` messages before messages[i] in the same conversation, anonymized."""
-    earlier = [p for p in messages[max(0, i - size):i] if p.conversation == messages[i].conversation]
-    return "\n".join(f"{p.anonymized_sender or 'Unknown'}: {p.anonymized_text}" for p in earlier)
+def _coerce(value: Any, field_type: Any, text: str) -> tuple[Any, bool]:
+    """Validate one raw model value against its template type.
+
+    Returns (value or None, whether a human should check it because it isn't in `text`).
+    """
+    if value is None:
+        return None, False
+    if isinstance(field_type, list):
+        return (value if value in field_type else None), False
+    if field_type == INTEGER:
+        try:
+            number = int(value)
+        except (TypeError, ValueError):
+            return None, False
+        return number, not re.search(rf"(?<!\d){number}(?!\d)", text)
+    string = str(value)
+    return string, field_type == VERBATIM_STRING and string.casefold() not in text.casefold()
+
+
+def context_for(messages: list[Message], index: int, size: int = CONTEXT_MESSAGES) -> str:
+    """The `size` messages before messages[index] in the same conversation, anonymized ("" if size is 0)."""
+    current = messages[index]
+    earlier = [message for message in messages[max(0, index - size):index]
+               if message.conversation == current.conversation]
+    return "\n".join(f"{message.anonymized_sender or 'Unknown'}: {message.anonymized_text}" for message in earlier)
 
 
 def extract(messages: list[Message], extractor: Extractor | None = None,
@@ -116,14 +141,12 @@ def extract(messages: list[Message], extractor: Extractor | None = None,
 
     context_size: earlier messages shown when reading status; 0 halves the model calls.
     """
+    require_anonymized(messages)
     extractor = extractor or Extractor()
-    for m in messages:
-        if m.anonymized_text is None:
-            raise ValueError(f"{m.id} has not been anonymized; run anonymize() first")
-    targets = [i for i, m in enumerate(messages) if m.relevance and m.relevance["label"] == "relevant"]
-    for n, i in enumerate(targets, start=1):
-        print(f"\r  extracting {n}/{len(targets)}", end="", flush=True)  # a few seconds per message
-        context = context_for(messages, i, context_size) if context_size else ""
-        messages[i].extraction = extractor.extract(messages[i].anonymized_text, context)
-    if targets:
+    relevant_indices = [index for index, message in enumerate(messages) if is_relevant(message)]
+    for progress, index in enumerate(relevant_indices, start=1):
+        print(f"\r  extracting {progress}/{len(relevant_indices)}", end="", flush=True)  # a few seconds per message
+        context = context_for(messages, index, context_size)
+        messages[index].extraction = extractor.extract(messages[index].anonymized_text, context)
+    if relevant_indices:
         print()

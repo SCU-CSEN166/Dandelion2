@@ -11,6 +11,7 @@ steps such as transcription can open it by path.
 
 import re
 import zipfile
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Callable
@@ -18,10 +19,13 @@ from typing import Callable
 from .base import Source, register
 from .schema import Attachment, AttachmentKind, Message, kind_from_filename
 
-LRM = "‎"  # iOS prefixes system notices and attachment lines with this
-_INVISIBLE = dict.fromkeys(map(ord, "‎‏﻿"))
-_SPACES = {0x202F: " ", 0xA0: " "}  # newer exports put a narrow no-break space before AM/PM
+LRM = "‎"  # left-to-right mark; iOS prefixes system notices and attachment lines with it
+_INVISIBLE = dict.fromkeys(map(ord, "‎‏﻿"))  # LRM, RLM, BOM: deleted
+_NARROW_NO_BREAK_SPACE = 0x202F  # newer exports put one before AM/PM
+_NO_BREAK_SPACE = 0xA0
+_SPACES = {_NARROW_NO_BREAK_SPACE: " ", _NO_BREAK_SPACE: " "}
 
+_DATE_SEPARATOR = re.compile(r"[/.-]")
 _DATE = r"(?P<date>\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4})"
 _TIME = r"(?P<time>\d{1,2}:\d{2}(?::\d{2})?(?: ?[AaPp]\.? ?[Mm]\.?)?)"
 _HEADERS = {
@@ -29,6 +33,7 @@ _HEADERS = {
     "android": re.compile(rf"^{_DATE},? {_TIME} - (?P<body>.*)$"),
 }
 _SENDER = re.compile(r"^(?P<sender>[^:\n]+?): (?P<text>.*)$", re.DOTALL)
+_UNSAVED_CONTACT_PREFIX = "~ "  # iOS marks contacts not saved on the exporting phone with "~"
 
 _IOS_ATTACHED = re.compile(r"<attached: (?P<file>[^>]+)>")
 _ANDROID_ATTACHED = re.compile(r"^(?P<file>\S[^\n]*?\.\w{2,5}) \(file attached\)$", re.MULTILINE)
@@ -39,7 +44,25 @@ _OMITTED_KINDS: dict[str, AttachmentKind] = {
     "audio": "audio", "video": "video", "document": "document",
 }
 
+# Chat file names, most specific first: iOS, then Android.
+_PREFERRED_CHAT_NAMES = ("_chat.txt", "WhatsApp Chat")
+
+MONTHS_PER_YEAR = 12
+HOURS_PER_MERIDIEM = 12
+TWO_DIGIT_YEAR_LIMIT = 100  # years below this are two-digit, e.g. "26"
+TWO_DIGIT_YEAR_CENTURY = 2000
+
 Resolver = Callable[[str], str | None]
+
+
+@dataclass
+class _Entry:
+    """One message's raw header fields and body, before parsing."""
+    export_format: str
+    date: str
+    time: str
+    body: str
+    line_number: int  # 1-based line in the chat .txt
 
 
 @register
@@ -61,131 +84,153 @@ class WhatsAppSource(Source):
             text, _ = _open(path, None)
         except (OSError, ValueError, zipfile.BadZipFile, UnicodeDecodeError):
             return False
-        first = next((line for line in text.splitlines() if line.strip()), "")
-        return _match_header(first) is not None
+        first_line = next((line for line in text.splitlines() if line.strip()), "")
+        return _match_header(first_line) is not None
 
     def load(self, path: Path) -> list[Message]:
         path = Path(path)
         text, resolve = _open(path, self.media_dir)
         conversation = path.stem
+        entries = _group_entries(text)
+        dayfirst = self.dayfirst if self.dayfirst is not None else _guess_dayfirst([entry.date for entry in entries])
+        return [
+            self._to_message(entry, f"{self.name}:{conversation}:{index}", conversation, resolve, dayfirst)
+            for index, entry in enumerate(entries)
+        ]
 
-        # Group raw lines into (format, date, time, body, line number) entries.
-        entries: list[list] = []
-        for line_no, line in enumerate(text.splitlines(), start=1):
-            header = _match_header(line)
-            if header:
-                fmt, m = header
-                entries.append([fmt, m["date"], m["time"], m["body"], line_no])
-            elif entries:
-                entries[-1][3] += "\n" + line
+    def _to_message(self, entry: _Entry, message_id: str, conversation: str,
+                    resolve: Resolver, dayfirst: bool) -> Message:
+        sender_match = _SENDER.match(entry.body)
+        if sender_match:
+            sender = sender_match["sender"].translate(_INVISIBLE).lstrip(_UNSAVED_CONTACT_PREFIX)
+            raw_text = sender_match["text"]
+        else:
+            sender, raw_text = None, entry.body
+        text, attachments = _split_attachments(raw_text.translate(_INVISIBLE), resolve)
+        return Message(
+            id=message_id,
+            source=self.name,
+            text=text,
+            sender=sender,
+            timestamp=_parse_timestamp(entry.date, entry.time, dayfirst),
+            conversation=conversation,
+            attachments=attachments,
+            # Android notices have no sender; iOS ones are marked with a leading LRM.
+            is_system=sender is None or (raw_text.startswith(LRM) and not attachments),
+            metadata={"export_format": entry.export_format, "line": entry.line_number},
+        )
 
-        dayfirst = self.dayfirst if self.dayfirst is not None else _guess_dayfirst([e[1] for e in entries])
 
-        messages = []
-        for i, (fmt, date, time, body, line_no) in enumerate(entries):
-            m = _SENDER.match(body)
-            # iOS prefixes contacts not saved on the exporting phone with "~"
-            sender, raw = (m["sender"].translate(_INVISIBLE).lstrip("~ "), m["text"]) if m else (None, body)
-            text, attachments = _split_attachments(raw.translate(_INVISIBLE), resolve)
-            messages.append(Message(
-                id=f"{self.name}:{conversation}:{i}",
-                source=self.name,
-                text=text,
-                sender=sender,
-                timestamp=_parse_timestamp(date, time, dayfirst),
-                conversation=conversation,
-                attachments=attachments,
-                # Android notices have no sender; iOS ones are marked with a leading LRM.
-                is_system=sender is None or (raw.startswith(LRM) and not attachments),
-                metadata={"export_format": fmt, "line": line_no},  # 1-based line in the chat .txt
-            ))
-        return messages
+def _group_entries(text: str) -> list[_Entry]:
+    """Split the chat into messages; lines without a header continue the previous one."""
+    entries: list[_Entry] = []
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        header = _match_header(line)
+        if header:
+            export_format, match = header
+            entries.append(_Entry(export_format, match["date"], match["time"], match["body"], line_number))
+        elif entries:
+            entries[-1].body += "\n" + line
+    return entries
 
 
 def _match_header(line: str) -> tuple[str, re.Match] | None:
     line = line.translate(_SPACES).lstrip(LRM)
-    for fmt, pattern in _HEADERS.items():
-        if m := pattern.match(line):
-            return fmt, m
+    for export_format, pattern in _HEADERS.items():
+        if match := pattern.match(line):
+            return export_format, match
     return None
 
 
 def _open(path: Path, media_dir: Path | None) -> tuple[str, Resolver]:
     """Return the chat text and a function mapping an attachment filename to a local path."""
     if path.is_file() and zipfile.is_zipfile(path):
-        with zipfile.ZipFile(path) as zf:
-            names = zf.namelist()
-            text = zf.read(_pick_chat(names)).decode("utf-8-sig")
-        members = {PurePosixPath(n).name: n for n in names}
-        out_dir = media_dir or path.with_suffix("")
+        return _open_zip(path, media_dir or path.with_suffix(""))
+    return _open_text(path)
 
-        def resolve(filename: str) -> str | None:
-            # Keys are bare basenames, so a crafted "../x" filename never matches.
-            if filename not in members:
-                return None
-            out_dir.mkdir(parents=True, exist_ok=True)
-            out = out_dir / filename
-            with zipfile.ZipFile(path) as zf:
-                out.write_bytes(zf.read(members[filename]))
-            return str(out)
 
-        return text, resolve
+def _open_zip(path: Path, media_dir: Path) -> tuple[str, Resolver]:
+    with zipfile.ZipFile(path) as archive:
+        names = archive.namelist()
+        text = archive.read(_pick_chat(names)).decode("utf-8-sig")
+    members = {PurePosixPath(name).name: name for name in names}
 
-    chat = path if path.is_file() else path / _pick_chat([p.name for p in path.iterdir()])
+    def resolve(filename: str) -> str | None:
+        # Keys are bare basenames, so a crafted "../x" filename never matches.
+        if filename not in members:
+            return None
+        media_dir.mkdir(parents=True, exist_ok=True)
+        extracted = media_dir / filename
+        with zipfile.ZipFile(path) as archive:
+            extracted.write_bytes(archive.read(members[filename]))
+        return str(extracted)
+
+    return text, resolve
+
+
+def _open_text(path: Path) -> tuple[str, Resolver]:
+    """`path` is the chat .txt itself, or an unzipped export folder containing it."""
+    chat = path if path.is_file() else path / _pick_chat([child.name for child in path.iterdir()])
     text = chat.read_text(encoding="utf-8-sig")
 
     def resolve(filename: str) -> str | None:
-        f = chat.parent / filename
-        return str(f) if Path(filename).name == filename and f.is_file() else None
+        media = chat.parent / filename
+        is_bare_name = Path(filename).name == filename  # reject "../x" and other paths
+        return str(media) if is_bare_name and media.is_file() else None
 
     return text, resolve
 
 
 def _pick_chat(names: list[str]) -> str:
-    txts = [n for n in names if n.lower().endswith(".txt")]
-    for preferred in ("_chat.txt", "WhatsApp Chat"):  # iOS, then Android naming
-        for n in txts:
-            if PurePosixPath(n).name.startswith(preferred):
-                return n
-    if txts:
-        return txts[0]
+    text_files = [name for name in names if name.lower().endswith(".txt")]
+    for preferred in _PREFERRED_CHAT_NAMES:
+        for name in text_files:
+            if PurePosixPath(name).name.startswith(preferred):
+                return name
+    if text_files:
+        return text_files[0]
     raise ValueError("no chat .txt file found")
 
 
 def _split_attachments(text: str, resolve: Resolver) -> tuple[str, list[Attachment]]:
     attachments = []
     for pattern in (_IOS_ATTACHED, _ANDROID_ATTACHED):
-        for m in pattern.finditer(text):
-            filename = m["file"].strip()
+        for match in pattern.finditer(text):
+            filename = match["file"].strip()
             attachments.append(Attachment(kind_from_filename(filename), filename, resolve(filename)))
         text = pattern.sub("", text)
-    for m in _OMITTED.finditer(text):
-        kind = _OMITTED_KINDS.get((m["kind"] or "").lower(), "other")
+    for match in _OMITTED.finditer(text):
+        kind = _OMITTED_KINDS.get((match["kind"] or "").lower(), "other")
         attachments.append(Attachment(kind))
     text = _OMITTED.sub("", text)
     return text.strip(), attachments
 
 
+def _date_numbers(date: str) -> list[int]:
+    """"11/3/26" -> [11, 3, 26]."""
+    return [int(part) for part in _DATE_SEPARATOR.split(date)]
+
+
 def _guess_dayfirst(dates: list[str]) -> bool:
-    pairs = [[int(x) for x in re.split(r"[/.-]", d)[:2]] for d in dates]
-    if any(a > 12 for a, _ in pairs):
+    leading_pairs = [_date_numbers(date)[:2] for date in dates]
+    if any(first > MONTHS_PER_YEAR for first, _ in leading_pairs):
         return True
-    if any(b > 12 for _, b in pairs):
+    if any(second > MONTHS_PER_YEAR for _, second in leading_pairs):
         return False
     # Still ambiguous: dotted dates are a day-first convention; slashes default to US order.
-    return any("." in d for d in dates)
+    return any("." in date for date in dates)
 
 
 def _parse_timestamp(date: str, time: str, dayfirst: bool) -> datetime:
-    a, b, year = (int(x) for x in re.split(r"[/.-]", date))
-    day, month = (a, b) if dayfirst else (b, a)
-    if year < 100:
-        year += 2000
+    first, second, year = _date_numbers(date)
+    day, month = (first, second) if dayfirst else (second, first)
+    if year < TWO_DIGIT_YEAR_LIMIT:
+        year += TWO_DIGIT_YEAR_CENTURY
 
     time = time.upper().replace(".", "").replace(" ", "")
     meridiem = time[-2:] if time[-2:] in ("AM", "PM") else None
-    parts = [int(x) for x in time.removesuffix(meridiem or "").split(":")]
-    hour, minute, second = parts + [0] * (3 - len(parts))
+    hour, minute, *optional_seconds = (int(part) for part in time.removesuffix(meridiem or "").split(":"))
+    second_of_minute = optional_seconds[0] if optional_seconds else 0
     if meridiem:
-        hour = hour % 12 + (12 if meridiem == "PM" else 0)
-    return datetime(year, month, day, hour, minute, second)
+        hour = hour % HOURS_PER_MERIDIEM + (HOURS_PER_MERIDIEM if meridiem == "PM" else 0)
+    return datetime(year, month, day, hour, minute, second_of_minute)

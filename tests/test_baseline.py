@@ -1,10 +1,9 @@
-import json
 import unittest
-from pathlib import Path
+
 from src.anonymize import Anonymizer, anonymize
-from src.evaluation.baseline import DATASETS, evaluate, from_whatsapp_label, load_records, metrics
+from src.evaluation.baseline import DATASETS, ConfusionMatrix, evaluate, from_whatsapp_label, load_records
 from src.ingest import Message
-from src.relevance import RelevanceClassifier, RELEVANT, IRRELEVANT, classify
+from src.relevance import IRRELEVANT_HYPOTHESIS, RELEVANT_HYPOTHESIS, RelevanceClassifier, classify
 
 
 def fake_anonymizer(entities=(), public=()):
@@ -12,8 +11,8 @@ def fake_anonymizer(entities=(), public=()):
 
 
 def fake_classifier(relevant=0.9):
-    return RelevanceClassifier(classifier=lambda text, **kw: {'labels': [IRRELEVANT, RELEVANT],
-                                                              'scores': [1-relevant, relevant]})
+    return RelevanceClassifier(classifier=lambda text, **kwargs: {'labels': [IRRELEVANT_HYPOTHESIS, RELEVANT_HYPOTHESIS],
+                                                              'scores': [1 - relevant, relevant]})
 
 
 class BaselineTests(unittest.TestCase):
@@ -39,7 +38,7 @@ class BaselineTests(unittest.TestCase):
         seen = []
         def classify_fn(text, **kwargs):
             seen.append(text)
-            return {'labels':[RELEVANT, IRRELEVANT], 'scores':[.9,.1]}
+            return {'labels': [RELEVANT_HYPOTHESIS, IRRELEVANT_HYPOTHESIS], 'scores': [.9, .1]}
         messages = [Message(id='m', source='test', text='Call 0721448903')]
         anonymize(messages, fake_anonymizer())
         classify(messages, RelevanceClassifier(classifier=classify_fn))
@@ -53,9 +52,9 @@ class BaselineTests(unittest.TestCase):
         calls = []
         def classify_fn(text, **kwargs):
             calls.append(text)
-            return {'labels':[RELEVANT, IRRELEVANT], 'scores':[.9 if 'served' in text else .1,.1]}
-        c = RelevanceClassifier(classifier=classify_fn)
-        self.assertEqual(c.classify('hello '*400+'served')['label'], 'relevant')
+            return {'labels': [RELEVANT_HYPOTHESIS, IRRELEVANT_HYPOTHESIS], 'scores': [.9 if 'served' in text else .1, .1]}
+        classifier = RelevanceClassifier(classifier=classify_fn)
+        self.assertEqual(classifier.classify('hello '*400+'served')['label'], 'relevant')
         self.assertEqual(len(calls), 3)
 
     def test_partial_mask_is_miss(self):
@@ -65,19 +64,19 @@ class BaselineTests(unittest.TestCase):
         self.assertIsNone(result['classification'])
 
     def test_subword_suffix_is_masked(self):
-        a = fake_anonymizer([{'entity_group':'PER','start':0,'end':3}])
-        self.assertEqual(a.anonymize('Wanjiku served 28')['text'], '[PERSON] served 28')
+        anonymizer = fake_anonymizer([{'entity_group':'PER','start':0,'end':3}])
+        self.assertEqual(anonymizer.anonymize('Wanjiku served 28')['text'], '[PERSON] served 28')
 
     def test_empty(self):
         self.assertEqual(fake_classifier().classify('')['label'], 'irrelevant')
-        self.assertIsNone(metrics(0,0,0,0)['recall'])
+        self.assertIsNone(ConfusionMatrix().metrics()['recall'])
 
     def test_senders_pseudonymized_and_masked_in_text(self):
         messages = [Message(id='1', source='test', sender='Grace Wanjiru', text='hello'),
                     Message(id='2', source='test', sender='Mary', text='thanks grace, see you'),
                     Message(id='3', source='test', sender='Grace Wanjiru', text='Wanjiru here')]
         anonymize(messages, fake_anonymizer())
-        self.assertEqual([m.anonymized_sender for m in messages], ['Sender 1', 'Sender 2', 'Sender 1'])
+        self.assertEqual([message.anonymized_sender for message in messages], ['Sender 1', 'Sender 2', 'Sender 1'])
         self.assertEqual(messages[1].anonymized_text, 'thanks [PERSON], see you')
         self.assertEqual(messages[2].anonymized_text, '[PERSON] here')
 
@@ -85,7 +84,7 @@ class BaselineTests(unittest.TestCase):
         label = {'message_id': 'msg_1', 'text': 'Esther in Nakuru, Esther again', 'relevance': 'relevant',
                  'location': 'Nakuru', 'pii': [{'type': 'PERSON', 'value': 'Esther'}]}
         record = from_whatsapp_label(label)
-        self.assertEqual([(e['start'], e['should_redact']) for e in record['entities']],
+        self.assertEqual([(entity['start'], entity['should_redact']) for entity in record['entities']],
                          [(0, True), (18, True), (10, False)])
 
     def test_dataset_offsets(self):

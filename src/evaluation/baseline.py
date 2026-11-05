@@ -9,25 +9,26 @@ and metrics are written to OUTPUT_DIR/baseline_<dataset>.json.
 """
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 from src.anonymize import NER_MODEL, Anonymizer
-from src.relevance import CLASSIFIER_MODEL, RelevanceClassifier
+from src.config import OUTPUT_DIR, PUBLIC_ENTITIES, WHATSAPP_LABELS
+from src.relevance import CLASSIFIER_MODEL, IRRELEVANT, RELEVANT, RelevanceClassifier
+from src.utils import JSON_INDENT, write_json
 
 DATASETS = {
     # The WhatsApp group chat in WhatsAppExports/export2: PII and relevance labels.
-    "whatsapp_labels": Path("data/whatsapp_labels.json"),
+    "whatsapp_labels": WHATSAPP_LABELS,
     # 20 synthetic records with dense PII and public-entity distractors; no relevance labels.
     "synthetic": Path("Archive/synthetic_unanonymized.json"),
 }
-OUTPUT_DIR = Path("output")
-PUBLIC_ENTITIES: list[str] = []  # reviewed list, independent of test annotations
 
 
 def load_records(path: Path) -> list[dict]:
     data = json.loads(path.read_text(encoding="utf-8"))
     records = data["records"] if isinstance(data, dict) else data
-    return [from_whatsapp_label(r) if "message_id" in r else r for r in records]
+    return [from_whatsapp_label(record) if "message_id" in record else record for record in records]
 
 
 def from_whatsapp_label(label: dict) -> dict:
@@ -35,8 +36,8 @@ def from_whatsapp_label(label: dict) -> dict:
     text. A labeled location that isn't PII (e.g. "Nakuru") is a should-not-redact entity.
     """
     text = label["text"]
-    pii_values = {p["value"] for p in label["pii"]}
-    entities = [e for value in pii_values for e in _occurrences(text, value, should_redact=True)]
+    pii_values = {pii["value"] for pii in label["pii"]}
+    entities = [entity for value in pii_values for entity in _occurrences(text, value, should_redact=True)]
     location = label.get("location")
     if location and location not in pii_values:
         entities += _occurrences(text, location, should_redact=False, required=False)
@@ -53,75 +54,119 @@ def _occurrences(text: str, value: str, should_redact: bool, required: bool = Tr
     return found
 
 
-def metrics(tp, fp, fn, tn):
-    def div(a, b):
-        return a / b if b else None
-    return {"TP": tp, "FP": fp, "FN": fn, "TN": tn,
-            "accuracy": div(tp + tn, tp + fp + fn + tn),
-            "precision": div(tp, tp + fp), "recall": div(tp, tp + fn),
-            "f1": div(2 * tp, 2 * tp + fp + fn)}
+def _ratio(numerator: int, denominator: int) -> float | None:
+    return numerator / denominator if denominator else None
 
 
-def evaluate(records: list[dict], anonymizer: Anonymizer, classifier: RelevanceClassifier) -> dict:
+@dataclass
+class ConfusionMatrix:
+    true_positives: int = 0
+    false_positives: int = 0
+    false_negatives: int = 0
+    true_negatives: int = 0
+
+    def add(self, predicted: bool, actual: bool) -> None:
+        if actual:
+            if predicted:
+                self.true_positives += 1
+            else:
+                self.false_negatives += 1
+        elif predicted:
+            self.false_positives += 1
+        else:
+            self.true_negatives += 1
+
+    @property
+    def total(self) -> int:
+        return self.true_positives + self.false_positives + self.false_negatives + self.true_negatives
+
+    def metrics(self) -> dict:
+        tp, fp, fn, tn = self.true_positives, self.false_positives, self.false_negatives, self.true_negatives
+        return {"TP": tp, "FP": fp, "FN": fn, "TN": tn,
+                "accuracy": _ratio(tp + tn, self.total),
+                "precision": _ratio(tp, tp + fp),
+                "recall": _ratio(tp, tp + fn),
+                "f1": _ratio(2 * tp, 2 * tp + fp + fn)}
+
+
+def _overlaps(start: int, end: int, other: dict) -> bool:
+    return other["start"] < end and start < other["end"]
+
+
+def _validate_entity(text: str, entity: dict, record_id) -> None:
+    start, end = entity["start"], entity["end"]
+    if not 0 <= start < end <= len(text) or text[start:end] != entity["text"]:
+        raise ValueError(f"Invalid gold offset in record {record_id}")
+
+
+def _score_entities(text: str, entities: list[dict], redactions: list[dict],
+                    pii: ConfusionMatrix, record_id) -> None:
     """Anonymization decision units are annotated entities:
     TP = private entity fully covered, FN = private entity not fully covered,
     FP = safe entity touched by a redaction, TN = safe entity untouched.
     """
+    for entity in entities:
+        _validate_entity(text, entity, record_id)
+        start, end = entity["start"], entity["end"]
+        touched = any(_overlaps(start, end, span) for span in redactions)
+        fully_covered = all(any(span["start"] <= position < span["end"] for span in redactions)
+                            for position in range(start, end))
+        # A private entity only counts as redacted when fully covered; partial masking is a miss.
+        redacted = fully_covered if entity["should_redact"] else touched
+        pii.add(predicted=redacted, actual=entity["should_redact"])
+
+
+def _redactions_outside(entities: list[dict], redactions: list[dict]) -> int:
+    """Redactions that touch no annotated entity (unlabeled PII, or over-masking)."""
+    return sum(not any(_overlaps(entity["start"], entity["end"], span) for entity in entities)
+               for span in redactions)
+
+
+def evaluate(records: list[dict], anonymizer: Anonymizer, classifier: RelevanceClassifier) -> dict:
     outputs = []
-    pii = [0, 0, 0, 0]
-    relevance = [0, 0, 0, 0]
-    full = total = preserved = safe = extra = 0
-    labeled = 0
-    for i, record in enumerate(records):
+    pii = ConfusionMatrix()
+    relevance = ConfusionMatrix()
+    redactions_outside_annotations = 0
+    for index, record in enumerate(records):
+        record_id = record.get("id", index)
         text = record["text"]  # Gold offsets refer to text, never translation_en.
+        entities = record.get("entities", [])
         anonymized = anonymizer.anonymize(text)
-        output = {**anonymized, "classification": classifier.classify(anonymized["text"])}
-        outputs.append({"id": record.get("id", i), **output})
-        spans = output["redactions"]
-        for entity in record.get("entities", []):
-            a, b = entity["start"], entity["end"]
-            if not 0 <= a < b <= len(text) or text[a:b] != entity["text"]:
-                raise ValueError("Invalid gold offset in record %s" % record.get("id", i))
-            overlap = any(s["start"] < b and a < s["end"] for s in spans)
-            covered = all(any(s["start"] <= pos < s["end"] for s in spans) for pos in range(a, b))
-            redact = entity["should_redact"]
-            # Positive requires complete coverage; partial PII masking is a miss.
-            index = (0 if covered else 2) if redact else (1 if overlap else 3)
-            pii[index] += 1
-            if redact:
-                total += 1
-                full += covered
-            else:
-                safe += 1
-                preserved += not overlap
-        extra += sum(not any(s["start"] < e["end"] and e["start"] < s["end"]
-                             for e in record.get("entities", [])) for s in spans)
+        classification = classifier.classify(anonymized["text"])
+        outputs.append({"id": record_id, **anonymized, "classification": classification})
+
+        _score_entities(text, entities, anonymized["redactions"], pii, record_id)
+        redactions_outside_annotations += _redactions_outside(entities, anonymized["redactions"])
+
         gold = record.get("relevance")
         if gold is not None:
-            if gold not in ("relevant", "irrelevant"):
-                raise ValueError("relevance must be relevant or irrelevant")
-            labeled += 1
-            predicted = output["classification"]["label"] == "relevant"
-            actual = gold == "relevant"
-            relevance[(0 if predicted else 2) if actual else (1 if predicted else 3)] += 1
+            if gold not in (RELEVANT, IRRELEVANT):
+                raise ValueError(f"relevance must be {RELEVANT} or {IRRELEVANT}")
+            relevance.add(predicted=classification["label"] == RELEVANT, actual=gold == RELEVANT)
+
     return {"records": outputs, "metrics": {
-        "anonymization_annotated_entities": metrics(*pii),
-        "fully_redacted_pii": full, "total_pii": total,
-        "preserved_safe_entities": preserved, "total_safe_entities": safe,
-        "redactions_outside_annotations": extra,
-        "classification": metrics(*relevance) if labeled else None,
-        "classification_labeled_records": labeled}}
+        "anonymization_annotated_entities": pii.metrics(),
+        "fully_redacted_pii": pii.true_positives,
+        "total_pii": pii.true_positives + pii.false_negatives,
+        "preserved_safe_entities": pii.true_negatives,
+        "total_safe_entities": pii.false_positives + pii.true_negatives,
+        "redactions_outside_annotations": redactions_outside_annotations,
+        "classification": relevance.metrics() if relevance.total else None,
+        "classification_labeled_records": relevance.total}}
 
 
-if __name__ == "__main__":
+def main() -> None:
     anonymizer = Anonymizer(public_entities=PUBLIC_ENTITIES)
     classifier = RelevanceClassifier()
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for name, path in DATASETS.items():
         report = evaluate(load_records(path), anonymizer, classifier)
         report["dataset"] = str(path)
         report["models"] = {"ner": NER_MODEL, "classification": CLASSIFIER_MODEL}
-        out = OUTPUT_DIR / f"baseline_{name}.json"
-        out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"== {name} ({path}) -> {out}")
-        print(json.dumps(report["metrics"], indent=2))
+        output_path = OUTPUT_DIR / f"baseline_{name}.json"
+        write_json(output_path, report)
+        print(f"== {name} ({path}) -> {output_path}")
+        print(json.dumps(report["metrics"], indent=JSON_INDENT))
+
+
+if __name__ == "__main__":
+    main()

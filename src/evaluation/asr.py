@@ -17,6 +17,7 @@ import torch
 from datasets import Audio, load_dataset
 from jiwer import cer, wer
 
+from src.config import OUTPUT_DIR
 from src.transcribe import Transcriber
 
 DATASET = "benjaminogbonna/nigerian_accented_english_dataset"
@@ -40,7 +41,13 @@ LOCAL_CLIPS = {
         "and then we had the quiz i was tweaking out",
 }
 
-OUTPUT = Path("output/asr_comparison.csv")
+OUTPUT = OUTPUT_DIR / "asr_comparison.csv"
+
+# Score table layout
+MODEL_COLUMN_WIDTH = 34
+SET_COLUMN_WIDTH = 9
+NUMBER_COLUMN_WIDTH = 6
+SCORE_DECIMALS = 3
 
 
 def normalize(text: str) -> str:
@@ -65,27 +72,29 @@ def load_clips(num_clips: int = NUM_CLIPS) -> list[dict]:
 
 def score(rows: list[dict]) -> dict:
     """WER/CER over the rows that have a reference transcript."""
-    scored = [r for r in rows if r["reference"]]
+    scored = [row for row in rows if row["reference"]]
     if not scored:
         return {"scored": 0, "wer": None, "wer_normalized": None, "cer_normalized": None}
-    refs = [r["reference"] for r in scored]
-    preds = [r["prediction"] for r in scored]
+    references = [row["reference"] for row in scored]
+    predictions = [row["prediction"] for row in scored]
+    normalized_references = [normalize(text) for text in references]
+    normalized_predictions = [normalize(text) for text in predictions]
     return {
         "scored": len(scored),
-        "wer": wer(refs, preds),
-        "wer_normalized": wer([normalize(t) for t in refs], [normalize(t) for t in preds]),
-        "cer_normalized": cer([normalize(t) for t in refs], [normalize(t) for t in preds]),
+        "wer": wer(references, predictions),
+        "wer_normalized": wer(normalized_references, normalized_predictions),
+        "cer_normalized": cer(normalized_references, normalized_predictions),
     }
 
 
 def evaluate(transcriber: Transcriber, clips: list[dict]) -> dict:
     rows = []
-    for i, clip in enumerate(clips, start=1):
-        print(f"  {transcriber.model}: clip {i}/{len(clips)}", flush=True)
+    for clip_number, clip in enumerate(clips, start=1):
+        print(f"  {transcriber.model}: clip {clip_number}/{len(clips)}", flush=True)
         rows.append({**clip, "prediction": transcriber(clip["audio"])})
-    sets = sorted({r["set"] for r in rows})
+    clip_sets = sorted({row["set"] for row in rows})
     return {"model": transcriber.model, "rows": rows,
-            "scores": {s: score([r for r in rows if r["set"] == s]) for s in sets}}
+            "scores": {clip_set: score([row for row in rows if row["set"] == clip_set]) for clip_set in clip_sets}}
 
 
 def free_memory() -> None:
@@ -96,7 +105,36 @@ def free_memory() -> None:
         torch.mps.empty_cache()
 
 
-if __name__ == "__main__":
+def _format_score(value: float | None) -> str:
+    return "-" if value is None else f"{value:.{SCORE_DECIMALS}f}"
+
+
+def _table_row(model: str, clip_set: str, *numbers: str) -> str:
+    cells = [f"{model:<{MODEL_COLUMN_WIDTH}}", f"{clip_set:<{SET_COLUMN_WIDTH}}"]
+    cells += [f"{number:>{NUMBER_COLUMN_WIDTH}}" for number in numbers]
+    return " ".join(cells)
+
+
+def print_scores(results: list[dict]) -> None:
+    print("\n" + _table_row("model", "set", "scored", "WER", "WER*", "CER*") + "   (* = ignoring case/punctuation)")
+    for result in results:
+        for clip_set, scores in result["scores"].items():
+            print(_table_row(result["model"], clip_set, str(scores["scored"]), _format_score(scores["wer"]),
+                             _format_score(scores["wer_normalized"]), _format_score(scores["cer_normalized"])))
+
+
+def write_transcripts(clips: list[dict], results: list[dict]) -> None:
+    """One CSV row per clip, with every model's transcript side by side."""
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    with open(OUTPUT, "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["set", "clip", "reference"] + [f"{result['model']} transcript" for result in results])
+        for clip_index, clip in enumerate(clips):
+            transcripts = [result["rows"][clip_index]["prediction"] for result in results]
+            writer.writerow([clip["set"], clip["clip"], clip["reference"]] + transcripts)
+
+
+def main() -> None:
     clips = load_clips()
     results = []
     for model in MODELS:
@@ -104,20 +142,10 @@ if __name__ == "__main__":
         results.append(evaluate(transcriber, clips))
         del transcriber  # one model in memory at a time
         free_memory()
-
-    def fmt(value):
-        return "-" if value is None else f"{value:.3f}"
-
-    print(f"\n{'model':<34} {'set':<9} {'scored':>6} {'WER':>6} {'WER*':>6} {'CER*':>6}   (* = ignoring case/punctuation)")
-    for result in results:
-        for clip_set, s in result["scores"].items():
-            print(f"{result['model']:<34} {clip_set:<9} {s['scored']:>6} {fmt(s['wer']):>6} "
-                  f"{fmt(s['wer_normalized']):>6} {fmt(s['cer_normalized']):>6}")
-
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(["set", "clip", "reference"] + [f"{r['model']} transcript" for r in results])
-        for i, clip in enumerate(clips):
-            writer.writerow([clip["set"], clip["clip"], clip["reference"]] + [r["rows"][i]["prediction"] for r in results])
+    print_scores(results)
+    write_transcripts(clips, results)
     print(f"\nSaved transcripts: {OUTPUT}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,17 +1,9 @@
-[11/4/26, 3:52:40 PM] dandelion africa: ‎Messages and calls are end-to-end encrypted. Only people in this chat can read, listen to, or share them.
-[11/4/26, 3:52:40 PM] ~ priyanka ganguly: ‎~ priyanka ganguly created group “oana”
-[11/4/26, 3:52:41 PM] dandelion africa: ‎~ priyanka ganguly added you
 [11/4/26, 3:52:45 PM] ~ priyanka ganguly: hello
 [11/4/26, 3:52:52 PM] Oliver Ortiz: hi
-[11/4/26, 3:52:53 PM] ~ Risha Desai: 💀💀💀
-[11/4/26, 3:53:00 PM] ~ priyanka ganguly: ‎~ priyanka ganguly changed the group name to “moana”
 [11/4/26, 3:53:04 PM] ~ priyanka ganguly: i love ai
-[11/4/26, 3:53:29 PM] ~ priyanka ganguly: ‎This message was deleted.
 [11/4/26, 3:54:37 PM] ~ priyanka ganguly: this is our sample test data
 [11/4/26, 3:54:37 PM] ~ Risha Desai: Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up.
 [11/4/26, 3:54:49 PM] ~ priyanka ganguly: how did it go?
-[11/4/26, 3:56:59 PM] dandelion africa: ‎You changed the group name to “dandelion”
-[11/4/26, 3:57:00 PM] ~ priyanka ganguly: ‎~ priyanka ganguly changed the group name to “dandelion africa”
 [11/4/26, 3:57:33 PM] ~ Risha Desai: It went well! We had 31 women attend and 4 were referred to the clinic for follow-up.
 [11/4/26, 3:57:39 PM] ~ priyanka ganguly: nice, were there any issues during the outreach?
 [11/4/26, 3:57:43 PM] ~ Risha Desai: Nothing major, but a few people came late and we’re still waiting on one follow-up form.
@@ -76,9 +68,7 @@
 [11/4/26, 4:03:47 PM] Oliver Ortiz: yes one more msg says “household visits done, 20+ women reached and 3 need follow up in Kapkures”
 [11/4/26, 4:03:49 PM] ~ Risha Desai: sounds same event but numbers little different
 [11/4/26, 4:03:50 PM] ~ priyanka ganguly: yeah maybe duplicate but not exact
-[11/4/26, 4:03:54 PM] ~ Prableen: we should test if system merges or flags it
 [11/4/26, 4:03:57 PM] Oliver Ortiz: agree
-[11/4/26, 4:04:00 PM] ~ Risha Desai: also btw who is uploading this data to github later
 [11/4/26, 4:04:46 PM] ~ Risha Desai: yall think we're gonna get the midterm back soon🙁
 [11/4/26, 4:04:51 PM] ~ Risha Desai: lowkey i was losing sleep for it
 ‎[11/4/26, 4:05:11 PM] ~ priyanka ganguly: ‎<attached: 00003084-AUDIO-2026-11-04-16-05-11.opus>

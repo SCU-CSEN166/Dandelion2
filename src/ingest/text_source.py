@@ -25,8 +25,9 @@ class TextSource(Source):
     def load(self, path: Path) -> list[Message]:
         path = Path(path)
         text = path.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
-        chunks = [c.strip() for c in text.split(self.separator)]
+        chunks = [chunk.strip() for chunk in text.split(self.separator)]
+        non_empty = [chunk for chunk in chunks if chunk]
         return [
-            Message(id=f"{self.name}:{path.stem}:{i}", source=self.name, text=chunk, conversation=path.stem)
-            for i, chunk in enumerate(c for c in chunks if c)
+            Message(id=f"{self.name}:{path.stem}:{index}", source=self.name, text=chunk, conversation=path.stem)
+            for index, chunk in enumerate(non_empty)
         ]

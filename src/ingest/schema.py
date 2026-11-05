@@ -20,8 +20,8 @@ _EXTENSIONS: dict[AttachmentKind, set[str]] = {
 
 
 def kind_from_filename(filename: str) -> AttachmentKind:
-    ext = filename.rsplit(".", 1)[-1].lower()
-    return next((kind for kind, exts in _EXTENSIONS.items() if ext in exts), "other")
+    extension = filename.rsplit(".", 1)[-1].lower()
+    return next((kind for kind, extensions in _EXTENSIONS.items() if extension in extensions), "other")
 
 
 @dataclass
@@ -53,22 +53,26 @@ class Message:
 
     @property
     def audio(self) -> list[Attachment]:
-        return [a for a in self.attachments if a.kind == "audio"]
+        return [attachment for attachment in self.attachments if attachment.kind == "audio"]
 
     @property
     def full_text(self) -> str:
         """Typed text plus any audio transcripts: what later steps should read."""
-        parts = [self.text] + [a.transcript for a in self.audio if a.transcript]
-        return "\n".join(p for p in parts if p)
+        parts = [self.text] + [attachment.transcript for attachment in self.audio]
+        return "\n".join(part for part in parts if part)
+
+    @property
+    def iso_timestamp(self) -> str | None:
+        return self.timestamp.isoformat() if self.timestamp else None
 
     def to_dict(self) -> dict[str, Any]:
-        d = asdict(self)
-        d["timestamp"] = self.timestamp.isoformat() if self.timestamp else None
-        return d
+        record = asdict(self)
+        record["timestamp"] = self.iso_timestamp
+        return record
 
     @classmethod
-    def from_dict(cls, d: dict[str, Any]) -> "Message":
-        d = dict(d)
-        d["timestamp"] = datetime.fromisoformat(d["timestamp"]) if d.get("timestamp") else None
-        d["attachments"] = [Attachment(**a) for a in d.get("attachments", [])]
-        return cls(**d)
+    def from_dict(cls, record: dict[str, Any]) -> "Message":
+        record = dict(record)
+        record["timestamp"] = datetime.fromisoformat(record["timestamp"]) if record.get("timestamp") else None
+        record["attachments"] = [Attachment(**attachment) for attachment in record.get("attachments", [])]
+        return cls(**record)
