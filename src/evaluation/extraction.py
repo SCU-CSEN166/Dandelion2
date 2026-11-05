@@ -1,85 +1,51 @@
-"""Score extracted activity fields against data/whatsapp_labels.json.
+"""Evaluate activity-field extraction (numind/NuExtract-2.0-2B) against labeled messages.
 
-    uv run -m src.evaluation.extraction
+    uv run -m src.evaluation.extraction data/whatsapp_labels.json
 
-The labels annotate the WhatsAppExports/export2 chat, so that chat is parsed and
-anonymized exactly as in the pipeline, and each labeled message (matched by line
-number) is extracted with its preceding messages as context. The relevance step is
-skipped so extraction is scored on its own. Per-record outputs and per-field
-accuracy are written to OUTPUT.
+Not from an earlier commit: written in the same style as anonymization.py and
+classification.py. Test data: Risha's data/whatsapp_labels.json, which labels status,
+activity_type, location, participant_count and referrals for each message.
 
-Scoring per field (null must match null):
-    status             exact; a null prediction counts as "neither"
-    activity_type      lenient: every word of the predicted category appears in the
-                       gold label ("savings group meeting" ~ "women's savings group meeting")
-    location           exact, case-insensitive. Anonymization masks private places, so
-                       location_detected also reports whether any location was found.
-    participant_count, referrals   exact
+Each labeled message's text is extracted on its own: no earlier messages as context
+and no anonymization, so this measures the model alone. A field counts as correct
+only when the extracted value equals the label exactly (null must match null).
 """
-
+import argparse
 import json
+from pathlib import Path
 
-from src.anonymize import Anonymizer, anonymize
-from src.config import LABELED_CHAT, OUTPUT_DIR, PUBLIC_ENTITIES, WHATSAPP_LABELS
-from src.extract import CONTEXT_MESSAGES, EXTRACTION_MODEL, NEEDS_REVIEW, Extractor, context_for
-from src.ingest import Message, load
-from src.utils import JSON_INDENT, write_json
-
-OUTPUT = OUTPUT_DIR / "extraction_whatsapp_labels.json"
-NO_STATUS = "neither"  # gold label for messages that are neither completed nor planned
-LOCATION_DETECTED = "location_detected"
+from src.extract import EXTRACTION_MODEL, Extractor
 
 
-def field_correct(field: str, predicted, gold) -> bool:
-    if field == "status":
-        return (predicted or NO_STATUS) == gold
-    if predicted is None or gold is None:
-        return predicted is None and gold is None
-    if field == "activity_type":
-        predicted_words = set(predicted.casefold().split())
-        gold_words = set(gold.casefold().replace("'s", "").split())  # "women's" -> "women"
-        return predicted_words <= gold_words
-    if field == "location":
-        return predicted.casefold() == gold.casefold()
-    return predicted == gold
-
-
-def evaluate(labels: list[dict], messages: list[Message], extractor: Extractor,
-             context_size: int = CONTEXT_MESSAGES) -> dict:
-    """messages: the anonymized chat the labels refer to, in order."""
-    index_by_line = {message.metadata["line"]: index for index, message in enumerate(messages)}
-    fields = list(extractor.template)
-    correct_counts = dict.fromkeys(fields + [LOCATION_DETECTED], 0)
+def evaluate(records, extractor):
     outputs = []
-    for label in labels:
-        index = index_by_line[label["source_line"]]
-        text = messages[index].anonymized_text
-        predicted = extractor.extract(text, context_for(messages, index, context_size))
-        outputs.append({"id": label["message_id"], "text": text, "predicted": predicted,
-                        "gold": {field: label[field] for field in fields}})
+    fields = list(extractor.template)
+    correct = dict.fromkeys(fields, 0)
+    for i, record in enumerate(records):
+        predicted = extractor.extract(record['text'])
+        expected = {field: record[field] for field in fields}
+        outputs.append({'id': record.get('message_id', i), 'predicted': predicted, 'expected': expected})
         for field in fields:
-            correct_counts[field] += field_correct(field, predicted[field], label[field])
-        correct_counts[LOCATION_DETECTED] += (predicted["location"] is None) == (label["location"] is None)
-
-    total = len(labels)
-    return {"records": outputs, "metrics": {
-        "records": total,
-        "context_messages": context_size,
-        "accuracy": {field: count / total if total else None for field, count in correct_counts.items()},
-        NEEDS_REVIEW: sum(bool(output["predicted"][NEEDS_REVIEW]) for output in outputs)}}
+            correct[field] += predicted[field] == expected[field]
+    total = len(records)
+    return {'records': outputs, 'metrics': {
+        'records': total,
+        'accuracy': {field: correct[field] / total if total else None for field in fields}}}
 
 
-def main() -> None:
-    labels = json.loads(WHATSAPP_LABELS.read_text(encoding="utf-8"))
-    messages = [message for message in load(LABELED_CHAT) if not message.is_system]
-    anonymize(messages, Anonymizer(public_entities=PUBLIC_ENTITIES))
-    report = evaluate(labels, messages, Extractor())
-    report["dataset"] = str(WHATSAPP_LABELS)
-    report["model"] = EXTRACTION_MODEL
-    write_json(OUTPUT, report)
-    print(f"{EXTRACTION_MODEL} on {WHATSAPP_LABELS} -> {OUTPUT}")
-    print(json.dumps(report["metrics"], indent=JSON_INDENT))
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('input', type=Path)
+    parser.add_argument('--output', type=Path, default=Path('output/evaluations/extraction.json'))
+    args = parser.parse_args()
+    records = json.loads(args.input.read_text(encoding='utf-8'))
+    result = evaluate(records, Extractor())
+    report = {'models': {'extraction': EXTRACTION_MODEL}, 'dataset': str(args.input),
+              'metrics': result['metrics'], 'records': result['records']}
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    print(json.dumps(report['metrics'], indent=2))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

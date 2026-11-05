@@ -1,6 +1,5 @@
 import json
 import unittest
-from src.evaluation.extraction import field_correct
 from src.extract import Extractor, extract
 from src.ingest import Message
 
@@ -42,13 +41,6 @@ class ExtractTests(unittest.TestCase):
     def test_extract_requires_anonymize(self):
         with self.assertRaises(ValueError):
             extract([Message(id='1', source='t', text='31 women')], fake_extractor({}))
-
-    def test_scoring(self):
-        self.assertTrue(field_correct('status', None, 'neither'))
-        self.assertTrue(field_correct('activity_type', 'savings group meeting', "women's savings group meeting"))
-        self.assertFalse(field_correct('activity_type', 'youth health session', 'family planning outreach'))
-        self.assertTrue(field_correct('location', 'nakuru', 'Nakuru'))
-        self.assertFalse(field_correct('referrals', None, 4))
 
 
 if __name__ == '__main__':

@@ -1,7 +1,9 @@
 import unittest
+from pathlib import Path
 
 from src.anonymize import Anonymizer, anonymize
-from src.evaluation.baseline import DATASETS, ConfusionMatrix, evaluate, from_whatsapp_label, load_records
+from src.evaluation import anonymization, classification
+from src.evaluation.anonymization import from_whatsapp_label, load_records, metrics
 from src.ingest import Message
 from src.relevance import IRRELEVANT_HYPOTHESIS, RELEVANT_HYPOTHESIS, RelevanceClassifier, classify
 
@@ -59,9 +61,10 @@ class BaselineTests(unittest.TestCase):
 
     def test_partial_mask_is_miss(self):
         records = [{'text':'Grace Wanjiku', 'entities':[{'text':'Grace Wanjiku','start':0,'end':13,'should_redact':True}]}]
-        result = evaluate(records, fake_anonymizer([{'entity_group':'PER','start':0,'end':3}]), fake_classifier())['metrics']
+        anonymizer = fake_anonymizer([{'entity_group':'PER','start':0,'end':3}])
+        result = anonymization.evaluate(records, anonymizer)['metrics']
         self.assertEqual(result['anonymization_annotated_entities']['FN'], 1)
-        self.assertIsNone(result['classification'])
+        self.assertIsNone(classification.evaluate(records, anonymizer, fake_classifier())['metrics']['classification'])
 
     def test_subword_suffix_is_masked(self):
         anonymizer = fake_anonymizer([{'entity_group':'PER','start':0,'end':3}])
@@ -69,7 +72,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_empty(self):
         self.assertEqual(fake_classifier().classify('')['label'], 'irrelevant')
-        self.assertIsNone(ConfusionMatrix().metrics()['recall'])
+        self.assertIsNone(metrics(0,0,0,0)['recall'])
 
     def test_senders_pseudonymized_and_masked_in_text(self):
         messages = [Message(id='1', source='test', sender='Grace Wanjiru', text='hello'),
@@ -88,7 +91,7 @@ class BaselineTests(unittest.TestCase):
                          [(0, True), (18, True), (10, False)])
 
     def test_dataset_offsets(self):
-        for path in DATASETS.values():
+        for path in [Path('Archive/synthetic_unanonymized.json'), Path('data/whatsapp_labels.json')]:
             for record in load_records(path):
                 for entity in record['entities']:
                     self.assertEqual(record['text'][entity['start']:entity['end']], entity['text'])

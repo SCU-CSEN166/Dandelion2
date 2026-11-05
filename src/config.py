@@ -7,7 +7,3 @@ from pathlib import Path
 PUBLIC_ENTITIES: list[str] = []
 
 OUTPUT_DIR = Path("output")
-
-# The WhatsApp group chat with hand labels, and the labels themselves.
-LABELED_CHAT = Path("WhatsAppExports/export2")
-WHATSAPP_LABELS = Path("data/whatsapp_labels.json")
