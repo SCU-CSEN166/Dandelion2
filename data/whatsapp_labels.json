@@ -1,0 +1,96 @@
+[
+  {
+    "message_id": "msg_001",
+    "source_line": 11,
+    "speaker": "Risha Desai",
+    "text": "Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up.",
+    "relevance": "relevant",
+    "status": "completed",
+    "activity_type": "family planning outreach",
+    "location": "Nakuru",
+    "participant_count": 31,
+    "referrals": 4,
+    "contains_pii": false,
+    "pii": [],
+    "event_id": "event_001",
+    "duplicate_of": null
+  },
+  {
+    "message_id": "msg_002",
+    "source_line": 12,
+    "speaker": "priyanka ganguly",
+    "text": "how did it go?",
+    "relevance": "irrelevant",
+    "status": "neither",
+    "activity_type": null,
+    "location": null,
+    "participant_count": null,
+    "referrals": null,
+    "contains_pii": false,
+    "pii": [],
+    "event_id": null,
+    "duplicate_of": null
+  },
+  {
+    "message_id": "msg_003",
+    "source_line": 15,
+    "speaker": "Risha Desai",
+    "text": "It went well! We had 31 women attend and 4 were referred to the clinic for follow-up.",
+    "relevance": "relevant",
+    "status": "completed",
+    "activity_type": "family planning outreach",
+    "location": null,
+    "participant_count": 31,
+    "referrals": 4,
+    "contains_pii": false,
+    "pii": [],
+    "event_id": "event_001",
+    "duplicate_of": "msg_001"
+  },
+  {
+    "message_id": "msg_004",
+    "source_line": 17,
+    "speaker": "Risha Desai",
+    "text": "Nothing major, but a few people came late and we’re still waiting on one follow-up form.",
+    "relevance": "relevant",
+    "status": "completed",
+    "activity_type": null,
+    "location": null,
+    "participant_count": null,
+    "referrals": null,
+    "contains_pii": false,
+    "pii": [],
+    "event_id": "event_001",
+    "duplicate_of": null
+  },
+  {
+    "message_id": "msg_005",
+    "source_line": 19,
+    "speaker": "Risha Desai",
+    "text": "Grace Wanjiru is handling them. Her number is 0712 345 678 if the clinic needs to reach her.",
+    "relevance": "relevant",
+    "status": "completed",
+    "activity_type": null,
+    "location": null,
+    "participant_count": null,
+    "referrals": null,
+    "contains_pii": true,
+    "pii": [
+      {
+        "type": "PERSON",
+        "value": "Grace Wanjiru"
+      },
+      {
+        "type": "PHONE",
+        "value": "0712 345 678"
+      }
+    ],
+    "event_id": "event_001",
+    "duplicate_of": null
+  },
+  {
+    "message_id": "msg_006",
+    "source_line": 21,
+    "speaker": "Risha Desai",
+    "text": "We’re planning another youth health session on Friday morning. We’re expecting around 25–30 students but the final number isn’t confirmed yet.",
+    "relevance": "relevant",
