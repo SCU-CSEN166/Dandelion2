@@ -129,7 +129,6 @@ End Considerations
 ### Attempts and outcomes
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
 |---|---|---|---|
-| [Attempt] | [Status] | [Evidence] | [Learning] |
 | Trying to do PII anonymization on the 31 message set we have from WhatsApp | Yes | TP 11, FP 0, FN 1, Precision 1.00, Recall 0.9167, F1 0.9565 | performed decently but one PII section was missed |
 | Classifying relevance on 31 already labeled messages | Partly | Accuracy 0.7097, Precision 0.9091, Recall 0.7407, F1 0.8163 | The precision was high so this is good but some relevant messages were missed | 
 
