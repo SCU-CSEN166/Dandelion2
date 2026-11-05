@@ -91,7 +91,7 @@ class BaselineTests(unittest.TestCase):
                          [(0, True), (18, True), (10, False)])
 
     def test_dataset_offsets(self):
-        for path in [Path('Archive/synthetic_unanonymized.json'), Path('data/whatsapp_labels.json')]:
+        for path in [Path('data/synthetic_unanonymized.json'), Path('data/whatsapp_labels.json')]:
             for record in load_records(path):
                 for entity in record['entities']:
                     self.assertEqual(record['text'][entity['start']:entity['end']], entity['text'])

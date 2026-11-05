@@ -1,7 +1,7 @@
 """Turn any supported input into a list of `Message` records.
 
     from src.ingest import load
-    messages = load("WhatsAppExports/export.zip")
+    messages = load("data/WhatsAppExports/export.zip")
     records = [message.to_dict() for message in messages]
 """
 

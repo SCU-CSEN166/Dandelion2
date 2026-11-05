@@ -1,13 +1,17 @@
-"""Compare Distil-Whisper and Whisper Small on our own WhatsApp voice notes (WER and CER).
+"""Compare Distil-Whisper and Whisper Small on recorded speech (WER and CER).
 
     uv run -m src.evaluation.transcription
+    uv run -m src.evaluation.transcription --audio-dir data/nigerian_accented --ground-truth data/nigerian_accented/ground_truth.json --output output/evaluations/transcription_accented.json
 
-Original: Priyanka's `audiotranscription` Colab notebook (commit 280f0a0). Test data:
-the voice notes in WhatsAppExports/export2, with Risha's reference transcripts from
-data/audio_ground_truth.json. Every change from the original is marked ADAPTED.
+Original: Priyanka's `audiotranscription` Colab notebook (commit 280f0a0). Default test
+data: the voice notes in data/WhatsAppExports/export2, with Risha's reference transcripts
+from data/audio_ground_truth.json. Second test set: 10 Nigerian-accented English clips in
+data/nigerian_accented (saved by data/nigerian_accented/download.py).
+Every change from the original is marked ADAPTED.
 """
 # ADAPTED: removed Colab-only setup (`!apt-get -qq install -y ffmpeg`, `!pip install -q jiwer`,
 # `from google.colab import files`); ffmpeg must be installed, and jiwer is a project dependency.
+import argparse
 import json
 import tempfile
 from pathlib import Path
@@ -18,10 +22,16 @@ import subprocess
 import torch
 import gc
 
-# ADAPTED: was `uploaded = files.upload()`; the recordings are now the ones listed in
-# data/audio_ground_truth.json that exist in WhatsAppExports/export2.
-audio_dir = Path("WhatsAppExports/export2")
-ground_truth = json.loads(Path("data/audio_ground_truth.json").read_text(encoding="utf-8"))
+# ADAPTED: was `uploaded = files.upload()`; the recordings are now the ones listed in a
+# ground-truth file that exist in an audio folder (by default, our WhatsApp voice notes).
+parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("--audio-dir", type=Path, default=Path("data/WhatsAppExports/export2"))
+parser.add_argument("--ground-truth", type=Path, default=Path("data/audio_ground_truth.json"))
+parser.add_argument("--output", type=Path, default=Path("output/evaluations/transcription.json"))
+args = parser.parse_args()
+
+audio_dir = args.audio_dir
+ground_truth = json.loads(args.ground_truth.read_text(encoding="utf-8"))
 for entry in ground_truth:
     if not (audio_dir / entry["file"]).is_file():
         print(f"Skipping {entry['file']}: not in {audio_dir}")
@@ -60,6 +70,7 @@ for model_id in model_ids:
     asr = pipeline(
         "automatic-speech-recognition",
         model=model_id,
+        chunk_length_s=15,  # ADAPTED: added, as in src/transcribe.py; clips over 30 s fail without it
         device=device,
     )
 
@@ -107,7 +118,7 @@ else:
 # only exists in notebooks); now JSON like the other evaluations, with the scores first.
 report = {
     "models": model_ids,
-    "dataset": "data/audio_ground_truth.json",
+    "dataset": args.ground_truth.as_posix(),
     "metrics": {"recordings_scored": len(scored), **scores},
     "records": [
         {"filename": filename, "reference_transcript": reference,
@@ -116,7 +127,7 @@ report = {
     ],
 }
 
-output = Path("output/evaluations/transcription.json")
+output = args.output
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 print(f"\nSaved: {output}")

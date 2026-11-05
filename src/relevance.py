@@ -6,7 +6,7 @@ From Prableen's Week 6 baseline. Runs on anonymized text only.
 from functools import cached_property
 
 from .ingest import Message
-from .utils import require_anonymized
+from .utils import require_anonymized, torch_device
 
 CLASSIFIER_MODEL = "facebook/bart-large-mnli"
 
@@ -43,7 +43,7 @@ class RelevanceClassifier:
         if self._classifier is not None:
             return self._classifier
         from transformers import pipeline
-        return pipeline("zero-shot-classification", model=CLASSIFIER_MODEL, device="cpu")
+        return pipeline("zero-shot-classification", model=CLASSIFIER_MODEL, device=torch_device(allow_mps=False))
 
     def _relevant_score(self, text: str) -> float:
         result = self.classifier(text, candidate_labels=[RELEVANT_HYPOTHESIS, IRRELEVANT_HYPOTHESIS],

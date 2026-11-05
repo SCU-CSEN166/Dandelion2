@@ -8,6 +8,7 @@ import re
 from functools import cached_property
 
 from .ingest import Message
+from .utils import torch_device
 
 NER_MODEL = "dslim/bert-base-NER"
 NER_STRIDE_TOKENS = 64  # overlap between windows when a message exceeds BERT's input length
@@ -73,7 +74,7 @@ class Anonymizer:
             return self._ner
         from transformers import pipeline
         return pipeline("token-classification", model=NER_MODEL,
-                        aggregation_strategy="simple", stride=NER_STRIDE_TOKENS, device="cpu")
+                        aggregation_strategy="simple", stride=NER_STRIDE_TOKENS, device=torch_device(allow_mps=False))
 
     def _is_public(self, surface_text: str) -> bool:
         return surface_text.casefold() in self.public_entities

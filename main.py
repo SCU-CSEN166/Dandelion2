@@ -2,6 +2,12 @@
 
     uv run main.py
 
+Or run the whole pipeline on one message instead of INPUTS (prints the result and
+writes no files):
+
+    uv run main.py --message "Today we held a youth health session with 20 girls"
+    uv run main.py --audio data/WhatsAppExports/export2/00003084-AUDIO-2026-11-04-16-05-11.opus
+
 Steps:
     1) Parse input (WhatsApp export, JSON/JSONL, plain text)  -> src.ingest
     2) Transcribe audio attachments                           -> src.transcribe
@@ -12,17 +18,21 @@ Steps:
 Settings shared with the evaluation scripts (e.g. PUBLIC_ENTITIES) live in src/config.py.
 """
 
+import argparse
+import json
+from pathlib import Path
+
 from src.anonymize import Anonymizer, anonymize
 from src.config import OUTPUT_DIR, PUBLIC_ENTITIES
 from src.extract import extract
-from src.ingest import Message, load
+from src.ingest import Attachment, Message, load
 from src.relevance import classify
 from src.transcribe import transcribe
 from src.utils import write_json
 
 # Any mix of WhatsApp exports (.zip/.txt/folder), .json/.jsonl, or plain .txt
 INPUTS = [
-    "WhatsAppExports/export2",
+    "data/WhatsAppExports/export2",
 ]
 MESSAGES_OUTPUT = OUTPUT_DIR / "messages.json"  # every message, processed and anonymized
 REPORTS_OUTPUT = OUTPUT_DIR / "reports.json"    # only relevant messages, with extracted fields
@@ -79,18 +89,41 @@ def report(message: Message) -> dict:
     }
 
 
+def single_message(text: str, audio_path: str | None) -> Message:
+    """A Message built from the command line, as if it came from a chat."""
+    attachments = [Attachment(kind="audio", filename=Path(audio_path).name, path=audio_path)] if audio_path else []
+    return Message(id="cli:0", source="cli", text=text, attachments=attachments)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run the Dandelion pipeline on INPUTS, or on one message.")
+    parser.add_argument("--message", help="run only this message text (no files are written)")
+    parser.add_argument("--audio", help="run only this audio file as a voice note (with --message: text + audio)")
+    args = parser.parse_args()
+    if args.audio and not Path(args.audio).is_file():
+        parser.error(f"audio file not found: {args.audio}")
+    return args
+
+
 def save(path, data) -> None:
     write_json(path, data)
     print(f"Wrote {path}")
 
 
 def main() -> None:
+    args = parse_args()
+    one_message = args.message is not None or args.audio is not None
+
     # 1) Parse
-    # Drop notices like "Messages are end-to-end encrypted", then apply LIMIT per input
-    messages = []
-    for path in INPUTS:
-        messages += [message for message in load(path) if not message.is_system][:LIMIT]
-    print(f"1) Loaded {len(messages)} messages from {len(INPUTS)} input(s)", flush=True)
+    if one_message:
+        messages = [single_message(args.message or "", args.audio)]
+        print("1) Loaded 1 message from the command line", flush=True)
+    else:
+        # Drop notices like "Messages are end-to-end encrypted", then apply LIMIT per input
+        messages = []
+        for path in INPUTS:
+            messages += [message for message in load(path) if not message.is_system][:LIMIT]
+        print(f"1) Loaded {len(messages)} messages from {len(INPUTS)} input(s)", flush=True)
 
     # 2) Transcribe (audio transcripts then show up in message.full_text)
     audio_count = sum(len(message.audio) for message in messages)
@@ -111,6 +144,12 @@ def main() -> None:
 
     for message in messages:
         print(summarize(message))
+    if one_message:
+        # Print instead of saving, so a quick test never overwrites a full run's output files.
+        message = messages[0]
+        result = report(message) if message.extraction else anonymized_record(message)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return
     reports = [report(message) for message in messages if message.extraction]
     print(f"{len(reports)} of {len(messages)} messages kept as activity reports")
     save(MESSAGES_OUTPUT, [anonymized_record(message) for message in messages])

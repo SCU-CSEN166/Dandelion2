@@ -1,6 +1,6 @@
 """Evaluate anonymization (dslim/bert-base-NER + regex) against annotated PII.
 
-    uv run -m src.evaluation.anonymization Archive/synthetic_unanonymized.json data/whatsapp_labels.json
+    uv run -m src.evaluation.anonymization data/synthetic_unanonymized.json data/whatsapp_labels.json
 
 Original: Prableen's evaluate.py (commit 6c10379), the anonymization half; the
 classification half is classification.py. Test data: the synthetic records, and

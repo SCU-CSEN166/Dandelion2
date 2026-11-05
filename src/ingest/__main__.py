@@ -1,4 +1,4 @@
-"""python -m src.ingest WhatsAppExports/export.zip [-o messages.json]"""
+"""python -m src.ingest data/WhatsAppExports/export.zip [-o messages.json]"""
 
 import argparse
 import json

@@ -106,27 +106,70 @@ Once we have our data, we will need to ensure it has names and locations for our
 
 ## Week 6 — Build: Working Baseline
 
-Considerations
-We considered an alternaitve PII model: knowledgator/gliner-pii-base-v1.0. Our current anonymization baseline uses dslim/bert-base-NER plus regex. Our current relevance model uses facebook/bart-large-mnli. For audio testing we are currently using Distil-Whisper and Whisper Small. The structured extraction uses numind/NuExtract-2.0-2B. We used Synthetic WhatsApp data since the real Dandelion data couldn't be exported and worked with. 
-So our dataset includes:
--31 labeled WhatsApp messages
--3 WhatsApp voice notes
--20-record synthetic PII testing dataset
--10 accented English audio clips for automatic speech recognition evaluation and testing 
-End Considerations
-
 **Deliverable during Week 7 Lab:** A runnable baseline, setup/run instructions, and 1–2 example inputs and outputs. Update this section with what worked, what failed, and individual contributions.
 
 ### Implementation status
-- **What runs end-to-end now?** [Describe exactly.]
-- **How to run it:** [Commands, dependencies, configuration; refer to Setup below.]
-- **Model(s) and data actually used:** [Names, versions, links, and any changes from the plan.]
-- **Example 1:** Input: Grace Wanjiru is handling them. Her number is 0712 345 678 if the clinic needs to reach her. → Output: [PERSON] is handling them. Her number is [PHONE] if the clinic needs to reach her.
-- Example 1 was classified as relevant 
-- **Example 2:** Input: Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up. → Output: The input was classified as relevant with a relevance score of 0.92 and there was no personal PII removed from the message. 
+- **What runs end-to-end now?** Currently, we have implemented full end-to-end capability using our baseline models. Our system takes in some source as input (such as exported WhatsApp data), and other supplemental data where necessary. That message is passed through the speech to text model (where necessary), anonymization model, classification model, and extraction model and the output is exported as a end-result.
+- **How to run it:**
+1) Install ffmpeg: `brew install ffmpeg` (MacOS)
+2) Clone Repo: `git clone https://github.com/SCU-CSEN166/Dandelion2.git`
+3) CD into cloned repo
+4) Install UV: `pip install uv` or `pip3 install uv`
+5) Sync project: `uv sync`
+6) Run: `uv run main.py` to process data. Inputted data can be changed in main.py. Outputted data is saved in output folder.
+7) Run individual evaluations
+Anonymization: `uv run -m src.evaluation.anonymization data/synthetic_unanonymized.json data/whatsapp_labels.json`
+Classification: `uv run -m src.evaluation.classification data/whatsapp_labels.json`
+Evaluation: `uv run -m src.evaluation.extraction data/whatsapp_labels.json`
+Speech to text: `uv run -m src.evaluation.transcription`
 
-![WhatsApp predictions part 1](screenshots/whatsapp_predictions_1.jpg)
-![WhatsApp predictions part 2](screenshots/whatsapp_predictions_2.jpg)
+- **Model(s) and data actually used:**
+
+Models:
+Speech to text: https://huggingface.co/distil-whisper/distil-small.en
+Anonymization: https://huggingface.co/dslim/bert-base-NER
+Relevance: https://huggingface.co/facebook/bart-large-mnli
+Extraction: https://huggingface.co/numind/NuExtract-2.0-2B
+  - Originally we had planned to use google/flan-t5-base for extraction, however we switched to NuExtract as it can fill a given template whereas flan-t5 could extract specific information given, which would be more unreliable in extracting obscure information.
+
+Data:
+- data/WhatsAppExports/export2 is WhatsApp data we created to test data actually from WhatsApp. We then manually labeled that data in data/whatsapp_labels.json.
+- We also have labaled anonymization data generated with help of AI and human review to evaluate our anonymization model with fake PII.
+- Testing with accented audio messages from Huggingface dataset: https://huggingface.co/datasets/benjaminogbonna/nigerian_accented_english_dataset
+
+- **Example 1:** 
+
+Input: `uv run main.py --message "Grace Wanjiru is handling them. Her number is 0712 345 678 if the clinic needs to reach her."`
+Output: {
+  "id": "cli:0",
+  "conversation": null,
+  "timestamp": null,
+  "sender": null,
+  "text": "[PERSON] is handling them. Her number is [PHONE] if the clinic needs to reach her.",
+  "relevance_score": 0.66,
+  "status": "neither",
+  "activity_type": "other",
+  "location": null,
+  "participant_count": null,
+  "referrals": null,
+  "needs_review": []
+}
+- **Example 2:** 
+Input: `uv run main.py --message "Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up."`
+Output: {
+  "id": "cli:0",
+  "conversation": null,
+  "timestamp": null,
+  "sender": null,
+  "text": "Today we held a family planning out outreach in [LOCATION]. 31 women attended and 4 were referred to the clinic for follow-up.",
+  "relevance_score": 0.943,
+  "status": "completed",
+  "activity_type": "family planning outreach",
+  "location": "[LOCATION]",
+  "participant_count": 31,
+  "referrals": 4,
+  "needs_review": []
+}
 
 ### Attempts and outcomes
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
@@ -134,6 +177,9 @@ End Considerations
 | Trying to do PII anonymization on the 31 message set we have from WhatsApp | Yes | TP 11, FP 0, FN 1, Precision 1.00, Recall 0.9167, F1 0.9565 | performed decently but one PII section was missed |
 | Classifying relevance on 31 already labeled messages | Partly | Accuracy 0.7097, Precision 0.9091, Recall 0.7407, F1 0.8163 | The precision was high so this is good but some relevant messages were missed | 
 
+
+![WhatsApp predictions part 1](screenshots/whatsapp_predictions_1.jpg)
+![WhatsApp predictions part 2](screenshots/whatsapp_predictions_2.jpg)
 ![Evaluation results](screenshots/evaluation_results.jpg)
 
 ### Individual contributions during that week
