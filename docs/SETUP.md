@@ -1,21 +1,24 @@
 # Week 6 classification and anonymization baseline
 
-This implementation covers Prableen's component. `MessageProcessor.process(text)`
-anonymizes a parsed message or transcript, then classifies it and returns a JSON-ready
-record. WhatsApp parsing, ASR, and activity attribute extraction remain team integration
-work; the existing WhatsApp.py and model experiments are not an end-to-end pipeline.
+This covers Prableen's component, now pipeline steps 3 and 4: `src/anonymize.py`
+masks a parsed message or transcript and `src/relevance.py` classifies the masked text.
+`main.py` runs them after WhatsApp parsing (`src/ingest`) and ASR (`src/transcribe.py`),
+then extracts activity fields from relevant messages (`src/extract.py`). It writes
+`output/messages.json` (every message, anonymized) and `output/reports.json` (relevant
+messages only, with status, activity type, location, participant count and referrals).
 
 ## Install and run
 
-Use Python 3.12 (the repository's `.python-version`). The baseline has its own small
-requirements file because the existing project includes unrelated experimental packages.
+Use Python 3.12 (the repository's `.python-version`) and [uv](https://docs.astral.sh/uv/).
+ffmpeg is needed to decode audio (`brew install ffmpeg`).
 
 ```sh
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-baseline.txt
-python -m unittest discover -s tests -v
-python evaluate.py synthetic_unanonymized.json --output output/baseline.json
+uv sync
+uv run python -m unittest discover -s tests -v
+uv run -m src.evaluation.baseline   # anonymization + relevance -> output/baseline_<dataset>.json
+uv run -m src.evaluation.extraction # extraction fields -> output/extraction_whatsapp_labels.json
+uv run -m src.evaluation.asr        # ASR word error rate on accented English
+uv run main.py                      # full pipeline on WhatsAppExports/export2
 ```
 
 First inference downloads both models from Hugging Face and requires network access
@@ -24,19 +27,26 @@ models. `output/test_example.json` is a deterministic integration example. Unit 
 not pretrained model quality.
 
 ```python
-from Anonymization import MessageProcessor
-processor = MessageProcessor(public_entities=['Nakuru', 'Dandelion Africa'])
-result = processor.process('Grace served 28 women in Nakuru. Call 0721 448 903.')
+from src.anonymize import Anonymizer
+from src.relevance import RelevanceClassifier
+masked = Anonymizer(public_entities=['Nakuru', 'Dandelion Africa']).anonymize('Grace served 28 women in Nakuru. Call 0721 448 903.')
+label = RelevanceClassifier().classify(masked['text'])
 ```
 
-Optional `--public-entities public.json` takes a reviewed JSON list of public place,
-organization, or contact strings. Matching is exact and case insensitive. Construct this
+`PUBLIC_ENTITIES` (in `main.py` and `src/evaluation/baseline.py`) is a reviewed list of
+public place, organization, or contact strings. Matching is exact and case insensitive. Construct this
 policy independently of evaluation labels. Unknown LOC and ORG spans are masked by
 default, preserving safety at the cost of reporting detail. PER spans are always masked.
 Counts, activity descriptions and general dates are not deliberately removed.
 
 ## Models and policy
 
+- [distil-whisper/distil-small.en](https://huggingface.co/distil-whisper/distil-small.en):
+  transcribes voice notes (needs ffmpeg).
+- [numind/NuExtract-2.0-2B](https://huggingface.co/numind/NuExtract-2.0-2B): fills a JSON
+  template (see `TEMPLATE` in `src/extract.py`) from anonymized text. Loaded without
+  `trust_remote_code`; uses the GPU (CUDA or Apple MPS) when available. Numbers and
+  locations not found in the message are listed in `needs_review`.
 - [facebook/bart-large-mnli](https://huggingface.co/facebook/bart-large-mnli): zero-shot
   classification with descriptive relevant/irrelevant labels. Completed activity reports
   count as relevant; plans and casual chat count as irrelevant. Default relevant-score
@@ -54,13 +64,20 @@ those snippets are not evidence that alternatives were successfully evaluated.
 
 ## Evaluation and outputs
 
-`output/baseline.json` contains message IDs, masked text, redaction offsets into the
+`output/baseline_<dataset>.json` contains message IDs, masked text, redaction offsets into the
 original text (without entity surface text), classification decisions and aggregate
 metrics. It omits input text and sender metadata. Missed identifiers may still appear
 in masked output; do not publish results from private inputs without review.
 
-The checked-in `synthetic_unanonymized.json` has 20 synthetic records and entity
-annotations. Its authorship is not recorded here; confirm with Risha that this is her
+Two labeled datasets are evaluated (see `DATASETS` in `src/evaluation/baseline.py`):
+
+- `data/whatsapp_labels.json`: the 31 messages of the `WhatsAppExports/export2` group
+  chat, with PII values and relevance labels. PII values are located in the text to get
+  offsets; a labeled location that is not PII counts as a should-not-redact entity.
+- `Archive/synthetic_unanonymized.json`: 20 synthetic records with denser PII and
+  public-entity distractors, but no relevance labels.
+
+The synthetic set has 20 synthetic records and entity annotations. Its authorship is not recorded here; confirm with Risha that this is her
 intended test set. Gold offsets refer to `text`, not `translation_en`. Evaluation checks
 offsets and never uses gold spans to generate predictions or public-entity policies.
 
@@ -70,8 +87,8 @@ FP = safe entity touched by redaction, TN = safe entity untouched. Accuracy, pre
 recall and F1 apply to these units, not arbitrary text spans. Redactions outside all
 annotations are reported separately. Undefined ratios are JSON null.
 
-There are no relevance labels in this dataset. Classification metrics remain null until
-records have a `relevance` field equal to `relevant` or `irrelevant`. Do not infer relevance
+The synthetic set has no relevance labels, so its classification metrics are null; they
+come from `data/whatsapp_labels.json`, whose records have `relevance` equal to `relevant` or `irrelevant`. Do not infer relevance
 ground truth from entity labels. Use independently reviewed relevant and irrelevant
 examples to measure classification quality.
 
