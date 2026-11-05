@@ -1,0 +1,53 @@
+{
+  "dataset": "synthetic_unanonymized.json",
+  "records": 20,
+  "device": "cpu",
+  "python": "3.9.6 (available local interpreter; project targets 3.12)",
+  "transformers": "4.57.6",
+  "torch": "2.8.0",
+  "models": {
+    "ner": "dslim/bert-base-NER",
+    "classification": "facebook/bart-large-mnli"
+  },
+  "metrics": {
+    "anonymization_annotated_entities": {
+      "TP": 51,
+      "FP": 26,
+      "FN": 15,
+      "TN": 10,
+      "accuracy": 0.5980392156862745,
+      "precision": 0.6623376623376623,
+      "recall": 0.7727272727272727,
+      "f1": 0.7132867132867133
+    },
+    "fully_redacted_pii": 51,
+    "total_pii": 66,
+    "preserved_safe_entities": 10,
+    "total_safe_entities": 36,
+    "redactions_outside_annotations": 16,
+    "classification": null,
+    "classification_labeled_records": 0
+  },
+  "attempts": [
+    {
+      "policy": "raw aggregated NER spans plus regex",
+      "TP": 43,
+      "FP": 26,
+      "FN": 23,
+      "TN": 10
+    },
+    {
+      "policy": "expand NER subwords to whole boundary words plus regex",
+      "TP": 51,
+      "FP": 26,
+      "FN": 15,
+      "TN": 10
+    }
+  ],
+  "limitations": [
+    "No relevance ground truth; classification scores are not accuracy.",
+    "Unknown locations and organizations masked; public allowlist empty.",
+    "15 private entities incompletely redacted; manual review required.",
+    "Dataset authorship not verified as Risha; 20 supplied synthetic records used."
+  ]
+}
