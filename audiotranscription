@@ -1,0 +1,39 @@
+# Evaluate Distil-Whisper on 10 streamed Nigerian-accented English clips.
+from datasets import load_dataset
+from transformers import pipeline
+from jiwer import wer
+import torch
+
+dataset = load_dataset(
+    "benjaminogbonna/nigerian_accented_english_dataset",
+    split="test",
+    streaming=True,
+)
+
+asr = pipeline(
+    "automatic-speech-recognition",
+    model="distil-whisper/distil-small.en",
+    chunk_length_s=15,
+    device=0 if torch.cuda.is_available() else -1,
+)
+
+references = []
+predictions = []
+
+for i, example in enumerate(dataset.take(10), start=1):
+    audio = example["audio"]
+    print(f"Transcribing clip {i}/10...", flush=True)
+
+    result = asr({
+        "raw": audio["array"],
+        "sampling_rate": audio["sampling_rate"],
+    })
+
+    references.append(example["sentence"])
+    predictions.append(result["text"])
+
+    print("REFERENCE:", example["sentence"])
+    print("MODEL:    ", result["text"])
+    print()
+
+print(f"WER on {len(references)} clips:", wer(references, predictions))
