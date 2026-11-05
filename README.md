@@ -120,10 +120,15 @@ End Considerations
 - **Example 1:** Input: [non-sensitive example] → Output: [result]
 - **Example 2:** Input: [non-sensitive example] → Output: [result]
 
+![WhatsApp predictions part 1](screenshots/whatsapp_predictions_1.jpg)
+![WhatsApp predictions part 2](screenshots/whatsapp_predictions_2.jpg)
+
 ### Attempts and outcomes
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
 |---|---|---|---|
 | [Attempt] | [Status] | [Evidence] | [Learning] |
+
+![Evaluation results](screenshots/evaluation_results.jpg)
 
 ### Individual contributions during that week
 | Member | What I personally implemented/tested | Result (worked / partly / failed) | Evidence (commit, PR, experiment) | Blocker / next step |
