@@ -22,63 +22,65 @@
 
 ### 1. Problem formulation and social impact
 - **Problem:** What specific task are you solving?
-  - The specific task we are solving with Dandelion Africa is using WhatsApp text and transcribed audio to share field updates. Our group aims to build an AI pipeline, which we want to eventually integrate into a WhatsApp bot, that converts these WhatsApp messages into organized records and removes personal information for privacy purposes.
+  - With Dandelion Africa, data is given to us using WhatsApp exports and that data, including audio, needs to be transcribed into text, processed, and returned as a structured output. Importantly, we only want to collect and extract relevant, anonymized data.
 - **Intended users:** Who would use the system, and for what decisions or activities?
-  - Dandelion Africa staff would use the system to review and organize field reports more quickly and support reporting. Staff should definitely verify records before relying on them.
+  - Dandelion Africa staff would use the system to review and organize field reports quicker than manually reviewing all field reports. Primarily, staff would be most involved in verifying records produced to ensure accuracy.
 - **Inputs and outputs:** What will the system receive and produce? Give one concrete example.
-  - The system will recieve WhatsApp text and audio, and it will transcribe the audio first. It will produce structured records with specific details such as activity type, date, location, participant count, services provided, referrals, and outcomes when stated in the text/audio.
-  - Example: “Today we held a reproductive health session in Nakuru with 35 women. Three women were referred to the clinic.” → Activity: reproductive health session; Location: Nakuru; Participants: 35; Referrals: 3.
+  - The system will recieve WhatsApp data, including text and audio, and it will produce structured records with specific details such as activity type, date, location, participant count, services provided, referrals, and outcomes.
+  - Example: "Today we held a reproductive health session in Nakuru with 35 women" and our program would categorize this message as a health/wellbeing activity, include the number of women, and anonymize important information, such Nakuru.
 - **Success criteria:** What would make the system useful and reliable?
-  - The system would be useful and reliable if if is accurate. This means it should be able to extract the stated details properly, work with text and audio which will be transcribed, and provide source evidence for the staff to review. It should flag things it is uncertain about and not assume everything is reliable, so errors can be prevented while processing the data. 
+  - This system will be useful only if it can be relied upon to produce accurate results that can be useful to Dandelion staff. This of course means every model we implement must be very accurate, such as text-to-speech being properly transcribed, names and other PII being properly anonymized, and relevant/important information being properly identified and extracted. As this system will never be perfect, providing a confidence score to our result can allow staff to make the final judgement.
 - **Constraints and risks:** [e.g., privacy, missing data, hallucinations, language coverage, human verification]
-  - The biggest constraint we are facing is the fact that we are unable to use Dandelion Africa's real WhatsApp data, so in order to fix this, we are creating realistic synethic examples. Since we are creating them and they are synthetic, they may not fully reflect real messages. There are certain things we may not be able to replicate such as background noise, possible informal words being used, varied accents, etc. The system could also miss things such as names, phone numbers and personal details. Human review will definitely be necessary to ensure that everything makes sense and is accurate.
+  - One important constraint we face is that we do not have Dandelion Africa's real WhatsApp data. We are overcoming this by collecting data from Huggingface, as well as our own WhatsApp data to test our system. Of course this is not perfect as our data will not perfectly match the data from Dandelion Africa, so ensuring our system can adapt to the true data will be very important.
 
 ### 2. Proposed technical approach
 - **Pipeline:**
-1) Start with WhatsApp text or audio messages.
+1) Start with exported WhatsApp data (or supplemented with other data sources during testing).
 
-2) Convert audio messages into text.
+2) Convert audio into text using a text-to-speech model.
 
-3) Look for personal info like names, phone numbers, locations, etc, and anonymize it.
+3) Anonymize message, removing personal info such as names and phone numbers using a anonymization model.
 
-4) Check whether each message has useful info about field activities or is just regular conversation messages.
+4) Classify each message as either relevant or irrelevant, where irrelevant messages such as random chat messages are ignored.
 
-5) For the relevant messages, pull out important info like what happened, where it happened, when it happened, and how many people were involved.
-
-6) Compare messages to check if any are talking about the same activity.
-
-7) Put everything into a structured record/database that someone can look over and fix if needed.
+5) Extract specific data from that message such as activity type or participants.
 
 - **Baseline(s):**
 
-We're planning to use pretrained models and see how well they work on the fake messages and data we make. First, we're going to convert audio messages to text and check whether each message is relevant. We're also going to try to remove any kind of personal information and details before extracting the details that we need. For now, we're mainly trying to get these steps working together but once we have something running, we can look at where it's making mistakes and work those parts.
+Our current plan is to use pretrained models from Hugginface and analyzing how well they perform on our dataset. From their, we can measure metrics such as F1, recall, precision, and accuracy to determine how well that model is performing on our data.
 
 - **Proposed models/tools:**
 
-distil-whisper/distil-small.en (https://huggingface.co/distil-whisper/distil-small.en) - A Speech-to-text model that translates spoken English into written text that we're going to use to turn audio messages into text.
+distil-whisper/distil-small.en (https://huggingface.co/distil-whisper/distil-small.en)
+Speech-to-text model that translates spoken English into text.
 
-facebook/bart-large-mnli (https://huggingface.co/facebook/bart-large-mnli) - Can sort text into categories without needing to be trained on our own examples first. Will use this for seeing whether a message is relevant or irrelevant.
+facebook/bart-large-mnli (https://huggingface.co/facebook/bart-large-mnli) 
+Sort text into categories including relevant or irrelevant.
 
-dslim/bert-base-NER (https://huggingface.co/dslim/bert-base-NER) - Finds things like people's names, organizations, locations and miscellaneous stuff in text. We're going to use this to look for names and locations to hide. We'll also look for phone numbers and email addresses using patterns (phone numbers usually have that hyphen pattern and emails have patterns like something@xyz.com) in case the AI model misses them.
+dslim/bert-base-NER (https://huggingface.co/dslim/bert-base-NER)
+Can anonymize messages to remove names, organization, locations, and other PII. We can also rely on REGEX to anomyze phone numbers in the messages.
 
-google/flan-t5-base (https://huggingface.co/google/flan-t5-base) - Follows instructions and gives answers based on the text that is inputted. We're going to use this for pulling out stuff like activity type, date, location, and participant count.
+google/flan-t5-base (https://huggingface.co/google/flan-t5-base)
+This model can be used to extract data we want from the messages, such as activity or location.
 
-sentence-transformers/all-MiniLM-L6-v2 (https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) - Compares how similar 2 messages are. Will use this to find messages that are talking about the same thing even if worded differently.
+sentence-transformers/all-MiniLM-L6-v2 (https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+Can be used to compute the similarity of two messages, which can be used to build a dataset of known questions and their responses.
 
 - **Alternative approach:**
 
-If the classification model is doing bad, we can try labeling some of our synthetic messages ourselves and using them to fine-tune a smaller model to help it recognize the kinds of messages we're working with. For anonymization, we're worried that the NER model might miss some names or personal details (especially if have spelling mistakes or is written informally) but we can just try adding more rules for those cases and compare a few models if needed. We also have to make sure we're not taking out any important info. If the extraction model doesn't work with longer or unclear messages, we can try lessening the number of fields and use easier rules.
+We expect some of these models to perform poorly as some of the data these models are trained on might not match the messages we will be using. As a result, we plan on potentially fine tuning a smaller model with our known data to try to improve the performance of our system as a whole.
 
 ### 3. Proposed data
 | Dataset/source | Link or access instructions | Purpose | Size / languages | Privacy or usage considerations |
 |---|---|---|---|---|
-| Synthetic WhatsApp-style text messages | Created by the team | Testing relevance classification, anonymization, extraction, and duplicate/event detection | Start with about 100-200 English messages | Fake data only and no real private information |
-| Synthetic WhatsApp audio | Recorded by team members or volunteers | Test speech-to-text and audio input | Start with about 20-40 short English clips | Using our invented content only |
-| Public English accent speech data | Hugging Face/public dataset | Test transcription on different accents and speakers | English with multiple speakers/accents | Following dataset license and rules set for using it |
-| AI-generated paraphrases | Created from existing synthetic examples | Add a lot more wording variation to the dataset | Depends on the starting size of the dataset | Before we use the examples, we review them | 
+| Generated WhatsApp Exports | Created by the team with supplemental messages generated from LLM | Testing and measure performance of our models with specific edge cases | Our goal is about ~100 messages | Fake data only, so no privacy concerns |
+| Public WhatsApp Exports | Can be found online, such as on Huggingface | Can be used to measure performance of our models on a large set of messages | Potentially thousands. Depends on size of dataset. | We will only use WhatsApp exports that are publicly available and free for use. |
+| Public English accent speech data | Hugging Face/public dataset | Test speech to text models with different accents and speakers | Depends on dataset. Potentially hundreds of english phrases | Follow license on dataset and ensure it is free for public use. |
+| AI-generated paraphrases | Created from existing data | Can increase the amount of data we use when testing our system | Depends on how much variation we have in our initial data, and how much we need to supplement | Review resulting dataset for accuracy and any other privacy concerns. | 
 
-- **Data preparation:** We are going to create relevant and irrelevant messages. We will add fake PII like names, phone numbers, and addresses/locations. We are going to include duplicates, incomplete messages, and planned vs activities are that complete. We plan to label each example with its correct answer. We are going to keep the correct transcripts for the audio examples. Lastly, we will split the data into the development/training set and the test sets, starting with an 80/20 split. 
-- **Data limitations:** The Synthetic data might not match the real Dandelion messages exactly. The starting dataset is pretty small. We might not be able to get data of every accent, writing style, or available background noises. After testing, we might have to add more examples.  
+- **Data preparation:** 
+Once we have our data, we will need to ensure it has names and locations for our anonymization model as well as a relevant activity at a location with attending participants. During testing, we can manually label this data to check our system accuracy. 
+- **Data limitations:** The dataset we work with in this project will not be the same data as the real Dandelion data, so we will need to be aware of that during development. This is especially important as we need to be aware of different writing styles or background noise in Dandelion Africa that might not be present in our dataset.
 
 ### 4. Proposed evaluation
 | Metric / test | What it measures | How it will be calculated | Target / success criterion |
@@ -98,7 +100,7 @@ If the classification model is doing bad, we can try labeling some of our synthe
 | Member | Primary responsibility | Specific Weekly contribution | Planned next task |
 |---|---|---|---|
 | Risha Desai | Data collection & analysis | Collect and test data from HuggingFace, Claude/AI, and team-made | Continue building out dataset with realistic data with audio. |
-| Priyanka Ganguly | TTS from audio in dataset | Evaluate the speech dataset and models using precision, recall, and T1 | Experiment with other TTS models and evaluate their performance. |
+| Priyanka Ganguly | STT from audio in dataset | Evaluate the speech dataset and models using precision, recall, and T1 | Experiment with other STT models and evaluate their performance. |
 | Prableen Kakar | Classification and anonymization | Evaluate dataset using anonymization and classification models | Experiment with different models on different datasets and sources. |
 | Oliver Ortiz | Extraction & Integration | Primary Python implementation, input, and output, and addition work on extraction | Build out complete end to end pipeline of work. |
 
