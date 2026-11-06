@@ -176,7 +176,7 @@ Output: {
 ### Attempts and outcomes
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
 |---|---|---|---|
-| Trying to do PII anonymization on the 31 message set we have from WhatsApp | Yes | TP 11, FP 0, FN 1, Precision 1.00, Recall 0.9167, F1 0.9565 | performed decently but one PII section was missed |
+| Trying to do PII anonymization on the 31 message set we have from WhatsApp | Yes | TP 11, FP 4, FN 1, Precision 0.7333, Recall 0.9167, F1 0.8148 | performed decently but one PII section was missed |
 | Classifying relevance on 31 already labeled messages | Partly | Accuracy 0.7097, Precision 0.9091, Recall 0.7407, F1 0.8163 | The precision was high so this is good but some relevant messages were missed | 
 | test Distil-Whisper on our 3 synthetic WhatsApp voice notes | Partly | all 3 transcribed, but some errors like sleep being steep and curve being curb, especially mistakes with slang | compare another Whisper model and test more accented audio |
 | test speech-to-text on Kenyan AfriSpeech-Dialog samples | Partly | 3 Kenyan/Swahili-accented convos, first 30 secs of each, Distil-Whisper produced transcripts, saved the comparison in CSV file | can't claim WER yet, reference transcripts cover full conversations and are not aligned to the 30 sec segments |
@@ -184,9 +184,8 @@ Output: {
 
 
 
-![WhatsApp predictions part 1](screenshots/whatsapp_predictions_1.jpg)
-![WhatsApp predictions part 2](screenshots/whatsapp_predictions_2.jpg)
-![Evaluation results](screenshots/evaluation_results.jpg)
+![Anonymization results](screenshots/anonymization_results.png)
+![Classification results](screenshots/classification_results.png)
 
 ### Individual contributions during that week
 | Member | What I personally implemented/tested | Result (worked / partly / failed) | Evidence (commit, PR, experiment) | Blocker / next step |
