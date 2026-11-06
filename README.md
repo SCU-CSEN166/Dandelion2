@@ -176,6 +176,7 @@ Output: {
 ### Attempts and outcomes
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
 |---|---|---|---|
+| PII anonymization on the 20 synthetic records (data/synthetic_unanonymized.json) | Partly | TP 51, FP 26, FN 15, Precision 0.6623, Recall 0.7727, F1 0.7133 | |
 | Trying to do PII anonymization on the 31 message set we have from WhatsApp | Yes | TP 11, FP 4, FN 1, Precision 0.7333, Recall 0.9167, F1 0.8148 | performed decently but one PII section was missed |
 | Classifying relevance on 31 already labeled messages | Partly | Accuracy 0.7097, Precision 0.9091, Recall 0.7407, F1 0.8163 | The precision was high so this is good but some relevant messages were missed | 
 | test Distil-Whisper on our 3 synthetic WhatsApp voice notes | Partly | all 3 transcribed, but some errors like sleep being steep and curve being curb, especially mistakes with slang | compare another Whisper model and test more accented audio |
