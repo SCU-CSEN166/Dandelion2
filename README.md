@@ -212,9 +212,9 @@ AI Disclosure:
 **Deliverable during Week 8 Lab:** Preliminary evaluation results, metrics, development-set details, and 2–3 representative successes or failures. Include what you will improve next.
 
 ### Evaluation setup
-- **Development data:** [Source, size, selection, annotations, link or access instructions]
-- **Metrics and rationale:** [Why these metrics reflect the intended use]
-- **Comparison:** [Baseline versus current approach, if different]
+- **Development data:** The development data we used was 31 labeled-by-us synthetic WhatsApp messages. The labels included relevance, PII, status, activity type, location, participant count, referrals, event IDs, and duplicate relationships. We had 3 synthetic WhatsApp voice memos with ground-truth transcripts. We used 10 accented-English audio clips which was scores and tested for ASR. Lastly, we used 3 Kenyan AfriSpeech-Dialog samples for more qualitative ASR testing, found from hugging face. 
+- **Metrics and rationale:** For anonymization we used precision, recall, and F1 score. For relevance classification we did used accuracy, precision, recall, and F1 score. For ASR we used WER score. Recall is very important for anonymization since missed PII is a privacy risk. Relevance recall matters since missed relevant messages mean there was field information lost. 
+- **Comparison:** Week 7 evaluates the Week 6 baseline on the labeled text and audio data. We're testing the updated anonymization and public place setup and are goinng to compare that on the same labeled WhatsApp set. 
 
 | System / version | Metric 1 | Metric 2 | Notes |
 |---|---:|---:|---|
