@@ -99,6 +99,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the Dandelion pipeline on INPUTS, or on one message.")
     parser.add_argument("--message", help="run only this message text (no files are written)")
     parser.add_argument("--audio", help="run only this audio file as a voice note (with --message: text + audio)")
+    parser.add_argument("--folder", help="TO BE IMPLEMENTED; load data from folder")
     args = parser.parse_args()
     if args.audio and not Path(args.audio).is_file():
         parser.error(f"audio file not found: {args.audio}")
@@ -158,3 +159,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
