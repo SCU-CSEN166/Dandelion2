@@ -46,9 +46,12 @@ def main():
     # ADAPTED: default was output/baseline.json, shared with anonymization.
     parser.add_argument('--output', type=Path, default=Path('output/evaluations/classification.json'))
     parser.add_argument('--public-entities', type=Path, help='Reviewed JSON list, independent of test annotations')
+    # Week 7 experiment: count planned activities as relevant.
+    parser.add_argument('--count-plans', action='store_true', help='treat planned activities as relevant')
     args = parser.parse_args()
     public = json.loads(args.public_entities.read_text()) if args.public_entities else []
-    result = evaluate(load_records(args.input), Anonymizer(public_entities=public), RelevanceClassifier())
+    result = evaluate(load_records(args.input), Anonymizer(public_entities=public),
+                      RelevanceClassifier(count_plans=args.count_plans))
     # ADAPTED: metrics written before the per-record outputs.
     report = {'models': {'ner': NER_MODEL, 'classification': CLASSIFIER_MODEL}, 'dataset': str(args.input),
               'metrics': result['metrics'], 'records': result['records']}

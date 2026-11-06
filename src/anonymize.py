@@ -26,7 +26,47 @@ PII_PATTERNS = {
 }
 
 # NER entity group -> redaction label. Other groups (e.g. MISC) are left alone.
-NER_LABELS = {"PER": "PERSON", "LOC": "LOCATION", "ORG": "ORG"}
+# DOB is only produced by GLiNER; BERT never returns it.
+NER_LABELS = {"PER": "PERSON", "LOC": "LOCATION", "ORG": "ORG", "DOB": "DATE_OF_BIRTH"}
+
+# Week 7 experiment: GLiNER instead of BERT. Unlike BERT's fixed label set, GLiNER
+# is told at run time which kinds of entity to look for.
+GLINER_MODEL = "knowledgator/gliner-pii-base-v1.0"
+GLINER_THRESHOLD = 0.5
+# GLiNER label (what we ask for) -> NER entity group (what the Anonymizer expects).
+GLINER_LABELS = {"person": "PER", "location": "LOC", "organization": "ORG", "date of birth": "DOB"}
+
+
+class GlinerNER:
+    """Wraps GLiNER so it returns the same format as the BERT pipeline:
+    a list of {"entity_group", "start", "end"} dicts. Pass it as Anonymizer(ner=GlinerNER())."""
+
+    def __init__(self, model_name: str = GLINER_MODEL, threshold: float = GLINER_THRESHOLD):
+        self.model_name = model_name
+        self.threshold = threshold
+
+    @cached_property
+    def model(self):
+        from gliner import GLiNER
+        return GLiNER.from_pretrained(self.model_name)
+
+    def __call__(self, text: str) -> list[dict]:
+        entities = self.model.predict_entities(text, list(GLINER_LABELS), threshold=self.threshold)
+        return [{"entity_group": GLINER_LABELS[e["label"]], "start": e["start"], "end": e["end"]}
+                for e in entities]
+
+
+class CombinedNER:
+    """Runs several NER models and returns everything any of them found.
+
+    BERT and GLiNER miss different things (e.g. GLiNER catches lowercase names and
+    dates of birth, BERT catches short first names), so their union hides more."""
+
+    def __init__(self, *models):
+        self.models = models
+
+    def __call__(self, text: str) -> list[dict]:
+        return [entity for model in self.models for entity in model(text)]
 PERSON_NER_GROUP = "PER"
 PERSON_LABEL = NER_LABELS[PERSON_NER_GROUP]
 

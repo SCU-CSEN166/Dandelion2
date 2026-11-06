@@ -14,6 +14,12 @@ CLASSIFIER_MODEL = "facebook/bart-large-mnli"
 RELEVANT_HYPOTHESIS = "a report of completed community health, outreach, training or livelihood activities and outcomes"
 IRRELEVANT_HYPOTHESIS = "casual conversation, greetings, unrelated information or plans for future activities"
 
+# Week 7 experiment: also count planned activities as relevant. The `status` field
+# extracted later still separates completed from planned events.
+RELEVANT_WITH_PLANS_HYPOTHESIS = ("a message about a community health, outreach, training or livelihood "
+                                  "activity that happened or is planned")
+IRRELEVANT_WITHOUT_PLANS_HYPOTHESIS = "casual conversation, greetings or unrelated information"
+
 # Labels stored in Message.relevance["label"].
 RELEVANT = "relevant"
 IRRELEVANT = "irrelevant"
@@ -28,15 +34,22 @@ def is_relevant(message: Message) -> bool:
 
 
 class RelevanceClassifier:
-    def __init__(self, classifier=None, threshold: float = DEFAULT_THRESHOLD):
+    def __init__(self, classifier=None, threshold: float = DEFAULT_THRESHOLD, count_plans: bool = False):
         """
         classifier: a zero-shot-classification pipeline (tests inject a fake one).
         threshold: minimum relevant-hypothesis score; uncalibrated.
+        count_plans: if True, planned activities also count as relevant (Week 7 experiment).
         """
         if not 0 <= threshold <= 1:
             raise ValueError("threshold must be between 0 and 1")
         self._classifier = classifier
         self.threshold = threshold
+        if count_plans:
+            self.relevant_hypothesis = RELEVANT_WITH_PLANS_HYPOTHESIS
+            self.irrelevant_hypothesis = IRRELEVANT_WITHOUT_PLANS_HYPOTHESIS
+        else:
+            self.relevant_hypothesis = RELEVANT_HYPOTHESIS
+            self.irrelevant_hypothesis = IRRELEVANT_HYPOTHESIS
 
     @cached_property
     def classifier(self):
@@ -46,10 +59,10 @@ class RelevanceClassifier:
         return pipeline("zero-shot-classification", model=CLASSIFIER_MODEL, device=torch_device(allow_mps=False))
 
     def _relevant_score(self, text: str) -> float:
-        result = self.classifier(text, candidate_labels=[RELEVANT_HYPOTHESIS, IRRELEVANT_HYPOTHESIS],
+        result = self.classifier(text, candidate_labels=[self.relevant_hypothesis, self.irrelevant_hypothesis],
                                  multi_label=False)
         score_by_hypothesis = dict(zip(result["labels"], result["scores"]))
-        return float(score_by_hypothesis[RELEVANT_HYPOTHESIS])
+        return float(score_by_hypothesis[self.relevant_hypothesis])
 
     def classify(self, text: str) -> dict:
         """Scores are model scores, not calibrated confidence."""

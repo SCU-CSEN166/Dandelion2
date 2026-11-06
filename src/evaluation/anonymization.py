@@ -15,7 +15,7 @@ import json
 from pathlib import Path
 
 # ADAPTED: was `from Anonymization import MessageProcessor` (file since deleted).
-from src.anonymize import NER_MODEL, Anonymizer
+from src.anonymize import GLINER_MODEL, NER_MODEL, Anonymizer, CombinedNER, GlinerNER
 
 
 def metrics(tp, fp, fn, tn):
@@ -98,13 +98,22 @@ def main():
     # ADAPTED: default was output/baseline.json, shared with classification.
     parser.add_argument('--output', type=Path, default=Path('output/evaluations/anonymization.json'))
     parser.add_argument('--public-entities', type=Path, help='Reviewed JSON list, independent of test annotations')
+    # Week 7 experiment: swap BERT for GLiNER, or use both together.
+    parser.add_argument('--ner', choices=['bert', 'gliner', 'both'], default='bert', help='which NER model(s) to use')
     args = parser.parse_args()
     public = json.loads(args.public_entities.read_text()) if args.public_entities else []
-    anonymizer = Anonymizer(public_entities=public)
+    if args.ner == 'gliner':
+        ner = GlinerNER()
+    elif args.ner == 'both':
+        ner = CombinedNER(Anonymizer().ner, GlinerNER())  # Anonymizer().ner is the default BERT pipeline
+    else:
+        ner = None  # Anonymizer loads BERT itself
+    anonymizer = Anonymizer(ner=ner, public_entities=public)
     # ADAPTED: was json.loads(args.input.read_text()) on a records file only; see load_records.
     reports = {str(path): evaluate(load_records(path), anonymizer) for path in args.inputs}
     # ADAPTED: one file for all datasets, metrics first; classification model moved to classification.py.
-    report = {'models': {'ner': NER_MODEL},
+    ner_names = {'bert': NER_MODEL, 'gliner': GLINER_MODEL, 'both': f'{NER_MODEL} + {GLINER_MODEL}'}
+    report = {'models': {'ner': ner_names[args.ner]},
               'metrics': {dataset: result['metrics'] for dataset, result in reports.items()},
               'records': {dataset: result['records'] for dataset, result in reports.items()}}
     args.output.parent.mkdir(parents=True, exist_ok=True)
