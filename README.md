@@ -116,11 +116,11 @@ Once we have our data, we will need to ensure it has names and locations for our
 3) CD into cloned repo
 4) Install UV: `pip install uv` or `pip3 install uv`
 5) Sync project: `uv sync`
-6) Run: `uv run main.py` to process data. Inputted data can be changed in main.py. Outputted data is saved in output folder.
-7) Run individual evaluations
+6) Run: `uv run main.py` to run the complete end-to-end system. Inputted data can be changed in main.py. Outputted data is saved in output folder.
+7) Or, run individual evaluations
 Anonymization: `uv run -m src.evaluation.anonymization data/synthetic_unanonymized.json data/whatsapp_labels.json`
 Classification: `uv run -m src.evaluation.classification data/whatsapp_labels.json`
-Evaluation: `uv run -m src.evaluation.extraction data/whatsapp_labels.json`
+Extraction: `uv run -m src.evaluation.extraction data/whatsapp_labels.json`
 Speech to text: `uv run -m src.evaluation.transcription`
 
 - **Model(s) and data actually used:**
@@ -180,6 +180,8 @@ Output: {
 | Classifying relevance on 31 already labeled messages | Partly | Accuracy 0.7097, Precision 0.9091, Recall 0.7407, F1 0.8163 | The precision was high so this is good but some relevant messages were missed | 
 | test Distil-Whisper on our 3 synthetic WhatsApp voice notes | Partly | all 3 transcribed, but some errors like sleep being steep and curve being curb, especially mistakes with slang | compare another Whisper model and test more accented audio |
 | test speech-to-text on Kenyan AfriSpeech-Dialog samples | Partly | 3 Kenyan/Swahili-accented convos, first 30 secs of each, Distil-Whisper produced transcripts, saved the comparison in CSV file | can't claim WER yet, reference transcripts cover full conversations and are not aligned to the 30 sec segments |
+| Extracting data to json format | Partly | output/evaluation/extraction.json. Overall, extraction worked well at extracting details except struggled with status (such as if a task is completed, planned, or neither). | We believe this is caused by extraction only extracting data from that specific message, and ignoring context from previous messages which could help the model know if the task is completed or not. |
+
 
 
 ![WhatsApp predictions part 1](screenshots/whatsapp_predictions_1.jpg)
@@ -191,6 +193,13 @@ Output: {
 |---|---|---|---|---|
 | Priyanka Ganguly | I streamed 10 test clips from the Nigerian-accented English dataset through Distil-Whisper. I compared it's transcripts with the references and calculated WER. | Partly because the transcription run completed and WER was 0.423. I saw that the accuracy varied in the sense that short clips were transcribed closely while I saw some errors in some names and longer clips.  Since I only used 10 clips, the result is preliminary for now. | https://colab.research.google.com/drive/1Ba0hFutu98B9gEcrXRTVKFOdV_9Z3mNd?usp=sharing | The result is only from 10 clips, so I want to test more data/examples (maybe 50+ more clips with short and longer recordings). I will compare another speech to text model on the same clips to see if I can get better accuracy in my results.  |
 | Risha Desai | I helped create four synthetic WhatsApp conversations. I included completed events, planned events, irrelevant messages, PII, not completed details messages, and almost duplicate reports. I exported the WhatsApp chat with audio too. This was then added to the repo and I created whatsapp_labels.json. This was where the ground-truth laid as the 31 labeled messages. The labels included relevance, event status, activity type, location, counts, referrals, PII, event IDs, and if there was a duplicate relationship. I created audio_ground_truth.json, as well as adding the ground-truth transcripts for the 3 WhatsApp voice notes. Then this labeled dataset was used for model evaluation. I also found AfriSpeech-Dialog to use as another public dataset. I filtered that to only Kenyan or Swahili-accented English. Then picked 3 samples and tested the first 30 seconds. I ran Distil-Whisper on them and then compared Whisper models on the same samples. | Creating the data: worked, Labeling: worked Anonymization testing: worked great on our WhatsApp set, Relevance testing: partly worked since some of the relevant messages were missed, Audio transcription: partly worked since I observed slang and individual words were incorrectly transcribed | whatsapp_labels.json, audio_ground_truth.json, exported WhatsApp data, test_results.md. Also the two CSV files of the Afrispeech Kenyan/Swahili accented data is in afrispeech_kenya_distilwhisper_results.csv and in afrispeech_kenya_model_comparison.csv. Again, the experiment is documented in test_results.md. | Next steps are to add duplicate-events and test/evaluate that. I want to test more audio too and try to find different accents. Comparing Distil-Whisper with Whisper Small is important too. I also want to improve the relevance recall since this is significant for Dandelion themselves. Lastly, I want to evaluate extraction on more already labeled messages. | 
+| Oliver Ortiz | This week, I focused on building out the pipeline that we will use to run messages and data through. I was provided implementations of many of the models by my teammates which I then implemented into our stack. I completed the full end-to-end system and was able to test it on some data provided by another teammate. Additionally, I was also responsible for implementing the final extraction model as that was the final model before output. | Overall, this process was a success as each part of the system came together perfectly. We currently have a complete baseline system which we can evaluate further and find the areas to focus most on improving. | Primarily my work is in the src/ directory. The primary code my teammates used to teach each model is in src/evaluation, and the implementation of each model are in their respective .py file in src/. | Next steps for this project are going to be testing out different models and processes for getting an accurate output. In the main end-to-end system this might mean abstracting some systems to make it easier to quickly test different models and tools.
+
+
+AI Disclosure:
+- Overall, used for brainstorming and feedback as we developed this baseline system.
+- AI was used to write the code to load in data (such as WhatsApp or other formatted data). AI was also used to move independent, working code for the models into the pipeline, including main.py. 
+- data/synthetic_unanonymized.json for anonymization test cases
 
 ---
 
