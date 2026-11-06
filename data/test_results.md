@@ -68,3 +68,17 @@ The model performed better on the shorter and more clear clips, while other clip
 Current Week 6 takeaway
 The text-processing baseline is running on exported WhatsApp messages. PII anonymization did decent but sometimes misses important, relevant messages. Relevance classification works but also misses some relevant messages. Distil-Whisper can transcribe the synthetic WhatsApp voice notes, but the informal words and a few regular individual words seem to trip up the model and get transcribed incorrectly. 
 The text-processing baseline runs on exported WhatsApp messages. We still need to do duplicate-event detection and document those results. 
+
+Kenyan AfriSpeech-Dialog Testing 
+
+I added AfriSpeech-Dialog as another public dataset to test African-accented conversational speech. I filtered the dataset to just Kenya (KE). There were 9 Kenyan conversations, and had prior labels as Swahili-accented English and were in the category of general conversations. 
+I picked 3 Kenyan conversations and used the first 30 seconds of each of the recordings. I ran distil-whisper/distil-small.en on all three and saved the predictions in afrispeech_kenya_distilwhisper_results.csv. 
+I also ran openai/whisper-small.en on the same three, so the two current speech-to-text models could be compared. Those results are saved in afrispeech_kenya_model_comparsion.csv. 
+This was more of a check on qualiative robustness instead of WER evaluation since the AfriSpeech-Dialog references I found cover the full conversations not just the exact 30 second segments that I used in this test. 
+
+Current Result:
+9 Kenyan conversations, 3 conversations selected for testing, 30 seconds tested from each conversation
+Accent: Swahili-accented English 
+Country: Kenya
+Domain: General
+Distil-Whisper properly produced the transcripts for all three. Whisper Small was tested on the same three so we had something to compare too. We need more aligned reference transcripts before we an calculate reliable WER for these three. 
