@@ -221,6 +221,9 @@ AI Disclosure:
 | Baseline | [Value] | [Value] | [Notes] |
 | Current | [Value] | [Value] | [Notes] |
 
+![Week 7 anonymization: BERT + GLiNER + public places](screenshots/week7_anonymization_bert_gliner_public.png)
+![Week 7 relevance: planned events counted as relevant](screenshots/week7_relevance_count_plans.png)
+
 ### Successes, failures, and interpretation
 | Example / category | Expected behavior | Actual behavior | Success or failure? | Likely reason |
 |---|---|---|---|---|
