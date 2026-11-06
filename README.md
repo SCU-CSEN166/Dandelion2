@@ -198,7 +198,7 @@ Output: {
 
 AI Disclosure:
 - Overall, used for brainstorming and feedback as we developed this baseline system.
-- AI was used to write the code to load in data (such as WhatsApp or other formatted data). AI was also used to move independent, working code for the models into the pipeline, including main.py. 
+- AI was used to write the code to load in data (such as WhatsApp or other formatted data). AI was also used to integrate out independent tests of each into the main pipeline. Also used it for main.py
 - data/synthetic_unanonymized.json for anonymization test cases
 
 ---
