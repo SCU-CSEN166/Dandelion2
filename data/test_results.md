@@ -82,3 +82,7 @@ Accent: Swahili-accented English
 Country: Kenya
 Domain: General
 Distil-Whisper properly produced the transcripts for all three. Whisper Small was tested on the same three so we had something to compare too. We need more aligned reference transcripts before we an calculate reliable WER for these three. 
+
+The current relevance baseline is TP 20, FP 2, FN 7, TN 2. We have precision of 0.909, recall of 0.741, F1 of 0.816. There were misses that included msg_004 (follow-up message that needed prior knowledge), msg_012 (informal/fragmented referral wording), and msg_027 (mostly contact information and little explicit activity context). 
+The false positives included GitHub logistics message and "lowkey I was losing sleep for it." There were four apparent false negatives that were actually planned/future messages which lables conflicted with the current "future = irrelevant" policy. 
+We need to add relevance error analysis to Week 7 results. 
