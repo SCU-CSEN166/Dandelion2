@@ -255,7 +255,7 @@ This is the relevance result when planned events count as relevant. It found all
 
 - **What improved?** We had anonymization recall improve from 0.773 to 0.909. As well as anonymization F1 improved from 0.713 to 0.845. The false negatives dropped so that means fewer PII entities were missed. The public-place handling reduced unnecessary masking. 
 - **What did not improve?** Relevance still missed the messages that depended on context. There were 7 false negatives and 2 false positives. Examples of this asre msg_004, msg_012, and msg_027. 
-- **Next experiment:** We will keep evaluating the updated anonymization setup on the same labeled data and check into whether the gains hold across more cases. 
+- **Next experiment:** We will keep evaluating the updated anonymization setup on the same labeled data and check into whether the gains hold across more cases. We will also check on relevance-policy consistency and rerunning relevance metrics. 
 
 ### Individual contributions during that week
 | Member | Work completed | Result (worked / partly / failed) | Evidence | Next step |
