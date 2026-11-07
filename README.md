@@ -223,7 +223,7 @@ AI Disclosure:
 | Extraction baseline | 1.0 F1 Location | 0.40 F1 status | This model performed perfectly extracting locations, however struggled with extracting status of activity, which might mean that we need a seperate model to extract status |
 | Anonymization Baseline | 0.773 Recall | 0.713 F1 | BERT + regex on the 20-record synthetic PII set |
 | Updated Anonymization | 0.909 Recall | 0.845 F1 | BERT + GLiNER + reviewed public places, with fewer false positives and false negatives |
-| Classification Baseline | 0.9 Precision | 0.813 F1 | Classifying data as relevant or irrelant also performed okay, however there is room for improvement by continueing to experiment with different models |
+| Classification Baseline | 0.909 Precision | 0.816 F1 | Classifying data as relevant or irrelant also performed okay, however there is room for improvement by continueing to experiment with different models |
 | Anonymization baseline (BERT + regex), synthetic | Recall 0.77 | Precision 0.66 | F1 0.71. 15 of 66 private items were leaked. |
 | GLiNER instead of BERT, synthetic | Recall 0.77 | Precision 0.67 | F1 0.72. Same number of words hidden but just different ones. |
 | BERT and GLiNER together, synthetic | Recall 0.91 | Precision 0.69 | F1 0.78. Leaks went down from 15 to 6. |
