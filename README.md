@@ -243,7 +243,7 @@ AI Disclosure:
 ### Individual contributions during that week
 | Member | Work completed | Result (worked / partly / failed) | Evidence | Next step |
 |---|---|---|---|---|
-| [Name] | [Specific work] | [Status] | [Link] | [Next step] |
+| Oliver Ortiz | This week, I continued to add in new models to our end-to-end pipeline. I also added our repo to Colab and ran it on numerous inputs to evaluate our current models. | W.I.P. Still need to get more data and find more models to improve performance in certain aspects of our code. | https://colab.research.google.com/drive/1o1VLE-ld7YXWmWRcteyG6sX7fonIrR-4?usp=sharing | Continue to add more models and test our pipeline |
 
 ---
 
