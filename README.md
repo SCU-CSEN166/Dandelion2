@@ -248,10 +248,11 @@ This is the relevance result when planned events count as relevant. It found all
 | Public place: "today's Nakuru outreach was 31 women" | Keep "Nakuru" visible | Baseline hid it as [LOCATION]. Now it stays visible. | Success | The new public places list (Kenya's 47 counties) tells the code which places are safe. |
 | Casual chat: "nice", "agree", "yall think we're gonna get the midterm back soon" | Irrelevant | With plans counted as relevant, these get marked relevant. On 18 unlabeled chat messages, 14 were marked relevant (vs. 6 before). | Failure | The new wording ("about an activity") is so broad it matches almost anything. Our labels only have 4 irrelevant messages, so the score doesn't catch it. |
 | "I think 9am but I'll double check" | Nothing hidden | GLiNER turns it into "[PERSON]'ll double check" | Failure (minor) | GLiNER sometimes treats "I" as a person. It doesn't leak anything, but it makes the text messier. |
+| reviewed public location | keep public location visible while masking private PII | public place stayed visible | success | reviewed public-entity allowlist | 
 
-- **What improved?** [Evidence]
+- **What improved?** We had anonymization recall improve from 0.773 to 0.909. As well as anonymization F1 improved from 0.713 to 0.845. The false negatives dropped so that means fewer PII entities were missed. The public-place handling reduced unnecessay masking. 
 - **What did not improve?** [Evidence]
-- **Next experiment:** [Specific change and how you will measure it]
+- **Next experiment:** We will keep evaluating the updated anonymization setup on the same labeled data and check into whether the gains hold across more cases. 
 
 ### Individual contributions during that week
 | Member | Work completed | Result (worked / partly / failed) | Evidence | Next step |
