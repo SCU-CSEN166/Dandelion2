@@ -224,18 +224,30 @@ AI Disclosure:
 | Anonymization Baseline | 0.773 Recall | 0.713 F1 | BERT + regex on the 20-record synthetic PII set |
 | Updated Anonymization | 0.909 Recall | 0.845 F1 | BERT + GLiNER + reviewed public places, with fewer false positives and false negatives |
 | Classification Baseline | 0.9 Precision | 0.813 F1 | Classifying data as relevant or irrelant also performed okay, however there is room for improvement by continueing to experiment with different models |
-
-
-
+| Anonymization baseline (BERT + regex), synthetic | Recall 0.77 | Precision 0.66 | F1 0.71. 15 of 66 private items were leaked. |
+| GLiNER instead of BERT, synthetic | Recall 0.77 | Precision 0.67 | F1 0.72. Same number of words hidden but just different ones. |
+| BERT and GLiNER together, synthetic | Recall 0.91 | Precision 0.69 | F1 0.78. Leaks went down from 15 to 6. |
+| **Current: BERT + GLiNER + public places, synthetic** | **Recall 0.91** | **Precision 0.79** | **F1 0.85** |
+| Anonymization baseline, WhatsApp | Recall 0.92 | Precision 0.73 | F1 0.81. All 4 safe place names were hidden. |
+| **Current: BERT + GLiNER + public places, WhatsApp** | **Recall 0.92** | **Precision 1.00** | **F1 0.96.** Place names like Nakuru aren't hidden now. |
+| Relevance baseline (completed only), WhatsApp | Recall 0.74 | Precision 0.91 | F1 0.82, accuracy 0.71. It missed 7 relevant messages and 4 of them were future planned events. |
+| Relevance, future plans count as relevant, WhatsApp | Recall 1.00 | Precision 0.90 | F1 0.95, accuracy 0.90. Looks better but could be better. |
 
 
 ![Week 7 anonymization: BERT + GLiNER + public places](screenshots/week7_anonymization_bert_gliner_public.png)
+Anonymization with BERT and GLiNER and the public places list. On the synthetic records it now hides 60 of 66 private items (which is up from 51!) and on WhatsApp nothing safe gets hidden anymore.
+
 ![Week 7 relevance: planned events counted as relevant](screenshots/week7_relevance_count_plans.png)
+This is the relevance result when planned events count as relevant. It found all 27 relevant messages but it also marks a lot of casual words (like 'nice' or 'agree') as relevant. Our data only has 4 irrelevant messages so the score doesn't show this problem.
 
 ### Successes, failures, and interpretation
 | Example / category | Expected behavior | Actual behavior | Success or failure? | Likely reason |
 |---|---|---|---|---|
-| [Case] | [Expected] | [Observed] | [Status] | [Hypothesis] |
+| Lowercase Swahili message: "ni wanjiru kutoka mau narok" | Hide "wanjiru" and "mau narok" | Baseline missed both. BERT + GLiNER now hides "wanjiru", but still misses "mau narok". | Partly | BERT learned from capitalized English news. GLiNER handles lowercase names better, but neither recognized this place. |
+| Date of birth: "DOB 04/11/1998" | Hide the date | Baseline missed it. GLiNER hides it. | Success | BERT has no date of birth category. GLiNER lets us ask for one. |
+| Public place: "today's Nakuru outreach was 31 women" | Keep "Nakuru" visible | Baseline hid it as [LOCATION]. Now it stays visible. | Success | The new public places list (Kenya's 47 counties) tells the code which places are safe. |
+| Casual chat: "nice", "agree", "yall think we're gonna get the midterm back soon" | Irrelevant | With plans counted as relevant, these get marked relevant. On 18 unlabeled chat messages, 14 were marked relevant (vs. 6 before). | Failure | The new wording ("about an activity") is so broad it matches almost anything. Our labels only have 4 irrelevant messages, so the score doesn't catch it. |
+| "I think 9am but I'll double check" | Nothing hidden | GLiNER turns it into "[PERSON]'ll double check" | Failure (minor) | GLiNER sometimes treats "I" as a person. It doesn't leak anything, but it makes the text messier. |
 
 - **What improved?** [Evidence]
 - **What did not improve?** [Evidence]
@@ -245,6 +257,7 @@ AI Disclosure:
 | Member | Work completed | Result (worked / partly / failed) | Evidence | Next step |
 |---|---|---|---|---|
 | Oliver Ortiz | This week, I continued to add in new models to our end-to-end pipeline. I also added our repo to Colab and ran it on numerous inputs to evaluate our current models. | W.I.P. Still need to get more data and find more models to improve performance in certain aspects of our code. | https://colab.research.google.com/drive/1o1VLE-ld7YXWmWRcteyG6sX7fonIrR-4?usp=sharing | Continue to add more models and test our pipeline |
+| Prableen Kakar | I tried three fixes for the problems from Week 6. First, I added GLiNER (knowledgator/gliner-pii-base-v1.0), a model made for private information to catch the lowercase names and dates of birth that BERT missed. I also added an option to run BERT and GLiNER together. Second, I added a list of public places (Kenya's 47 counties, Dandelion Africa, Ministry of Health) that should not be hidden by anonymization so we stop hiding useful locations. I built it from a general list, not from our test labels. Lastly, I added an option to count planned events as relevant since 4 of the 7 relevance misses were planned events. I added switches to the evaluation scripts (--ner bert/gliner/both, --public-entities, --count-plans) and compared every version on the same data. | What worked was BERT and GLiNER and public places raised synthetic recall from 0.77 to 0.91 and F1 from 0.71 to 0.85, and WhatsApp precision from 0.73 to 1.00. GLiNER by itself just scored the same as BERT so it kind of worked. Counting plans found every planned event (recall 1.00) but it also marked most of the casual chat as relevant. | Commit 89cd752 (code), commit 88eeca5 (screenshots). Code: src/anonymize.py (GlinerNER, CombinedNER), src/relevance.py (count_plans), src/evaluation/anonymization.py, src/evaluation/classification.py, data/public_entities.json. Screenshots: screenshots/week7_anonymization_bert_gliner_public.png, screenshots/week7_relevance_count_plans.png | Label the rest of the 45 chat messages and re-compare the relevance versions. Also, try a higher threshold for the plans version. Also, add regex for record numbers and M-Pesa codes (Kenya's mobile money service). |
 
 ---
 
