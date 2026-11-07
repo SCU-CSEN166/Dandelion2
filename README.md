@@ -221,7 +221,8 @@ AI Disclosure:
 | Speech-to-text baseline | 0.423 WER | .203 CER | These results are from distil-whisper/distil-small.en. We found that openai/whisper-small.en performed better, but took much longer to run |
 | Speech-to-text improved | 0.138 WER | 0.049 CER | Switched to a more clear dataset which drastically improved our results |
 | Extraction baseline | 1.0 F1 Location | 0.40 F1 status | This model performed perfectly extracting locations, however struggled with extracting status of activity, which might mean that we need a seperate model to extract status |
-| Anonymization Baseline | 0.90 Recall | 0.78 Accuracy | This is the right direction as our primary metric with anonymization is recall, however this should be as close to 1.0 as possible |
+| Anonymization Baseline | 0.773 Recall | 0.713 F1 | BERT + regex on the 20-record synthetic PII set |
+| Updated Anonymization | 0.909 Recall | 0.845 F1 | BERT + GLiNER + reviewed public places, with fewer false positives and false negatives |
 | Classification Baseline | 0.9 Precision | 0.813 F1 | Classifying data as relevant or irrelant also performed okay, however there is room for improvement by continueing to experiment with different models |
 
 
