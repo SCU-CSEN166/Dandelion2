@@ -233,6 +233,8 @@ AI Disclosure:
 | Relevance baseline (completed only), WhatsApp | Recall 0.74 | Precision 0.91 | F1 0.82, accuracy 0.71. It missed 7 relevant messages and 4 of them were future planned events. |
 | Relevance, future plans count as relevant, WhatsApp | Recall 1.00 | Precision 0.90 | F1 0.95, accuracy 0.90. Looks better but could be better. |
 
+![Extraction Data]("screenshots/extraction_results.png)
+
 
 ![Week 7 anonymization: BERT + GLiNER + public places](screenshots/week7_anonymization_bert_gliner_public.png)
 Anonymization with BERT and GLiNER and the public places list. On the synthetic records it now hides 60 of 66 private items (which is up from 51!) and on WhatsApp nothing safe gets hidden anymore.
