@@ -156,6 +156,8 @@ Output: {
   "referrals": null,
   "needs_review": []
 }
+Expected Behavior: The model should recognize Grace Wanjiru as a person and mask it as [PERSON]. 0712 345 678 should be recognized as a phone number and masked as [PHONE]. The rest of the sentence should be kept readable. This message doesn't provide a full field event report, so activity/count/referral fields can stay empty or be labeled as null. 
+
 - **Example 2:** 
 Input: `uv run main.py --message "Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up."`
 Output: {
@@ -172,6 +174,7 @@ Output: {
   "referrals": 4,
   "needs_review": []
 }
+Expected Behavior: We excepted the message to be classified as relevant, detect that the activity was completed, have the activity type show "family planning outreach," have the participant count as 31, referrals as 4 and anonymize the location according to the week 6 baseline behavior we had. At the end these fields should be outputted in the structured results. 
 
 ### Attempts and outcomes
 | Attempt / change | Worked? (Yes / Partly / No) | Evidence (output, metric, link) | What we learned / next step |
