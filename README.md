@@ -282,9 +282,9 @@ This is the relevance result when planned events count as relevant. It found all
 
 | Failure case / category | What went wrong | Possible cause | Severity / user impact | Proposed fix |
 |---|---|---|---|---|
-| [Case 1] | [Observation] | [Hypothesis] | [Impact] | [Fix] |
-| [Case 2] | [Observation] | [Hypothesis] | [Impact] | [Fix] |
-| [Case 3] | [Observation] | [Hypothesis] | [Impact] | [Fix] |
+| Kenyan names and place names | “Faith Achieng” became “faith aching”; both models changed “Kampi ya Moto” to “Campi Amoto.” | Local names and pronunciations may be underrepresented in the models training data. | High: incorrect names or locations can affect referrals, anonymization and extraction. | I could add a reviewed glossary of local names and places. I could also measure name and location accuracy separately |
+| Phone-number transcription | Distil-Whisper split up digits on several clips. The results would end up being unaccurate. Whisper Small did better on this sample. | Fast sequences of spoken digits are easy to confuse or format inconsistently. | High: a wrong number can prevent follow-up with a participant. | To improve we could track the exact digit accuracy separately and/or flag phone numbers for human verification.|
+| Repetitions and omitted details | Both models repeated part of the “Monday” phrase in message 7. Distil-Whisper also missed some follow-up details in message 6. | Conversational speech or decoding errors could have caused this. | Medium to high: repeated or missing details can make follow-up actions confusing/not serve the full needs one would need in a follow up. | I can review these errors against the reference transcripts and test more conversational clips. I can also verify the referrals/follow-ups. |
 
 ### Changes attempted after stress-testing
 | Change | Worked? (Yes / Partly / No) | Evidence | Keep, revise, or revert? |
@@ -294,7 +294,7 @@ This is the relevance result when planned events count as relevant. It found all
 ### Individual contributions during that week
 | Member | Work completed | Result (worked / partly / failed) | Evidence | Next step |
 |---|---|---|---|---|
-| [Name] | [Specific work] | [Status] | [Link] | [Next step] |
+| Priyanka Ganguly | Compared Distil-Whisper Small and Whisper Small on 10 hidden-test audio clips using reference transcripts; calculated WER/CER and documented recurring ASR errors. | 10 hidden-test audio clips using reference transcripts; calculated WER/CER and documented recurring ASR errors.	Worked for the evaluation. Whisper Small scored 10.0% WER / 5.6% CER; Distil-Whisper Small scored 15.1% / 8.3%. Both still made errors with local names and places. | (https://colab.research.google.com/drive/1Ba0hFutu98B9gEcrXRTVKFOdV_9Z3mNd?usp=sharing#scrollTo=Oo9GZ8O-LN4D) | Test more African-accented clips and track name, location, and phone-number accuracy separately. |
 
 ---
 
