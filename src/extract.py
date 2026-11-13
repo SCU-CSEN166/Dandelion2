@@ -28,8 +28,12 @@ VERBATIM_STRING = "verbatim-string"  # must be copied from the text
 
 TEMPLATE = {
     "status": ["completed", "planned", "neither"],
+    # Dandelion Africa's program areas. The last five were added for the real voice notes
+    # (data/dandelion_audio), which were otherwise mostly "other".
     "activity_type": ["family planning outreach", "youth health session", "savings group meeting",
-                      "business training", "community health visit", "other"],
+                      "business training", "community health visit", "nutrition talk",
+                      "menstrual hygiene session", "gender-based violence dialogue",
+                      "cancer screening", "agriculture training", "other"],
     "location": VERBATIM_STRING,
     "participant_count": INTEGER,
     "referrals": INTEGER,

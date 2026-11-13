@@ -14,7 +14,7 @@ from .schema import Attachment, Message
 
 # Importing a module registers its Source. Auto-detection tries them in this
 # order, so the generic plain-text fallback must come last.
-from . import whatsapp, json_source, text_source  # noqa: F401, E402
+from . import whatsapp, audio_folder, json_source, text_source  # noqa: F401, E402
 
 __all__ = ["Attachment", "Message", "Source", "register", "load", "save_json", "load_json"]
 

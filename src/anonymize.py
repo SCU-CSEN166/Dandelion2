@@ -13,17 +13,27 @@ from .utils import torch_device
 NER_MODEL = "dslim/bert-base-NER"
 NER_STRIDE_TOKENS = 64  # overlap between windows when a message exceeds BERT's input length
 
-# Each pattern's `value` group is the part that gets masked.
-PII_PATTERNS = {
-    label: re.compile(pattern, re.IGNORECASE)
-    for label, pattern in {
-        "EMAIL": r"(?<![\w.+-])(?P<value>[\w.+-]+@[\w.-]+\.[A-Za-z]{2,})(?![\w-])",
+# Digit words Whisper writes when a number is read aloud ("0711100 for 82").
+_SPOKEN_DIGIT_WORDS = r"(?:oh|zero|one|two|to|too|three|four|for|five|six|seven|eight|nine|double|triple)"
+
+# (label, pattern) pairs; several patterns may share a label. Each pattern's `value` group is the part masked.
+PII_PATTERNS = [
+    (label, re.compile(pattern, re.IGNORECASE))
+    for label, pattern in [
+        ("EMAIL", r"(?<![\w.+-])(?P<value>[\w.+-]+@[\w.-]+\.[A-Za-z]{2,})(?![\w-])"),
         # Kenyan mobile numbers: +254 7xx / 01xx ... or the local 07xx / 01xx form.
-        "PHONE": r"(?<!\w)(?P<value>(?:\+?254[\s.-]?[17]|0[17])(?:[\s.-]?\d){8})(?!\w)",
+        ("PHONE", r"(?<!\w)(?P<value>(?:\+?254[\s.-]?[17]|0[17])(?:[\s.-]?\d){8})(?!\w)"),
+        # The same, as transcribed from speech: stray separators ("079--0-100-274", "0.729-0-4008")
+        # and sometimes a digit dropped by ASR, so 7-8 digits after the 07 / 01.
+        ("PHONE", r"(?<![\w.])(?P<value>0[\s.-]*[17](?:[\s.-]*\d){7,8})(?!\d)"),
+        # Anything number-like right after a cue such as "my number is" / "call me on", including
+        # spoken digit words. Catches numbers the patterns above can't parse.
+        ("PHONE", (rf"\b(?:number\s+is|number\s*:|(?:call|reach|contact|text)\s+(?:me|her|him|us|them)\s+on)\s*"
+                   rf"(?P<value>\d(?:[\d.\-]|\s(?=[\d.\-]|{_SPOKEN_DIGIT_WORDS}\b)|{_SPOKEN_DIGIT_WORDS}\b)*\d)")),
         # Only the digits after an "ID" / "ID No." / "ID number" prefix.
-        "NATIONAL_ID": r"\b(?:ID\s*(?:No\.?|number)?\s*[:#.-]?\s*)(?P<value>\d{7,8})\b",
-    }.items()
-}
+        ("NATIONAL_ID", r"\b(?:ID\s*(?:No\.?|number)?\s*[:#.-]?\s*)(?P<value>\d{7,8})\b"),
+    ]
+]
 
 # NER entity group -> redaction label. Other groups (e.g. MISC) are left alone.
 # DOB is only produced by GLiNER; BERT never returns it.
@@ -134,7 +144,7 @@ class Anonymizer:
 
     def _pattern_spans(self, text: str) -> list[dict]:
         spans = []
-        for label, pattern in PII_PATTERNS.items():
+        for label, pattern in PII_PATTERNS:
             for match in pattern.finditer(text):
                 start, end = match.span("value")
                 if not self._is_public(text[start:end]):
