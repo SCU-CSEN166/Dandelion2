@@ -12,16 +12,11 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "[PERSON] [PERSON], this is [PERSON], the CHV from [LOCATION]. I want to report on today's family planning outreach at [LOCATION] [ORG]. We started at 9 in the morning with a short talk on the different methods than the nurse Sister [PERSON] gave services. In total 42 women came and most of them were young mothers. Six women were referred to wrong eye health center for implants because we ran out of stock. One mama asked to be called for follow-up, her number is [PHONE]. I will send the register tomorrow. Thank you.",
+    "anonymized_text": "[PERSON], this is [PERSON], the [ORG] from [LOCATION]. I want to report on today's family planning outreach at [ORG]. We started at 9 in the morning with a short talk on the different methods than the nurse [PERSON] gave services. In total 42 women came and most of them were young mothers. Six women were referred to wrong eye health center for implants because we ran out of stock. One mama asked to be called for follow-up, her number is [PHONE]. I will send the register tomorrow. Thank you.",
     "anonymized_sender": null,
     "redactions": [
       {
         "start": 0,
-        "end": 6,
-        "label": "PERSON"
-      },
-      {
-        "start": 7,
         "end": 10,
         "label": "PERSON"
       },
@@ -31,22 +26,22 @@
         "label": "PERSON"
       },
       {
+        "start": 39,
+        "end": 42,
+        "label": "ORG"
+      },
+      {
         "start": 48,
         "end": 53,
         "label": "LOCATION"
       },
       {
         "start": 111,
-        "end": 122,
-        "label": "LOCATION"
-      },
-      {
-        "start": 123,
         "end": 133,
         "label": "ORG"
       },
       {
-        "start": 231,
+        "start": 224,
         "end": 243,
         "label": "PERSON"
       },
@@ -58,12 +53,12 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.9044706225395203
+      "score": 0.9453680515289307
     },
     "extraction": {
       "status": "completed",
       "activity_type": "family planning outreach",
-      "location": "[LOCATION]",
+      "location": "[ORG]",
       "participant_count": 42,
       "referrals": 6,
       "needs_review": [
@@ -84,7 +79,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "Good evening everyone, its faith aching. I was also at the [ORG] outreach today with grace. Just to confirm the numbers, we served 42 women on family planning and 6 were referred for implants. The turnout was very good even though the rain started around noon. The women asked if we can come back next month, so maybe we can plan that. If anyone needs the photos, call me on [PHONE] and I will share them on what's up. [PERSON].",
+    "anonymized_text": "Good evening everyone, its faith aching. I was also at the [ORG] outreach today with grace. Just to confirm the numbers, we served 42 women on family planning and 6 were referred for implants. The turnout was very good even though the rain started around noon. The women asked if we can come back next month, so maybe we can plan that. If anyone needs the photos, call me on [DATE_OF_BIRTH] and I will share them on what's up. [PERSON].",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -95,7 +90,7 @@
       {
         "start": 380,
         "end": 390,
-        "label": "PHONE"
+        "label": "DATE_OF_BIRTH"
       },
       {
         "start": 427,
@@ -105,7 +100,7 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.6773905754089355
+      "score": 0.8918560147285461
     },
     "extraction": {
       "status": "completed",
@@ -164,10 +159,17 @@
       }
     ],
     "relevance": {
-      "label": "irrelevant",
-      "score": 0.2135360687971115
+      "label": "relevant",
+      "score": 0.5372148752212524
     },
-    "extraction": null
+    "extraction": {
+      "status": "neither",
+      "activity_type": "other",
+      "location": "[LOCATION]",
+      "participant_count": null,
+      "referrals": null,
+      "needs_review": []
+    }
   },
   {
     "id": "audio:dandelion_audio:msg04",
@@ -212,10 +214,19 @@
       }
     ],
     "relevance": {
-      "label": "irrelevant",
-      "score": 0.443869411945343
+      "label": "relevant",
+      "score": 0.8018561601638794
     },
-    "extraction": null
+    "extraction": {
+      "status": "completed",
+      "activity_type": "savings group meeting",
+      "location": "[LOCATION]",
+      "participant_count": 25,
+      "referrals": 4,
+      "needs_review": [
+        "referrals"
+      ]
+    }
   },
   {
     "id": "audio:dandelion_audio:msg05",
@@ -230,7 +241,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "Morning everyone, this is [PERSON]. Yesterday we went to [LOCATION] Primary School for the Menstral hygiene session with the girls in class 6-8. 60 girls attended. We talked about periods, how to use and dispose of pads safely, and why they should not miss school. At the end, every girl received a pack of reusable sanitary pads. The head teacher, Mrs. [PERSON], has asked us to come back and also talk to the mothers. Her phone number is [PHONE] if someone wants to follow up.",
+    "anonymized_text": "Morning everyone, this is [PERSON]. Yesterday we went to [ORG] for the Menstral hygiene session with the girls in class 6-8. 60 girls attended. We talked about periods, how to use and dispose of pads safely, and why they should not miss school. At the end, every girl received a pack of reusable sanitary pads. The head teacher, [PERSON], has asked us to come back and also talk to the mothers. Her phone number is [PHONE] if someone wants to follow up.",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -240,11 +251,11 @@
       },
       {
         "start": 60,
-        "end": 68,
-        "label": "LOCATION"
+        "end": 83,
+        "label": "ORG"
       },
       {
-        "start": 355,
+        "start": 350,
         "end": 367,
         "label": "PERSON"
       },
@@ -256,12 +267,12 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.8111936450004578
+      "score": 0.9168434143066406
     },
     "extraction": {
       "status": "completed",
       "activity_type": "menstrual hygiene session",
-      "location": "Primary School",
+      "location": "[ORG]",
       "participant_count": 60,
       "referrals": null,
       "needs_review": []
@@ -280,7 +291,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "Hello team, it's [PERSON]. I want to share about the community dialogue on gender-based violence we held this afternoon at the chief's camp in [LOCATION]. 35 women attended plus a few village elders. The police gender desk officer Corporal and [PERSON] explained how to report cases and where survivors can get help. Some women shared their stories, but it was very emotional. Three women asked for private follow-up, and we connected them with the counselor. For anything about this session, you can call me on [PHONE].",
+    "anonymized_text": "Hello team, it's [PERSON]. I want to share about the community dialogue on gender-based violence we held this afternoon at the chief's camp in [LOCATION]. 35 women attended plus a few village elders. The [ORG] gender desk officer [PERSON] and [PERSON] explained how to report cases and where survivors can get help. Some women shared their stories, but it was very emotional. Three women asked for private follow-up, and we connected them with the counselor. For anything about this session, you can call me on [PHONE].",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -292,6 +303,16 @@
         "start": 146,
         "end": 151,
         "label": "LOCATION"
+      },
+      {
+        "start": 202,
+        "end": 208,
+        "label": "ORG"
+      },
+      {
+        "start": 229,
+        "end": 237,
+        "label": "PERSON"
       },
       {
         "start": 242,
@@ -306,7 +327,7 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.6395663022994995
+      "score": 0.7270135879516602
     },
     "extraction": {
       "status": "completed",
@@ -332,7 +353,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "Hi everyone, sister [PERSON] here. Today we did the cervical cancer screening camp at [LOCATION]. We screened 28 women. Most results were normal but three women had positive results so we referred them to [LOCATION] level 5 hospital for father treatment. One of them is Mrs. [PERSON] and she has a bridge to go on Monday. Please, whoever is going to [LOCATION] that day help her with transport. Her number is [PHONE]. I will upload the full report later.",
+    "anonymized_text": "Hi everyone, sister [PERSON] here. Today we did the cervical cancer screening camp at [LOCATION]. We screened 28 women. Most results were normal but three women had positive results so we referred them to Nakuru level 5 hospital for father treatment. One of them is [PERSON] and she has a bridge to go on Monday. Please, whoever is going to Nakuru that day help her with transport. Her number is [PHONE]. I will upload the full report later.",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -346,19 +367,9 @@
         "label": "LOCATION"
       },
       {
-        "start": 220,
-        "end": 226,
-        "label": "LOCATION"
-      },
-      {
-        "start": 286,
+        "start": 281,
         "end": 296,
         "label": "PERSON"
-      },
-      {
-        "start": 363,
-        "end": 369,
-        "label": "LOCATION"
       },
       {
         "start": 418,
@@ -368,7 +379,7 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.8098989129066467
+      "score": 0.8862866759300232
     },
     "extraction": {
       "status": "completed",
@@ -394,7 +405,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "[PERSON]. Congratulations to [PERSON]-[PERSON]-2 on the new baby. We are so happy for you. Ladies, let's plan to visit her this weekend at her home in [LOCATION] after church. I suggest we each contribute 200 shillings for a small gift, maybe a baby blanket and some anger. Send your contribution to [PERSON] on empesa. Her number is [PHONE]. And please don't forget to bring your own chairs last time we were standing. Okay, have a blessed evening.",
+    "anonymized_text": "[PERSON]. Congratulations to [PERSON] on the new baby. We are so happy for you. Ladies, let's plan to visit her this weekend at her home in [LOCATION] after church. I suggest we each contribute 200 shillings for a small gift, maybe a baby blanket and some anger. Send your contribution to [PERSON] on [ORG]. Her number is [PHONE]. And please don't forget to bring your own chairs last time we were standing. Okay, have a blessed evening.",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -404,12 +415,7 @@
       },
       {
         "start": 22,
-        "end": 34,
-        "label": "PERSON"
-      },
-      {
-        "start": 35,
-        "end": 38,
+        "end": 40,
         "label": "PERSON"
       },
       {
@@ -423,16 +429,28 @@
         "label": "PERSON"
       },
       {
+        "start": 297,
+        "end": 303,
+        "label": "ORG"
+      },
+      {
         "start": 319,
         "end": 329,
         "label": "PHONE"
       }
     ],
     "relevance": {
-      "label": "irrelevant",
-      "score": 0.2381480485200882
+      "label": "relevant",
+      "score": 0.5726934671401978
     },
-    "extraction": null
+    "extraction": {
+      "status": "neither",
+      "activity_type": "community health visit",
+      "location": "[LOCATION]",
+      "participant_count": null,
+      "referrals": null,
+      "needs_review": []
+    }
   },
   {
     "id": "audio:dandelion_audio:msg09",
@@ -447,7 +465,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "Hello, [PERSON]. This is [PERSON] reporting from [LOCATION]. Today we held the kitchen garden training for women farmers. 18 women attended. The agriculture officer, Mr. [PERSON], showed them how to make a sack garden and how to make compost from kitchen waste. Each woman received seedlings of succuma wiki and spinach to plant at home. Next month we will visit their homes to see how the gardens are doing. If you want to join the follow-up visits, call me on [PHONE].",
+    "anonymized_text": "Hello, [PERSON]. This is [PERSON] reporting from [LOCATION]. Today we held the kitchen garden training for women farmers. 18 women attended. The agriculture officer, [PERSON], showed them how to make a sack garden and how to make compost from kitchen waste. Each woman received seedlings of succuma wiki and spinach to plant at home. Next month we will visit their homes to see how the gardens are doing. If you want to join the follow-up visits, call me on [PHONE].",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -466,7 +484,7 @@
         "label": "LOCATION"
       },
       {
-        "start": 173,
+        "start": 169,
         "end": 185,
         "label": "PERSON"
       },
@@ -478,7 +496,7 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.6438767910003662
+      "score": 0.8650521636009216
     },
     "extraction": {
       "status": "planned",
@@ -502,7 +520,7 @@
       }
     ],
     "is_system": false,
-    "anonymized_text": "Good evening, this is [PERSON]. I was helping Sister [PERSON] at the screening camp in [LOCATION] today. Just adding to her report, we had 28 women screened for cervical cancer and 3 were referred to [LOCATION] level 5. The women were very happy because many of them had never been screened before. Next time we should bring more chairs and water because the key was long. My number is [PHONE] if you need anything from me.",
+    "anonymized_text": "Good evening, this is [PERSON]. I was helping [PERSON] at the screening camp in [LOCATION] today. Just adding to her report, we had 28 women screened for cervical cancer and 3 were referred to Nakuru level 5. The women were very happy because many of them had never been screened before. Next time we should bring more chairs and water because the key was long. My number is [PHONE] if you need anything from me.",
     "anonymized_sender": null,
     "redactions": [
       {
@@ -511,18 +529,13 @@
         "label": "PERSON"
       },
       {
-        "start": 57,
+        "start": 50,
         "end": 62,
         "label": "PERSON"
       },
       {
         "start": 88,
         "end": 94,
-        "label": "LOCATION"
-      },
-      {
-        "start": 197,
-        "end": 203,
         "label": "LOCATION"
       },
       {
@@ -533,12 +546,12 @@
     ],
     "relevance": {
       "label": "relevant",
-      "score": 0.821643590927124
+      "score": 0.8944604396820068
     },
     "extraction": {
       "status": "completed",
       "activity_type": "cancer screening",
-      "location": "[LOCATION]",
+      "location": "Nakuru level 5",
       "participant_count": 28,
       "referrals": 3,
       "needs_review": []
