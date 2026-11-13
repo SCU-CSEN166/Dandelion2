@@ -27,11 +27,12 @@ import csv
 import json
 from pathlib import Path
 
-from src.anonymize import Anonymizer, anonymize
-from src.config import OUTPUT_DIR, PUBLIC_ENTITIES
+from src.anonymize import Anonymizer, CombinedNER, GlinerNER, anonymize
+from src.config import (OUTPUT_DIR, PUBLIC_ENTITIES, RELEVANCE_COUNT_PLANS, RELEVANCE_MIN_WORDS,
+                        RELEVANCE_SKIP_QUESTIONS, USE_GLINER)
 from src.extract import extract
 from src.ingest import Attachment, Message, load
-from src.relevance import classify
+from src.relevance import RelevanceClassifier, classify
 from src.transcribe import transcribe
 from src.utils import write_json
 
@@ -175,11 +176,14 @@ def main() -> None:
 
     # 3) Anonymize (fills anonymized_text, redactions, anonymized_sender)
     print("3) Anonymizing", flush=True)
-    anonymize(messages, Anonymizer(public_entities=PUBLIC_ENTITIES))
+    # BERT + GLiNER together when USE_GLINER (Anonymizer().ner is the default BERT pipeline).
+    ner = CombinedNER(Anonymizer().ner, GlinerNER()) if USE_GLINER else None
+    anonymize(messages, Anonymizer(ner=ner, public_entities=PUBLIC_ENTITIES))
 
     # 4) Determine relevance on the anonymized text (fills relevance)
     print("4) Classifying relevance", flush=True)
-    classify(messages)
+    classify(messages, RelevanceClassifier(count_plans=RELEVANCE_COUNT_PLANS, min_words=RELEVANCE_MIN_WORDS,
+                                           skip_questions=RELEVANCE_SKIP_QUESTIONS))
 
     # 5) Extract activity fields from relevant messages (fills extraction)
     print("5) Extracting activity fields", flush=True)
