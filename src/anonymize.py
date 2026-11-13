@@ -32,6 +32,14 @@ PII_PATTERNS = [
                    rf"(?P<value>\d(?:[\d.\-]|\s(?=[\d.\-]|{_SPOKEN_DIGIT_WORDS}\b)|{_SPOKEN_DIGIT_WORDS}\b)*\d)")),
         # Only the digits after an "ID" / "ID No." / "ID number" prefix.
         ("NATIONAL_ID", r"\b(?:ID\s*(?:No\.?|number)?\s*[:#.-]?\s*)(?P<value>\d{7,8})\b"),
+        # Week 8: codes that can identify a person but that NER models ignore. (?-i:...) makes
+        # these case-sensitive, so ordinary lowercase words never match.
+        # M-Pesa transaction codes: 10 capital letters and digits, mixing both (e.g. "SCK7H2LQ9D").
+        ("MPESA_CODE", r"(?<![\w-])(?P<value>(?-i:(?=[A-Z0-9]*\d)(?=[A-Z0-9]*[A-Z])[A-Z0-9]{10}))(?![\w-])"),
+        # Patient / health record numbers: capital-letter groups then digits (e.g. "NKR-MCH-004512").
+        ("HEALTH_RECORD_NO", r"(?<![\w-])(?P<value>(?-i:[A-Z]{2,5}(?:-[A-Z]{2,5})*-\d{3,}))(?![\w-])"),
+        # Police Occurrence Book (OB) case numbers (e.g. "OB 37/09/2026", "OB No. 12/3/2025").
+        ("CASE_NUMBER", r"(?<!\w)(?P<value>(?-i:OB)\s*(?:No\.?\s*)?\d{1,4}/\d{1,2}/\d{2,4})(?!\d)"),
     ]
 ]
 
