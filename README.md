@@ -232,6 +232,7 @@ AI Disclosure:
 | **Current: BERT + GLiNER + public places, WhatsApp** | **Recall 0.92** | **Precision 1.00** | **F1 0.96.** Place names like Nakuru aren't hidden now. |
 | Relevance baseline (completed only), WhatsApp | Recall 0.74 | Precision 0.91 | F1 0.82, accuracy 0.71. It missed 7 relevant messages and 4 of them were future planned events. |
 | Relevance, future plans count as relevant, WhatsApp | Recall 1.00 | Precision 0.90 | F1 0.95, accuracy 0.90. Looks better but could be better. |
+| Fine-tuned Whisper Small, 100 Nigerian-accented English validation clips | WER 0.216, down from 0.321 | - | Fine-tuning our model improved WER on these clips.
 
 ![Extraction Data](screenshots/extraction_results.png)
 
@@ -252,6 +253,7 @@ This is the relevance result when planned events count as relevant. It found all
 | "I think 9am but I'll double check" | Nothing hidden | GLiNER turns it into "[PERSON]'ll double check" | Failure (minor) | GLiNER sometimes treats "I" as a person. It doesn't leak anything, but it makes the text messier. |
 | reviewed public location | keep public location visible while masking private PII | public place stayed visible | success | reviewed public-entity allowlist | 
 | msg_012 "just recommend rn, i dont think theyve gone to the clinic yet" | relevant | predicted irrelevant | | failure | fragmented and informal wording and not having the prior conversation context |
+| Synthetic WhatsApp Voice Notes | Transcribe Spoken Words Accurately | All 3 notes were transcribed, but “sleep” became “steep” and “curve” became “curb. | Partly | Slang and individual words may be difficult for the model to recognize.
 
 - **What improved?** We had anonymization recall improve from 0.773 to 0.909. As well as anonymization F1 improved from 0.713 to 0.845. The false negatives dropped so that means fewer PII entities were missed. The public-place handling reduced unnecessary masking. 
 - **What did not improve?** Relevance still missed the messages that depended on context. There were 7 false negatives and 2 false positives. Examples of this asre msg_004, msg_012, and msg_027. 
