@@ -48,10 +48,14 @@ def main():
     parser.add_argument('--public-entities', type=Path, help='Reviewed JSON list, independent of test annotations')
     # Week 7 experiment: count planned activities as relevant.
     parser.add_argument('--count-plans', action='store_true', help='treat planned activities as relevant')
+    # Week 8 experiment: rule out short chat and questions before asking the model.
+    parser.add_argument('--min-words', type=int, default=0, help='messages with fewer words are irrelevant (0 = off)')
+    parser.add_argument('--skip-questions', action='store_true', help='messages ending in "?" are irrelevant')
     args = parser.parse_args()
     public = json.loads(args.public_entities.read_text()) if args.public_entities else []
     result = evaluate(load_records(args.input), Anonymizer(public_entities=public),
-                      RelevanceClassifier(count_plans=args.count_plans))
+                      RelevanceClassifier(count_plans=args.count_plans, min_words=args.min_words,
+                                          skip_questions=args.skip_questions))
     # ADAPTED: metrics written before the per-record outputs.
     report = {'models': {'ner': NER_MODEL, 'classification': CLASSIFIER_MODEL}, 'dataset': str(args.input),
               'metrics': result['metrics'], 'records': result['records']}
