@@ -1,0 +1,608 @@
+{
+  "records": [
+    {
+      "id": "msg_001",
+      "text": "Today we held a family planning out outreach in [LOCATION]. 31 women attended and 4 were referred to the clinic for follow-up.",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "family planning outreach",
+        "location": "[LOCATION]",
+        "participant_count": 31,
+        "referrals": 4,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "family planning outreach",
+        "location": "Nakuru",
+        "participant_count": 31,
+        "referrals": 4
+      }
+    },
+    {
+      "id": "msg_002",
+      "text": "how did it go?",
+      "predicted": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_003",
+      "text": "It went well! We had 31 women attend and 4 were referred to the clinic for follow-up.",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "community health visit",
+        "location": null,
+        "participant_count": 31,
+        "referrals": 4,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "family planning outreach",
+        "location": null,
+        "participant_count": 31,
+        "referrals": 4
+      }
+    },
+    {
+      "id": "msg_004",
+      "text": "Nothing major, but a few people came late and we’re still waiting on one follow-up form.",
+      "predicted": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_005",
+      "text": "[PERSON] is handling them. Her number is [PHONE] if the clinic needs to reach her.",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "other",
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_006",
+      "text": "We’re planning another youth health session on Friday morning. We’re expecting around 25–30 students but the final number isn’t confirmed yet.",
+      "predicted": {
+        "status": "planned",
+        "activity_type": "youth health session",
+        "location": null,
+        "participant_count": 25,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "planned",
+        "activity_type": "youth health session",
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_007",
+      "text": "I think 9am but I’ll double check.",
+      "predicted": {
+        "status": "planned",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "planned",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_008",
+      "text": "Also just to confirm, today’s [ORG] outreach was 31 women and 4 referrals.",
+      "predicted": {
+        "status": "planned",
+        "activity_type": "family planning outreach",
+        "location": null,
+        "participant_count": 31,
+        "referrals": 4,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "family planning outreach",
+        "location": "Nakuru",
+        "participant_count": 31,
+        "referrals": 4
+      }
+    },
+    {
+      "id": "msg_009",
+      "text": "I’ll send the full participant details later once everything is finalized.",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_010",
+      "text": "we finished the youth health session in [LOCATION] this afternoon, 42 students came",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "youth health session",
+        "location": "[LOCATION]",
+        "participant_count": 42,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "youth health session",
+        "location": "Baringo",
+        "participant_count": 42,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_011",
+      "text": "ya menstrual health + reproductive health. 2 students also asked for clinic referrals",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "youth health session",
+        "location": null,
+        "participant_count": 2,
+        "referrals": 2,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "youth health session",
+        "location": null,
+        "participant_count": null,
+        "referrals": 2
+      }
+    },
+    {
+      "id": "msg_012",
+      "text": "just recommended rn, i dont think theyve gone to the clinic yet",
+      "predicted": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": 2
+      }
+    },
+    {
+      "id": "msg_013",
+      "text": "also the facilitator was [PERSON] and her number is [PHONE] if anyone needs to follow up",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_014",
+      "text": "theres one planned for thursday in [LOCATION] but the final count isnt confirmed yet",
+      "predicted": {
+        "status": "planned",
+        "activity_type": null,
+        "location": "[LOCATION]",
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "planned",
+        "activity_type": "youth health session",
+        "location": "Nakuru",
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_015",
+      "text": "10am i think but lemme double check",
+      "predicted": {
+        "status": "planned",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "planned",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_016",
+      "text": "also just confirming todays one was 42 students + 2 referrals",
+      "predicted": {
+        "status": "planned",
+        "activity_type": "other",
+        "location": null,
+        "participant_count": 42,
+        "referrals": 2,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "youth health session",
+        "location": null,
+        "participant_count": 42,
+        "referrals": 2
+      }
+    },
+    {
+      "id": "msg_017",
+      "text": "yes they finish this morning, around 19 women was there",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "family planning outreach",
+        "location": null,
+        "participant_count": 19,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "women's savings group meeting",
+        "location": null,
+        "participant_count": 19,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_018",
+      "text": "both i think, they did savings first and then short business training after",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "business training",
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "savings meeting and business training",
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_019",
+      "text": "yes 2 women got loans but i dont have full details yet",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "other",
+        "location": null,
+        "participant_count": 2,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "women's savings group meeting",
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_020",
+      "text": "one name is [PERSON]. other one not written in update",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_021",
+      "text": "also [PERSON] number is [PHONE] for follow up",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_022",
+      "text": "[LOCATION]",
+      "predicted": {
+        "status": null,
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": "Green Valley Village",
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_023",
+      "text": "next tuesday but location not confirm yet",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "planned",
+        "activity_type": "women's savings group meeting",
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_024",
+      "text": "they visited 14 homes today and around 21 women received health information",
+      "predicted": {
+        "status": "completed",
+        "activity_type": "community health visit",
+        "location": null,
+        "participant_count": 21,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "community health visit",
+        "location": null,
+        "participant_count": 21,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_025",
+      "text": "message says 3 women need follow up but not clear if referral already done",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "community health visit",
+        "location": null,
+        "participant_count": null,
+        "referrals": 3
+      }
+    },
+    {
+      "id": "msg_026",
+      "text": "it says [LOCATION] area",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": "Kapkures area",
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_027",
+      "text": "yes [PERSON] was leading. number is [PHONE]",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_028",
+      "text": "yes one more msg says “household visits done, 20+ women reached and 3 need follow up in [PERSON]”",
+      "predicted": {
+        "status": "neither",
+        "activity_type": "community health visit",
+        "location": "[PERSON]",
+        "participant_count": 20,
+        "referrals": 3,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "completed",
+        "activity_type": "community health visit",
+        "location": "Kapkures",
+        "participant_count": null,
+        "referrals": 3
+      }
+    },
+    {
+      "id": "msg_029",
+      "text": "also btw who is uploading this data to github later",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_030",
+      "text": "yall think we're gonna get the midterm back soon🙁",
+      "predicted": {
+        "status": null,
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    },
+    {
+      "id": "msg_031",
+      "text": "lowkey i was losing sleep for it",
+      "predicted": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null,
+        "needs_review": []
+      },
+      "gold": {
+        "status": "neither",
+        "activity_type": null,
+        "location": null,
+        "participant_count": null,
+        "referrals": null
+      }
+    }
+  ],
+  "metrics": {
+    "records": 31,
+    "context_messages": 5,
+    "accuracy": {
+      "status": 0.5806451612903226,
+      "activity_type": 0.7419354838709677,
+      "location": 0.7741935483870968,
+      "participant_count": 0.8709677419354839,
+      "referrals": 0.9354838709677419,
+      "location_detected": 0.9032258064516129
+    },
+    "needs_review": 0
+  },
+  "dataset": "data/whatsapp_labels.json",
+  "model": "numind/NuExtract-2.0-2B"
+}

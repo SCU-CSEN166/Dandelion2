@@ -1,0 +1,747 @@
+{
+  "records": [
+    {
+      "id": "rec_001",
+      "text": "[ORG] [PERSON] visited the household of [PERSON] in [LOCATION] village, [LOCATION]. [PERSON] (ID No. [NATIONAL_ID]) received a 3-month injectable, and her son [PERSON] was screened for malnutrition. Follow-up phone: [PHONE].",
+      "redactions": [
+        {
+          "start": 0,
+          "end": 3,
+          "label": "ORG"
+        },
+        {
+          "start": 4,
+          "end": 17,
+          "label": "PERSON"
+        },
+        {
+          "start": 43,
+          "end": 58,
+          "label": "PERSON"
+        },
+        {
+          "start": 62,
+          "end": 69,
+          "label": "LOCATION"
+        },
+        {
+          "start": 79,
+          "end": 93,
+          "label": "LOCATION"
+        },
+        {
+          "start": 95,
+          "end": 101,
+          "label": "PERSON"
+        },
+        {
+          "start": 110,
+          "end": 118,
+          "label": "NATIONAL_ID"
+        },
+        {
+          "start": 163,
+          "end": 178,
+          "label": "PERSON"
+        },
+        {
+          "start": 227,
+          "end": 239,
+          "label": "PHONE"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.9200514554977417
+      }
+    },
+    {
+      "id": "rec_002",
+      "text": "Minutes of the [ORG] meeting held at [ORG] market shed. Chairlady [PERSON] reported total savings of [ORG] 184,500. A loan of [ORG] 20,000 was disbursed to [PERSON] via [ORG]-[ORG], transaction SCK7H2LQ9D. Treasurer [PERSON] will follow up with members who missed contributions. A [ORG] field officer attended.",
+      "redactions": [
+        {
+          "start": 15,
+          "end": 44,
+          "label": "ORG"
+        },
+        {
+          "start": 61,
+          "end": 68,
+          "label": "ORG"
+        },
+        {
+          "start": 92,
+          "end": 107,
+          "label": "PERSON"
+        },
+        {
+          "start": 134,
+          "end": 137,
+          "label": "ORG"
+        },
+        {
+          "start": 157,
+          "end": 160,
+          "label": "ORG"
+        },
+        {
+          "start": 185,
+          "end": 195,
+          "label": "PERSON"
+        },
+        {
+          "start": 200,
+          "end": 201,
+          "label": "ORG"
+        },
+        {
+          "start": 202,
+          "end": 206,
+          "label": "ORG"
+        },
+        {
+          "start": 242,
+          "end": 257,
+          "label": "PERSON"
+        },
+        {
+          "start": 314,
+          "end": 330,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.4326108396053314
+      }
+    },
+    {
+      "id": "rec_003",
+      "text": "Mentor [PERSON] met with Form 2 student [PERSON], aged 15, from [ORG] School. [PERSON] has been missing school during her periods and was given reusable sanitary pads under the Youth [ORG]. Her guardian, Mr. [PERSON], can be reached on [PHONE].",
+      "redactions": [
+        {
+          "start": 7,
+          "end": 20,
+          "label": "PERSON"
+        },
+        {
+          "start": 45,
+          "end": 57,
+          "label": "PERSON"
+        },
+        {
+          "start": 73,
+          "end": 97,
+          "label": "ORG"
+        },
+        {
+          "start": 106,
+          "end": 111,
+          "label": "PERSON"
+        },
+        {
+          "start": 208,
+          "end": 215,
+          "label": "ORG"
+        },
+        {
+          "start": 235,
+          "end": 244,
+          "label": "PERSON"
+        },
+        {
+          "start": 264,
+          "end": 280,
+          "label": "PHONE"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.7441345453262329
+      }
+    },
+    {
+      "id": "rec_004",
+      "text": "Case referral: [PERSON], DOB 04/11/1998, reported domestic violence by her husband [PERSON] of [LOCATION], [LOCATION]. She was escorted to [LOCATION] for medical care, and the matter was reported at the local police station under [ORG] 37/09/2026.",
+      "redactions": [
+        {
+          "start": 15,
+          "end": 30,
+          "label": "PERSON"
+        },
+        {
+          "start": 90,
+          "end": 108,
+          "label": "PERSON"
+        },
+        {
+          "start": 112,
+          "end": 124,
+          "label": "LOCATION"
+        },
+        {
+          "start": 126,
+          "end": 140,
+          "label": "LOCATION"
+        },
+        {
+          "start": 162,
+          "end": 194,
+          "label": "LOCATION"
+        },
+        {
+          "start": 275,
+          "end": 277,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.7451156973838806
+      }
+    },
+    {
+      "id": "rec_005",
+      "text": "habari, ni wanjiru kutoka mau narok. dawa ya family planning imeisha, naweza pata appointment kesho? namba yangu ni [PHONE]",
+      "redactions": [
+        {
+          "start": 116,
+          "end": 126,
+          "label": "PHONE"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.7211564779281616
+      }
+    },
+    {
+      "id": "rec_006",
+      "text": "Name: [PERSON] | ID: [NATIONAL_ID] | DOB: 1991-07-23 | Phone: [PHONE] | Email: [EMAIL] | Ward: [LOCATION] | Sub-county: [LOCATION] | Program: Women's Livelihood",
+      "redactions": [
+        {
+          "start": 6,
+          "end": 26,
+          "label": "PERSON"
+        },
+        {
+          "start": 33,
+          "end": 41,
+          "label": "NATIONAL_ID"
+        },
+        {
+          "start": 69,
+          "end": 85,
+          "label": "PHONE"
+        },
+        {
+          "start": 95,
+          "end": 121,
+          "label": "EMAIL"
+        },
+        {
+          "start": 130,
+          "end": 134,
+          "label": "LOCATION"
+        },
+        {
+          "start": 149,
+          "end": 154,
+          "label": "LOCATION"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.7154977321624756
+      }
+    },
+    {
+      "id": "rec_007",
+      "text": "In 2025, [ORG] supported community health promoters across [LOCATION], [LOCATION], [LOCATION] and [LOCATION] counties, working alongside the [ORG]. Over 50,000 women and youth have received contraceptives through the [ORG].",
+      "redactions": [
+        {
+          "start": 9,
+          "end": 25,
+          "label": "ORG"
+        },
+        {
+          "start": 70,
+          "end": 76,
+          "label": "LOCATION"
+        },
+        {
+          "start": 78,
+          "end": 85,
+          "label": "LOCATION"
+        },
+        {
+          "start": 87,
+          "end": 94,
+          "label": "LOCATION"
+        },
+        {
+          "start": 99,
+          "end": 104,
+          "label": "LOCATION"
+        },
+        {
+          "start": 137,
+          "end": 155,
+          "label": "ORG"
+        },
+        {
+          "start": 226,
+          "end": 240,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.9430328607559204
+      }
+    },
+    {
+      "id": "rec_008",
+      "text": "Faith in the program grew after the first clinic day. Hope is high that the harvest will improve, and members asked for mercy on late repayments. Wamama wana imani kubwa na mradi huu.",
+      "redactions": [],
+      "classification": {
+        "label": "relevant",
+        "score": 0.6469184160232544
+      }
+    },
+    {
+      "id": "rec_009",
+      "text": "When [PERSON] joined a savings group in [LOCATION], she had never run a business. Today she keeps 200 chickens and sells eggs to two hotels in [LOCATION] town. \"I used to wait for my husband to give me money,\" [PERSON] says. Her daughter [PERSON] is now in Form 4 at [ORG] Secondary School.",
+      "redactions": [
+        {
+          "start": 5,
+          "end": 19,
+          "label": "PERSON"
+        },
+        {
+          "start": 46,
+          "end": 57,
+          "label": "LOCATION"
+        },
+        {
+          "start": 150,
+          "end": 155,
+          "label": "LOCATION"
+        },
+        {
+          "start": 212,
+          "end": 217,
+          "label": "PERSON"
+        },
+        {
+          "start": 237,
+          "end": 242,
+          "label": "PERSON"
+        },
+        {
+          "start": 263,
+          "end": 279,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.7318402528762817
+      }
+    },
+    {
+      "id": "rec_010",
+      "text": "Hi [PERSON], please send the [ORG] stipend list to [EMAIL] before Friday. [PERSON] ([ORG], [ORG]) has changed his [ORG]-[ORG] number to [PHONE]. Thanks, [PERSON], Programs Officer, [ORG]",
+      "redactions": [
+        {
+          "start": 3,
+          "end": 8,
+          "label": "PERSON"
+        },
+        {
+          "start": 26,
+          "end": 29,
+          "label": "ORG"
+        },
+        {
+          "start": 46,
+          "end": 66,
+          "label": "EMAIL"
+        },
+        {
+          "start": 82,
+          "end": 93,
+          "label": "PERSON"
+        },
+        {
+          "start": 95,
+          "end": 98,
+          "label": "ORG"
+        },
+        {
+          "start": 100,
+          "end": 105,
+          "label": "ORG"
+        },
+        {
+          "start": 123,
+          "end": 124,
+          "label": "ORG"
+        },
+        {
+          "start": 125,
+          "end": 129,
+          "label": "ORG"
+        },
+        {
+          "start": 140,
+          "end": 152,
+          "label": "PHONE"
+        },
+        {
+          "start": 162,
+          "end": 177,
+          "label": "PERSON"
+        },
+        {
+          "start": 197,
+          "end": 213,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.34066739678382874
+      }
+    },
+    {
+      "id": "rec_011",
+      "text": "Mobile clinic at [LOCATION] chief's camp served 47 clients. Client [PERSON], patient no. NKR-MCH-004512, received a 5-year implant. Child [PERSON], under 5, was given vitamin A and dewormed. One client was referred to [LOCATION].",
+      "redactions": [
+        {
+          "start": 17,
+          "end": 24,
+          "label": "LOCATION"
+        },
+        {
+          "start": 64,
+          "end": 77,
+          "label": "PERSON"
+        },
+        {
+          "start": 140,
+          "end": 153,
+          "label": "PERSON"
+        },
+        {
+          "start": 225,
+          "end": 251,
+          "label": "LOCATION"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.9176319241523743
+      }
+    },
+    {
+      "id": "rec_012",
+      "text": "I am a mother of four from [LOCATION]. The [ORG] comes every month and my children are healthier now. Please add more family planning options.",
+      "redactions": [
+        {
+          "start": 27,
+          "end": 35,
+          "label": "LOCATION"
+        },
+        {
+          "start": 41,
+          "end": 44,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.8746423125267029
+      }
+    },
+    {
+      "id": "rec_013",
+      "text": "Attendance: [PERSON], [PERSON], [PERSON]-[PERSON] and [PERSON]. attended the [ORG] [ORG] training on GBV referral pathways at [LOCATION].",
+      "redactions": [
+        {
+          "start": 12,
+          "end": 23,
+          "label": "PERSON"
+        },
+        {
+          "start": 25,
+          "end": 40,
+          "label": "PERSON"
+        },
+        {
+          "start": 42,
+          "end": 46,
+          "label": "PERSON"
+        },
+        {
+          "start": 47,
+          "end": 60,
+          "label": "PERSON"
+        },
+        {
+          "start": 65,
+          "end": 72,
+          "label": "PERSON"
+        },
+        {
+          "start": 87,
+          "end": 95,
+          "label": "ORG"
+        },
+        {
+          "start": 96,
+          "end": 103,
+          "label": "ORG"
+        },
+        {
+          "start": 141,
+          "end": 172,
+          "label": "LOCATION"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.905163049697876
+      }
+    },
+    {
+      "id": "rec_014",
+      "text": "Two complicated pregnancies from [PERSON] were referred to [LOCATION] in [LOCATION]. Two nurses also attended a refresher course at [LOCATION].",
+      "redactions": [
+        {
+          "start": 33,
+          "end": 40,
+          "label": "PERSON"
+        },
+        {
+          "start": 58,
+          "end": 92,
+          "label": "LOCATION"
+        },
+        {
+          "start": 96,
+          "end": 103,
+          "label": "LOCATION"
+        },
+        {
+          "start": 152,
+          "end": 178,
+          "label": "LOCATION"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.9724683165550232
+      }
+    },
+    {
+      "id": "rec_015",
+      "text": "Stock update: received 300 doses of [ORG]-[ORG], lot no. 25110487, expiry 08/2028. Survivors of violence can call the national toll-free [ORG] helpline 1195.",
+      "redactions": [
+        {
+          "start": 36,
+          "end": 40,
+          "label": "ORG"
+        },
+        {
+          "start": 41,
+          "end": 43,
+          "label": "ORG"
+        },
+        {
+          "start": 133,
+          "end": 136,
+          "label": "ORG"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.6995275020599365
+      }
+    },
+    {
+      "id": "rec_016",
+      "text": "For questions, contact [ORG], P.[ORG]. Box 13226-20100, [PERSON], or email [EMAIL].",
+      "redactions": [
+        {
+          "start": 23,
+          "end": 39,
+          "label": "ORG"
+        },
+        {
+          "start": 43,
+          "end": 44,
+          "label": "ORG"
+        },
+        {
+          "start": 63,
+          "end": 69,
+          "label": "PERSON"
+        },
+        {
+          "start": 80,
+          "end": 104,
+          "label": "EMAIL"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.5231189131736755
+      }
+    },
+    {
+      "id": "rec_017",
+      "text": "[PERSON] sells vegetables near the [LOCATION] stage and asked whether [PERSON]'s granddaughter could join the youth club.",
+      "redactions": [
+        {
+          "start": 0,
+          "end": 10,
+          "label": "PERSON"
+        },
+        {
+          "start": 37,
+          "end": 44,
+          "label": "LOCATION"
+        },
+        {
+          "start": 69,
+          "end": 79,
+          "label": "PERSON"
+        }
+      ],
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.23309946060180664
+      }
+    },
+    {
+      "id": "rec_018",
+      "text": "[PERSON], 28, delivered at home last month with help from her neighbour [PERSON]. [ORG] [PERSON] visited three days later and found the baby underweight. [PERSON]'s husband, [PERSON], is a boda boda rider in [ORG] [LOCATION] Moto. Contact via husband: [PHONE].",
+      "redactions": [
+        {
+          "start": 0,
+          "end": 12,
+          "label": "PERSON"
+        },
+        {
+          "start": 76,
+          "end": 81,
+          "label": "PERSON"
+        },
+        {
+          "start": 83,
+          "end": 86,
+          "label": "ORG"
+        },
+        {
+          "start": 87,
+          "end": 102,
+          "label": "PERSON"
+        },
+        {
+          "start": 160,
+          "end": 164,
+          "label": "PERSON"
+        },
+        {
+          "start": 176,
+          "end": 184,
+          "label": "PERSON"
+        },
+        {
+          "start": 210,
+          "end": 215,
+          "label": "ORG"
+        },
+        {
+          "start": 216,
+          "end": 218,
+          "label": "LOCATION"
+        },
+        {
+          "start": 246,
+          "end": 258,
+          "label": "PHONE"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.6882745623588562
+      }
+    },
+    {
+      "id": "rec_019",
+      "text": "BENEFICIARY: [PERSON] JANET | WARD: TENGES | PHONE: [PHONE] | STATUS: ACTIVE",
+      "redactions": [
+        {
+          "start": 13,
+          "end": 20,
+          "label": "PERSON"
+        },
+        {
+          "start": 51,
+          "end": 63,
+          "label": "PHONE"
+        }
+      ],
+      "classification": {
+        "label": "relevant",
+        "score": 0.5557811856269836
+      }
+    },
+    {
+      "id": "rec_020",
+      "text": "[PERSON] wa wanachama utafanyika Jumamosi saa nne asubuhi. [PERSON] leteni michango yenu ya mwezi.",
+      "redactions": [
+        {
+          "start": 0,
+          "end": 7,
+          "label": "PERSON"
+        },
+        {
+          "start": 58,
+          "end": 67,
+          "label": "PERSON"
+        }
+      ],
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.36967065930366516
+      }
+    }
+  ],
+  "metrics": {
+    "anonymization_annotated_entities": {
+      "TP": 51,
+      "FP": 26,
+      "FN": 15,
+      "TN": 10,
+      "accuracy": 0.5980392156862745,
+      "precision": 0.6623376623376623,
+      "recall": 0.7727272727272727,
+      "f1": 0.7132867132867133
+    },
+    "fully_redacted_pii": 51,
+    "total_pii": 66,
+    "preserved_safe_entities": 10,
+    "total_safe_entities": 36,
+    "redactions_outside_annotations": 16,
+    "classification": null,
+    "classification_labeled_records": 0
+  },
+  "dataset": "Archive/synthetic_unanonymized.json",
+  "models": {
+    "ner": "dslim/bert-base-NER",
+    "classification": "facebook/bart-large-mnli"
+  }
+}

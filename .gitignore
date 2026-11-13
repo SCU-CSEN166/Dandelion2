@@ -5,4 +5,3 @@ __pycache__/
 # Pipeline and evaluation outputs can contain message text, so none are committed.
 # output/             end-to-end pipeline results (main.py)
 # output/evaluations/ evaluation results (src/evaluation)
-output/
