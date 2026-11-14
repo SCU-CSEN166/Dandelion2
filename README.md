@@ -240,6 +240,12 @@ AI Disclosure:
 ![Extraction Data](screenshots/extraction_results.png)
 
 
+![Week 7 anonymization: GLiNER only](screenshots/week7_anonymization_gliner.png)
+GLiNER by itself on the synthetic records. It hid 51 of 66 private items, same as BERT, just different ones.
+
+![Week 7 anonymization: BERT + GLiNER](screenshots/week7_anonymization_bert_gliner.png)
+BERT and GLiNER together, before the public places list. Leaks went down from 15 to 6 but precision is still 0.69 because public places get hidden too.
+
 ![Week 7 anonymization: BERT + GLiNER + public places](screenshots/week7_anonymization_bert_gliner_public.png)
 Anonymization with BERT and GLiNER and the public places list. On the synthetic records it now hides 60 of 66 private items (which is up from 51!) and on WhatsApp nothing safe gets hidden anymore.
 
