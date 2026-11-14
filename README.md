@@ -309,7 +309,7 @@ This is the relevance result when planned events count as relevant. It found all
 | Skip short messages and questions | Yes on our data, no effect on hidden set | Raised F1 from 0.61 to 0.84 on our 74 labeled WhatsApp messages. None of the hidden messages were short or questions so it didn't change anything there. | Keep |
 | BERT and GLiNER with public places list | Partly | In hidden set, all 10 phone numbers were still hidden, but the phone number in msg02 was labeled [DATE_OF_BIRTH], and the misheard name "faith aching" wasn't hidden. | Keep and also fix the phone number label |
 | Regex for M-Pesa codes, health record and police case numbers | Yes on our data | Synthetic recall went from 0.91 to 0.95. The hidden set doesn't have these codes so it couldn't be tested there. | Keep |
-| added saved transcript for reuse and configurable ASR model | Partly worked | 
+| added saved transcript for reuse and configurable ASR model | Partly worked | successfully reused 10/10 hidden-test transcripts so that the downstream testing could run without retranscribing the same audio again and again, we observed the workflow was slightly more efficient | Keep and Revise, but run a formal runtime benchmark and Whisper Large test before actually say it got faster | 
 
 ### Individual contributions during that week
 | Member | Work completed | Result (worked / partly / failed) | Evidence | Next step |
