@@ -1,0 +1,919 @@
+{
+  "models": {
+    "ner": "dslim/bert-base-NER + knowledgator/gliner-pii-base-v1.0"
+  },
+  "metrics": {
+    "data/synthetic_unanonymized.json": {
+      "anonymization_annotated_entities": {
+        "TP": 63,
+        "FP": 16,
+        "FN": 3,
+        "TN": 20,
+        "accuracy": 0.8137254901960784,
+        "precision": 0.7974683544303798,
+        "recall": 0.9545454545454546,
+        "f1": 0.8689655172413793
+      },
+      "fully_redacted_pii": 63,
+      "total_pii": 66,
+      "preserved_safe_entities": 20,
+      "total_safe_entities": 36,
+      "redactions_outside_annotations": 19
+    },
+    "data/whatsapp_labels.json": {
+      "anonymization_annotated_entities": {
+        "TP": 11,
+        "FP": 0,
+        "FN": 1,
+        "TN": 4,
+        "accuracy": 0.9375,
+        "precision": 1.0,
+        "recall": 0.9166666666666666,
+        "f1": 0.9565217391304348
+      },
+      "fully_redacted_pii": 11,
+      "total_pii": 12,
+      "preserved_safe_entities": 4,
+      "total_safe_entities": 4,
+      "redactions_outside_annotations": 7
+    }
+  },
+  "records": {
+    "data/synthetic_unanonymized.json": [
+      {
+        "id": "rec_001",
+        "text": "[ORG] [PERSON] visited the household of [PERSON] in [LOCATION] village, Baringo County. [PERSON] (ID No. [NATIONAL_ID]) received a 3-month injectable, and her son [PERSON] was screened for malnutrition. Follow-up phone: [PHONE].",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 3,
+            "label": "ORG"
+          },
+          {
+            "start": 4,
+            "end": 17,
+            "label": "PERSON"
+          },
+          {
+            "start": 43,
+            "end": 58,
+            "label": "PERSON"
+          },
+          {
+            "start": 62,
+            "end": 69,
+            "label": "LOCATION"
+          },
+          {
+            "start": 95,
+            "end": 101,
+            "label": "PERSON"
+          },
+          {
+            "start": 110,
+            "end": 118,
+            "label": "NATIONAL_ID"
+          },
+          {
+            "start": 163,
+            "end": 178,
+            "label": "PERSON"
+          },
+          {
+            "start": 227,
+            "end": 239,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "rec_002",
+        "text": "Minutes of the [ORG] meeting held at [LOCATION]. Chairlady [PERSON] reported total savings of [ORG] 184,500. A loan of [ORG] 20,000 was disbursed to [PERSON] via [ORG]-[ORG], transaction [MPESA_CODE]. Treasurer [PERSON] will follow up with members who missed contributions. A Dandelion Africa field officer attended.",
+        "redactions": [
+          {
+            "start": 15,
+            "end": 44,
+            "label": "ORG"
+          },
+          {
+            "start": 61,
+            "end": 80,
+            "label": "LOCATION"
+          },
+          {
+            "start": 92,
+            "end": 107,
+            "label": "PERSON"
+          },
+          {
+            "start": 134,
+            "end": 137,
+            "label": "ORG"
+          },
+          {
+            "start": 157,
+            "end": 160,
+            "label": "ORG"
+          },
+          {
+            "start": 185,
+            "end": 195,
+            "label": "PERSON"
+          },
+          {
+            "start": 200,
+            "end": 201,
+            "label": "ORG"
+          },
+          {
+            "start": 202,
+            "end": 206,
+            "label": "ORG"
+          },
+          {
+            "start": 220,
+            "end": 230,
+            "label": "MPESA_CODE"
+          },
+          {
+            "start": 242,
+            "end": 257,
+            "label": "PERSON"
+          }
+        ]
+      },
+      {
+        "id": "rec_003",
+        "text": "Mentor [PERSON] met with Form 2 student [PERSON], aged 15, from [ORG]. [PERSON] has been missing school during her periods and was given reusable sanitary pads under the [ORG]. Her guardian, [PERSON], can be reached on [PHONE].",
+        "redactions": [
+          {
+            "start": 7,
+            "end": 20,
+            "label": "PERSON"
+          },
+          {
+            "start": 45,
+            "end": 57,
+            "label": "PERSON"
+          },
+          {
+            "start": 73,
+            "end": 104,
+            "label": "ORG"
+          },
+          {
+            "start": 106,
+            "end": 111,
+            "label": "PERSON"
+          },
+          {
+            "start": 202,
+            "end": 215,
+            "label": "ORG"
+          },
+          {
+            "start": 231,
+            "end": 244,
+            "label": "PERSON"
+          },
+          {
+            "start": 264,
+            "end": 280,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "rec_004",
+        "text": "Case referral: [PERSON], DOB [DATE_OF_BIRTH], reported domestic violence by her husband [PERSON] of [LOCATION]. She was escorted to [LOCATION] for medical care, and the matter was reported at the local police station under [CASE_NUMBER].",
+        "redactions": [
+          {
+            "start": 15,
+            "end": 30,
+            "label": "PERSON"
+          },
+          {
+            "start": 36,
+            "end": 46,
+            "label": "DATE_OF_BIRTH"
+          },
+          {
+            "start": 90,
+            "end": 108,
+            "label": "PERSON"
+          },
+          {
+            "start": 112,
+            "end": 140,
+            "label": "LOCATION"
+          },
+          {
+            "start": 162,
+            "end": 194,
+            "label": "LOCATION"
+          },
+          {
+            "start": 275,
+            "end": 288,
+            "label": "CASE_NUMBER"
+          }
+        ]
+      },
+      {
+        "id": "rec_005",
+        "text": "[PERSON], ni [PERSON] mau narok. dawa ya family planning imeisha, [PERSON] appointment kesho? namba yangu ni [PHONE]",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 6,
+            "label": "PERSON"
+          },
+          {
+            "start": 11,
+            "end": 25,
+            "label": "PERSON"
+          },
+          {
+            "start": 70,
+            "end": 81,
+            "label": "PERSON"
+          },
+          {
+            "start": 116,
+            "end": 126,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "rec_006",
+        "text": "Name: [PERSON] | ID: [NATIONAL_ID] | DOB: [DATE_OF_BIRTH] | Phone: [PHONE] | Email: [EMAIL] | Ward: [LOCATION] | Sub-county: [LOCATION] | Program: Women's Livelihood",
+        "redactions": [
+          {
+            "start": 6,
+            "end": 26,
+            "label": "PERSON"
+          },
+          {
+            "start": 33,
+            "end": 41,
+            "label": "NATIONAL_ID"
+          },
+          {
+            "start": 49,
+            "end": 59,
+            "label": "DATE_OF_BIRTH"
+          },
+          {
+            "start": 69,
+            "end": 85,
+            "label": "PHONE"
+          },
+          {
+            "start": 95,
+            "end": 121,
+            "label": "EMAIL"
+          },
+          {
+            "start": 130,
+            "end": 134,
+            "label": "LOCATION"
+          },
+          {
+            "start": 149,
+            "end": 154,
+            "label": "LOCATION"
+          }
+        ]
+      },
+      {
+        "id": "rec_007",
+        "text": "In 2025, Dandelion Africa supported community health promoters across Nakuru, Baringo, Kajiado and Narok counties, working alongside the Ministry of Health. Over 50,000 women and youth have received contraceptives through the [ORG].",
+        "redactions": [
+          {
+            "start": 226,
+            "end": 240,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "rec_008",
+        "text": "Faith in the program grew after the first clinic day. Hope is high that the harvest will improve, and members asked for mercy on late repayments. Wamama wana imani kubwa na mradi huu.",
+        "redactions": []
+      },
+      {
+        "id": "rec_009",
+        "text": "When [PERSON] joined a [ORG] in [LOCATION], she had never run a business. Today she keeps 200 chickens and sells eggs to two hotels in Narok town. \"I used to wait for my husband to give me money,\" [PERSON] says. Her daughter [PERSON] is now in Form 4 at [ORG].",
+        "redactions": [
+          {
+            "start": 5,
+            "end": 19,
+            "label": "PERSON"
+          },
+          {
+            "start": 29,
+            "end": 42,
+            "label": "ORG"
+          },
+          {
+            "start": 46,
+            "end": 57,
+            "label": "LOCATION"
+          },
+          {
+            "start": 212,
+            "end": 217,
+            "label": "PERSON"
+          },
+          {
+            "start": 237,
+            "end": 242,
+            "label": "PERSON"
+          },
+          {
+            "start": 263,
+            "end": 296,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "rec_010",
+        "text": "Hi [PERSON], please send the [ORG] stipend list to [EMAIL] before Friday. [PERSON] ([ORG], [ORG]) has changed his [ORG]-[ORG] number to [PHONE]. Thanks, [PERSON], Programs Officer, Dandelion Africa",
+        "redactions": [
+          {
+            "start": 3,
+            "end": 8,
+            "label": "PERSON"
+          },
+          {
+            "start": 26,
+            "end": 29,
+            "label": "ORG"
+          },
+          {
+            "start": 46,
+            "end": 66,
+            "label": "EMAIL"
+          },
+          {
+            "start": 82,
+            "end": 93,
+            "label": "PERSON"
+          },
+          {
+            "start": 95,
+            "end": 98,
+            "label": "ORG"
+          },
+          {
+            "start": 100,
+            "end": 105,
+            "label": "ORG"
+          },
+          {
+            "start": 123,
+            "end": 124,
+            "label": "ORG"
+          },
+          {
+            "start": 125,
+            "end": 129,
+            "label": "ORG"
+          },
+          {
+            "start": 140,
+            "end": 152,
+            "label": "PHONE"
+          },
+          {
+            "start": 162,
+            "end": 177,
+            "label": "PERSON"
+          }
+        ]
+      },
+      {
+        "id": "rec_011",
+        "text": "Mobile clinic at [LOCATION] chief's camp served 47 clients. Client [PERSON], patient no. [HEALTH_RECORD_NO], received a 5-year implant. Child [PERSON], under 5, was given vitamin A and dewormed. One client was referred to [LOCATION].",
+        "redactions": [
+          {
+            "start": 17,
+            "end": 24,
+            "label": "LOCATION"
+          },
+          {
+            "start": 64,
+            "end": 77,
+            "label": "PERSON"
+          },
+          {
+            "start": 91,
+            "end": 105,
+            "label": "HEALTH_RECORD_NO"
+          },
+          {
+            "start": 140,
+            "end": 153,
+            "label": "PERSON"
+          },
+          {
+            "start": 225,
+            "end": 251,
+            "label": "LOCATION"
+          }
+        ]
+      },
+      {
+        "id": "rec_012",
+        "text": "I am a mother of four from [LOCATION]. The [ORG] comes every month and my children are healthier now. Please add more family planning options.",
+        "redactions": [
+          {
+            "start": 27,
+            "end": 35,
+            "label": "LOCATION"
+          },
+          {
+            "start": 41,
+            "end": 44,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "rec_013",
+        "text": "Attendance: [PERSON], [PERSON], [PERSON] and [PERSON] attended the [ORG] training on GBV referral pathways at [LOCATION].",
+        "redactions": [
+          {
+            "start": 12,
+            "end": 23,
+            "label": "PERSON"
+          },
+          {
+            "start": 25,
+            "end": 40,
+            "label": "PERSON"
+          },
+          {
+            "start": 42,
+            "end": 60,
+            "label": "PERSON"
+          },
+          {
+            "start": 65,
+            "end": 73,
+            "label": "PERSON"
+          },
+          {
+            "start": 87,
+            "end": 103,
+            "label": "ORG"
+          },
+          {
+            "start": 141,
+            "end": 172,
+            "label": "LOCATION"
+          }
+        ]
+      },
+      {
+        "id": "rec_014",
+        "text": "Two complicated pregnancies from [PERSON] were referred to [LOCATION] in [LOCATION]. Two nurses also attended a refresher course at [LOCATION].",
+        "redactions": [
+          {
+            "start": 33,
+            "end": 40,
+            "label": "PERSON"
+          },
+          {
+            "start": 58,
+            "end": 92,
+            "label": "LOCATION"
+          },
+          {
+            "start": 96,
+            "end": 103,
+            "label": "LOCATION"
+          },
+          {
+            "start": 152,
+            "end": 178,
+            "label": "LOCATION"
+          }
+        ]
+      },
+      {
+        "id": "rec_015",
+        "text": "Stock update: received 300 doses of [ORG], lot no. 25110487, expiry [DATE_OF_BIRTH]. Survivors of violence can call the national toll-free [ORG] helpline 1195.",
+        "redactions": [
+          {
+            "start": 36,
+            "end": 43,
+            "label": "ORG"
+          },
+          {
+            "start": 70,
+            "end": 77,
+            "label": "DATE_OF_BIRTH"
+          },
+          {
+            "start": 133,
+            "end": 136,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "rec_016",
+        "text": "For questions, contact Dandelion Africa, P.[ORG]. Box 13226-20100, [PERSON], or email [EMAIL].",
+        "redactions": [
+          {
+            "start": 43,
+            "end": 44,
+            "label": "ORG"
+          },
+          {
+            "start": 63,
+            "end": 69,
+            "label": "PERSON"
+          },
+          {
+            "start": 80,
+            "end": 104,
+            "label": "EMAIL"
+          }
+        ]
+      },
+      {
+        "id": "rec_017",
+        "text": "[PERSON] sells vegetables near the [LOCATION] stage and asked whether [PERSON]'s granddaughter could join the [ORG].",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 10,
+            "label": "PERSON"
+          },
+          {
+            "start": 37,
+            "end": 44,
+            "label": "LOCATION"
+          },
+          {
+            "start": 69,
+            "end": 79,
+            "label": "PERSON"
+          },
+          {
+            "start": 111,
+            "end": 121,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "rec_018",
+        "text": "[PERSON], 28, delivered at home last month with help from her neighbour [PERSON]. [ORG] [PERSON] visited three days later and found the baby underweight. [PERSON]'s husband, [PERSON], is a boda boda rider in [LOCATION]. Contact via husband: [PHONE].",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 12,
+            "label": "PERSON"
+          },
+          {
+            "start": 76,
+            "end": 81,
+            "label": "PERSON"
+          },
+          {
+            "start": 83,
+            "end": 86,
+            "label": "ORG"
+          },
+          {
+            "start": 87,
+            "end": 102,
+            "label": "PERSON"
+          },
+          {
+            "start": 160,
+            "end": 164,
+            "label": "PERSON"
+          },
+          {
+            "start": 176,
+            "end": 184,
+            "label": "PERSON"
+          },
+          {
+            "start": 210,
+            "end": 223,
+            "label": "LOCATION"
+          },
+          {
+            "start": 246,
+            "end": 258,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "rec_019",
+        "text": "BENEFICIARY: [PERSON] | WARD: TENGES | PHONE: [PHONE] | STATUS: ACTIVE",
+        "redactions": [
+          {
+            "start": 13,
+            "end": 26,
+            "label": "PERSON"
+          },
+          {
+            "start": 51,
+            "end": 63,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "rec_020",
+        "text": "[PERSON] wa wanachama utafanyika Jumamosi saa nne asubuhi. [PERSON] leteni michango yenu ya mwezi.",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 7,
+            "label": "PERSON"
+          },
+          {
+            "start": 58,
+            "end": 67,
+            "label": "PERSON"
+          }
+        ]
+      }
+    ],
+    "data/whatsapp_labels.json": [
+      {
+        "id": "msg_001",
+        "text": "Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up.",
+        "redactions": []
+      },
+      {
+        "id": "msg_002",
+        "text": "how did it go?",
+        "redactions": []
+      },
+      {
+        "id": "msg_003",
+        "text": "It went well! We had 31 women attend and 4 were referred to the [ORG] for follow-up.",
+        "redactions": [
+          {
+            "start": 64,
+            "end": 70,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "msg_004",
+        "text": "Nothing major, but a few people came late and we’re still waiting on one follow-up form.",
+        "redactions": []
+      },
+      {
+        "id": "msg_005",
+        "text": "[PERSON] is handling them. Her number is [PHONE] if the [ORG] needs to reach her.",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 13,
+            "label": "PERSON"
+          },
+          {
+            "start": 46,
+            "end": 58,
+            "label": "PHONE"
+          },
+          {
+            "start": 66,
+            "end": 72,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "msg_006",
+        "text": "We’re planning another youth health session on Friday morning. We’re expecting around 25–30 students but the final number isn’t confirmed yet.",
+        "redactions": []
+      },
+      {
+        "id": "msg_007",
+        "text": "I think 9am but [PERSON]’ll double check.",
+        "redactions": [
+          {
+            "start": 16,
+            "end": 17,
+            "label": "PERSON"
+          }
+        ]
+      },
+      {
+        "id": "msg_008",
+        "text": "Also just to confirm, today’s Nakuru outreach was 31 women and 4 referrals.",
+        "redactions": []
+      },
+      {
+        "id": "msg_009",
+        "text": "I’ll send the full participant details later once everything is finalized.",
+        "redactions": []
+      },
+      {
+        "id": "msg_010",
+        "text": "we finished the youth health session in Baringo this afternoon, 42 students came",
+        "redactions": []
+      },
+      {
+        "id": "msg_011",
+        "text": "ya menstrual health + reproductive health. 2 students also asked for clinic referrals",
+        "redactions": []
+      },
+      {
+        "id": "msg_012",
+        "text": "just recommended [PERSON], i dont think theyve gone to the [ORG] yet",
+        "redactions": [
+          {
+            "start": 17,
+            "end": 19,
+            "label": "PERSON"
+          },
+          {
+            "start": 53,
+            "end": 59,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "msg_013",
+        "text": "also the facilitator was [PERSON] and her number is [PHONE] if anyone needs to follow up",
+        "redactions": [
+          {
+            "start": 25,
+            "end": 36,
+            "label": "PERSON"
+          },
+          {
+            "start": 55,
+            "end": 67,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "msg_014",
+        "text": "theres one planned for thursday in Nakuru but the final count isnt confirmed yet",
+        "redactions": []
+      },
+      {
+        "id": "msg_015",
+        "text": "10am i think but lemme double check",
+        "redactions": []
+      },
+      {
+        "id": "msg_016",
+        "text": "also just confirming todays one was 42 students + 2 referrals",
+        "redactions": []
+      },
+      {
+        "id": "msg_017",
+        "text": "yes they finish this morning, around 19 women was there",
+        "redactions": []
+      },
+      {
+        "id": "msg_018",
+        "text": "both i think, they did savings first and then short business training after",
+        "redactions": []
+      },
+      {
+        "id": "msg_019",
+        "text": "yes 2 women got loans but i dont have full details yet",
+        "redactions": []
+      },
+      {
+        "id": "msg_020",
+        "text": "one name is [PERSON]. other one not written in update",
+        "redactions": [
+          {
+            "start": 12,
+            "end": 26,
+            "label": "PERSON"
+          }
+        ]
+      },
+      {
+        "id": "msg_021",
+        "text": "also [PERSON] number is [PHONE] for follow up",
+        "redactions": [
+          {
+            "start": 5,
+            "end": 11,
+            "label": "PERSON"
+          },
+          {
+            "start": 22,
+            "end": 34,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "msg_022",
+        "text": "[LOCATION]",
+        "redactions": [
+          {
+            "start": 0,
+            "end": 20,
+            "label": "LOCATION"
+          }
+        ]
+      },
+      {
+        "id": "msg_023",
+        "text": "next tuesday but location not confirm yet",
+        "redactions": []
+      },
+      {
+        "id": "msg_024",
+        "text": "they visited 14 homes today and around 21 women received health information",
+        "redactions": []
+      },
+      {
+        "id": "msg_025",
+        "text": "message says 3 women need follow up but not clear if referral already done",
+        "redactions": []
+      },
+      {
+        "id": "msg_026",
+        "text": "it says [LOCATION] area",
+        "redactions": [
+          {
+            "start": 8,
+            "end": 16,
+            "label": "LOCATION"
+          }
+        ]
+      },
+      {
+        "id": "msg_027",
+        "text": "yes [PERSON] was leading. number is [PHONE]",
+        "redactions": [
+          {
+            "start": 4,
+            "end": 17,
+            "label": "PERSON"
+          },
+          {
+            "start": 41,
+            "end": 53,
+            "label": "PHONE"
+          }
+        ]
+      },
+      {
+        "id": "msg_028",
+        "text": "yes one more msg says “household visits done, 20+ women reached and 3 need follow up in [PERSON]”",
+        "redactions": [
+          {
+            "start": 88,
+            "end": 96,
+            "label": "PERSON"
+          }
+        ]
+      },
+      {
+        "id": "msg_029",
+        "text": "also btw who is uploading this data to [ORG] later",
+        "redactions": [
+          {
+            "start": 39,
+            "end": 45,
+            "label": "ORG"
+          }
+        ]
+      },
+      {
+        "id": "msg_030",
+        "text": "yall think we're gonna get the midterm back soon🙁",
+        "redactions": []
+      },
+      {
+        "id": "msg_031",
+        "text": "lowkey [PERSON] was losing sleep for it",
+        "redactions": [
+          {
+            "start": 7,
+            "end": 8,
+            "label": "PERSON"
+          }
+        ]
+      }
+    ]
+  }
+}

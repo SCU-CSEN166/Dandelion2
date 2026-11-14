@@ -1,0 +1,649 @@
+{
+  "models": {
+    "ner": "dslim/bert-base-NER",
+    "classification": "facebook/bart-large-mnli"
+  },
+  "dataset": "data/whatsapp_relevance_full.json",
+  "metrics": {
+    "classification": {
+      "TP": 27,
+      "FP": 9,
+      "FN": 1,
+      "TN": 37,
+      "accuracy": 0.8648648648648649,
+      "precision": 0.75,
+      "recall": 0.9642857142857143,
+      "f1": 0.84375
+    },
+    "classification_labeled_records": 74
+  },
+  "records": [
+    {
+      "id": "msg_001",
+      "text": "Today we held a family planning out outreach in [LOCATION]. 31 women attended and 4 were referred to the clinic for follow-up.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9821128249168396
+      }
+    },
+    {
+      "id": "msg_002",
+      "text": "how did it go?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_003",
+      "text": "It went well! We had 31 women attend and 4 were referred to the clinic for follow-up.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9652612209320068
+      }
+    },
+    {
+      "id": "msg_004",
+      "text": "Nothing major, but a few people came late and we’re still waiting on one follow-up form.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8629148602485657
+      }
+    },
+    {
+      "id": "msg_005",
+      "text": "[PERSON] is handling them. Her number is [PHONE] if the clinic needs to reach her.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8735073804855347
+      }
+    },
+    {
+      "id": "msg_006",
+      "text": "We’re planning another youth health session on Friday morning. We’re expecting around 25–30 students but the final number isn’t confirmed yet.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9670785665512085
+      }
+    },
+    {
+      "id": "msg_007",
+      "text": "I think 9am but I’ll double check.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.6017853021621704
+      }
+    },
+    {
+      "id": "msg_008",
+      "text": "Also just to confirm, today’s [ORG] outreach was 31 women and 4 referrals.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9683619141578674
+      }
+    },
+    {
+      "id": "msg_009",
+      "text": "I’ll send the full participant details later once everything is finalized.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9140148162841797
+      }
+    },
+    {
+      "id": "msg_010",
+      "text": "we finished the youth health session in [LOCATION] this afternoon, 42 students came",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9800772070884705
+      }
+    },
+    {
+      "id": "msg_011",
+      "text": "ya menstrual health + reproductive health. 2 students also asked for clinic referrals",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9071421027183533
+      }
+    },
+    {
+      "id": "msg_012",
+      "text": "just recommended rn, i dont think theyve gone to the clinic yet",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7309495806694031
+      }
+    },
+    {
+      "id": "msg_013",
+      "text": "also the facilitator was [PERSON] and her number is [PHONE] if anyone needs to follow up",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7842514514923096
+      }
+    },
+    {
+      "id": "msg_014",
+      "text": "theres one planned for thursday in [LOCATION] but the final count isnt confirmed yet",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9454490542411804
+      }
+    },
+    {
+      "id": "msg_015",
+      "text": "10am i think but lemme double check",
+      "classification": {
+        "label": "relevant",
+        "score": 0.6392362117767334
+      }
+    },
+    {
+      "id": "msg_016",
+      "text": "also just confirming todays one was 42 students + 2 referrals",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9389396905899048
+      }
+    },
+    {
+      "id": "msg_017",
+      "text": "yes they finish this morning, around 19 women was there",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8656184673309326
+      }
+    },
+    {
+      "id": "msg_018",
+      "text": "both i think, they did savings first and then short business training after",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9643537402153015
+      }
+    },
+    {
+      "id": "msg_019",
+      "text": "yes 2 women got loans but i dont have full details yet",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8787474632263184
+      }
+    },
+    {
+      "id": "msg_020",
+      "text": "one name is [PERSON]. other one not written in update",
+      "classification": {
+        "label": "relevant",
+        "score": 0.5995221734046936
+      }
+    },
+    {
+      "id": "msg_021",
+      "text": "also [PERSON] number is [PHONE] for follow up",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7681421637535095
+      }
+    },
+    {
+      "id": "msg_022",
+      "text": "[LOCATION]",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_023",
+      "text": "next tuesday but location not confirm yet",
+      "classification": {
+        "label": "relevant",
+        "score": 0.844261109828949
+      }
+    },
+    {
+      "id": "msg_024",
+      "text": "they visited 14 homes today and around 21 women received health information",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9898410439491272
+      }
+    },
+    {
+      "id": "msg_025",
+      "text": "message says 3 women need follow up but not clear if referral already done",
+      "classification": {
+        "label": "relevant",
+        "score": 0.752164363861084
+      }
+    },
+    {
+      "id": "msg_026",
+      "text": "it says [LOCATION] area",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8270857930183411
+      }
+    },
+    {
+      "id": "msg_027",
+      "text": "yes [PERSON] was leading. number is [PHONE]",
+      "classification": {
+        "label": "relevant",
+        "score": 0.755161702632904
+      }
+    },
+    {
+      "id": "msg_028",
+      "text": "yes one more msg says “household visits done, 20+ women reached and 3 need follow up in [PERSON]”",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9927642345428467
+      }
+    },
+    {
+      "id": "msg_029",
+      "text": "also btw who is uploading this data to github later",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7449132204055786
+      }
+    },
+    {
+      "id": "msg_030",
+      "text": "yall think we're gonna get the midterm back soon🙁",
+      "classification": {
+        "label": "relevant",
+        "score": 0.6307109594345093
+      }
+    },
+    {
+      "id": "msg_031",
+      "text": "lowkey i was losing sleep for it",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8373099565505981
+      }
+    },
+    {
+      "id": "msg_032",
+      "text": "hello",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_033",
+      "text": "hi",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_034",
+      "text": "i love ai",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_035",
+      "text": "this is our sample test data",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7031874656677246
+      }
+    },
+    {
+      "id": "msg_036",
+      "text": "nice, were there any issues during the outreach?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_037",
+      "text": "okay do you know who is handling the follow-ups?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_038",
+      "text": "got it. are we doing another session this week?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_039",
+      "text": "okay what time is it supposed to start?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_040",
+      "text": "sounds good",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_041",
+      "text": "yep noted",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_042",
+      "text": "perfect thanks",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_043",
+      "text": "niceee did they cover menstrual health too?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_044",
+      "text": "were the referrals actually done or just recommended?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_045",
+      "text": "okay yeah thats prob important to separate",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7475767731666565
+      }
+    },
+    {
+      "id": "msg_046",
+      "text": "got it",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_047",
+      "text": "any more sessions this week?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_048",
+      "text": "what time?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_049",
+      "text": "sounds good",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_050",
+      "text": "noted",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_051",
+      "text": "hey did the womens group finish meeting today?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_052",
+      "text": "was this only savings meeting or also business training?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_053",
+      "text": "any loans given today?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_054",
+      "text": "do we have names?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_055",
+      "text": "okay better leave second one blank then",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.21348261833190918
+      }
+    },
+    {
+      "id": "msg_056",
+      "text": "yes dont assume anything if not there",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.4753211736679077
+      }
+    },
+    {
+      "id": "msg_057",
+      "text": "what location?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_058",
+      "text": "is next meeting already planned?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_059",
+      "text": "okay good this one has completed event + future event also",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9254228472709656
+      }
+    },
+    {
+      "id": "msg_060",
+      "text": "nice",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_061",
+      "text": "i got update from community health visit",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9888620972633362
+      }
+    },
+    {
+      "id": "msg_062",
+      "text": "what they say?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_063",
+      "text": "any referrals?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_064",
+      "text": "so we should mark outcome unknown maybe?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_065",
+      "text": "yeah i think so, because its not saying they actually went clinic",
+      "classification": {
+        "label": "relevant",
+        "score": 0.5301337242126465
+      }
+    },
+    {
+      "id": "msg_066",
+      "text": "exactly",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_067",
+      "text": "do we know where this happened?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_068",
+      "text": "was there any staff name?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_069",
+      "text": "okay thats pii for anonymization too",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.10634292662143707
+      }
+    },
+    {
+      "id": "msg_070",
+      "text": "yup",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    },
+    {
+      "id": "msg_071",
+      "text": "did anyone send another update for same visit?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "msg_072",
+      "text": "sounds same event but numbers little different",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8130066394805908
+      }
+    },
+    {
+      "id": "msg_073",
+      "text": "yeah maybe duplicate but not exact",
+      "classification": {
+        "label": "relevant",
+        "score": 0.5840251445770264
+      }
+    },
+    {
+      "id": "msg_074",
+      "text": "agree",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "short_message"
+      }
+    }
+  ]
+}
