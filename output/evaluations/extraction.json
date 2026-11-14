@@ -8,23 +8,23 @@
     "fields": {
       "status": {
         "TP": 12,
-        "FP": 11,
+        "FP": 12,
         "FN": 19,
         "TN": 0,
         "accuracy": 0.3870967741935484,
-        "precision": 0.5217391304347826,
+        "precision": 0.5,
         "recall": 0.3870967741935484,
-        "f1": 0.4444444444444444
+        "f1": 0.43636363636363634
       },
       "activity_type": {
-        "TP": 7,
+        "TP": 6,
         "FP": 7,
-        "FN": 8,
-        "TN": 14,
+        "FN": 9,
+        "TN": 15,
         "accuracy": 0.6774193548387096,
-        "precision": 0.5,
-        "recall": 0.4666666666666667,
-        "f1": 0.4827586206896552
+        "precision": 0.46153846153846156,
+        "recall": 0.4,
+        "f1": 0.42857142857142855
       },
       "location": {
         "TP": 7,
@@ -38,13 +38,13 @@
       },
       "participant_count": {
         "TP": 7,
-        "FP": 4,
+        "FP": 3,
         "FN": 0,
-        "TN": 20,
-        "accuracy": 0.8709677419354839,
-        "precision": 0.6363636363636364,
+        "TN": 21,
+        "accuracy": 0.9032258064516129,
+        "precision": 0.7,
         "recall": 1.0,
-        "f1": 0.7777777777777778
+        "f1": 0.8235294117647058
       },
       "referrals": {
         "TP": 6,
@@ -61,8 +61,8 @@
       "status": {
         "completed": {
           "completed": 8,
-          "neither": 10,
-          "null": 4
+          "neither": 11,
+          "null": 3
         },
         "neither": {
           "null": 2,
@@ -80,16 +80,17 @@
           "community health visit": 1
         },
         "null": {
-          "null": 14,
-          "other": 2
+          "null": 15,
+          "other": 1
         },
         "youth health session": {
-          "youth health session": 3,
+          "youth health session": 2,
+          "menstrual hygiene session": 1,
           "null": 1,
           "other": 1
         },
         "women's savings group meeting": {
-          "family planning outreach": 1,
+          "community health visit": 1,
           "other": 1,
           "null": 1
         },
@@ -287,8 +288,8 @@
     {
       "id": "msg_011",
       "predicted": {
-        "status": null,
-        "activity_type": "youth health session",
+        "status": "neither",
+        "activity_type": "menstrual hygiene session",
         "location": null,
         "participant_count": 2,
         "referrals": 2,
@@ -396,7 +397,7 @@
       "id": "msg_017",
       "predicted": {
         "status": "completed",
-        "activity_type": "family planning outreach",
+        "activity_type": "community health visit",
         "location": null,
         "participant_count": 19,
         "referrals": null,
@@ -434,7 +435,7 @@
         "status": "neither",
         "activity_type": "other",
         "location": null,
-        "participant_count": 2,
+        "participant_count": null,
         "referrals": null,
         "needs_review": []
       },
@@ -576,7 +577,7 @@
       "id": "msg_027",
       "predicted": {
         "status": "neither",
-        "activity_type": "other",
+        "activity_type": null,
         "location": null,
         "participant_count": null,
         "referrals": null,

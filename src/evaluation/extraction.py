@@ -1,6 +1,9 @@
-"""Evaluate activity-field extraction (numind/NuExtract-2.0-2B) against labeled messages.
+"""Evaluate activity-field extraction against labeled messages.
 
-    uv run -m src.evaluation.extraction data/whatsapp_labels.json
+    uv run -m src.evaluation.extraction data/whatsapp_labels.json                  # NuExtract-2.0-2B
+    uv run -m src.evaluation.extraction data/whatsapp_labels.json --model flan-t5  # google/flan-t5-base
+
+Both models fill the same template and are scored identically, so their reports compare directly.
 
 Not from an earlier commit: written in the same style as anonymization.py and
 classification.py. Test data: Risha's data/whatsapp_labels.json, which labels status,
@@ -24,7 +27,7 @@ import json
 from pathlib import Path
 
 from src.evaluation.anonymization import metrics
-from src.extract import EXTRACTION_MODEL, Extractor
+from src.extract import EXTRACTORS, make_extractor
 
 NULL = 'null'  # stands in for None as a confusion-matrix key (JSON keys must be strings)
 
@@ -78,14 +81,19 @@ def evaluate(records, extractor):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input', type=Path)
-    parser.add_argument('--output', type=Path, default=Path('output/evaluations/extraction.json'))
+    parser.add_argument('--model', choices=list(EXTRACTORS), default='nuextract', help='which extraction model to use')
+    parser.add_argument('--output', type=Path, help='default: output/evaluations/extraction.json '
+                                                    '(extraction_flan-t5.json for --model flan-t5)')
     args = parser.parse_args()
+    suffix = '' if args.model == 'nuextract' else f'_{args.model}'
+    output = args.output or Path(f'output/evaluations/extraction{suffix}.json')
     records = json.loads(args.input.read_text(encoding='utf-8'))
-    result = evaluate(records, Extractor())
-    report = {'models': {'extraction': EXTRACTION_MODEL}, 'dataset': str(args.input),
+    extractor = make_extractor(args.model)
+    result = evaluate(records, extractor)
+    report = {'models': {'extraction': extractor.model_name}, 'dataset': str(args.input),
               'metrics': result['metrics'], 'records': result['records']}
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     print(json.dumps(report['metrics'], indent=2))
 
 

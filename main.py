@@ -28,9 +28,9 @@ import json
 from pathlib import Path
 
 from src.anonymize import Anonymizer, CombinedNER, GlinerNER, anonymize
-from src.config import (OUTPUT_DIR, PUBLIC_ENTITIES, RELEVANCE_COUNT_PLANS, RELEVANCE_MIN_WORDS,
+from src.config import (EXTRACTION_BACKEND, OUTPUT_DIR, PUBLIC_ENTITIES, RELEVANCE_COUNT_PLANS, RELEVANCE_MIN_WORDS,
                         RELEVANCE_SKIP_QUESTIONS, USE_GLINER)
-from src.extract import extract
+from src.extract import extract, make_extractor
 from src.ingest import Attachment, Message, load
 from src.relevance import RelevanceClassifier, classify
 from src.transcribe import transcribe
@@ -187,7 +187,7 @@ def main() -> None:
 
     # 5) Extract activity fields from relevant messages (fills extraction)
     print("5) Extracting activity fields", flush=True)
-    extract(messages, context_size=EXTRACTION_CONTEXT)
+    extract(messages, make_extractor(EXTRACTION_BACKEND), context_size=EXTRACTION_CONTEXT)
 
     for message in messages:
         print(summarize(message))

@@ -1,0 +1,1173 @@
+{
+  "solution": "data/dandelion_audio/hidden_test_outputs.csv",
+  "pipeline_output": "output/HIDDEN_TEST_OUTPUT.csv",
+  "pipeline": {
+    "records": [
+      {
+        "id": "1",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Family planning outreach",
+          "Family planning outreach"
+        ],
+        "participants": [
+          "42",
+          "42"
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "2",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Family planning outreach",
+          "Family planning outreach"
+        ],
+        "participants": [
+          "42",
+          "42"
+        ],
+        "duplicate_of": [
+          "none",
+          "1"
+        ],
+        "leaked_pii": [
+          "Faith Achieng",
+          "Grace"
+        ]
+      },
+      {
+        "id": "3",
+        "relevance": [
+          "Event",
+          "Chit-chat"
+        ],
+        "activity_type": [
+          "Other",
+          ""
+        ],
+        "participants": [
+          "none",
+          ""
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "4",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Savings group meeting",
+          "Women's group table banking (savings) meeting"
+        ],
+        "participants": [
+          "25",
+          "25"
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "5",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Menstrual hygiene session",
+          "Menstrual hygiene session and sanitary pad distribution"
+        ],
+        "participants": [
+          "60",
+          "60"
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "6",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Gender-based violence dialogue",
+          "Gender-based violence awareness dialogue"
+        ],
+        "participants": [
+          "35",
+          "35"
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "7",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Cancer screening",
+          "Cervical cancer screening camp"
+        ],
+        "participants": [
+          "28",
+          "28"
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": [
+          "Nakuru Level Five Hospital",
+          "Nakuru"
+        ]
+      },
+      {
+        "id": "8",
+        "relevance": [
+          "Event",
+          "Chit-chat"
+        ],
+        "activity_type": [
+          "Community health visit",
+          ""
+        ],
+        "participants": [
+          "none",
+          ""
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "9",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Agriculture training",
+          "Kitchen garden training"
+        ],
+        "participants": [
+          "18",
+          "18"
+        ],
+        "duplicate_of": [
+          "none",
+          "none"
+        ],
+        "leaked_pii": []
+      },
+      {
+        "id": "10",
+        "relevance": [
+          "Event",
+          "Event"
+        ],
+        "activity_type": [
+          "Cancer screening",
+          "Cervical cancer screening camp"
+        ],
+        "participants": [
+          "28",
+          "28"
+        ],
+        "duplicate_of": [
+          "none",
+          "7"
+        ],
+        "leaked_pii": [
+          "Nakuru Level Five"
+        ]
+      }
+    ],
+    "metrics": {
+      "messages": 10,
+      "relevance": {
+        "TP": 8,
+        "FP": 2,
+        "FN": 0,
+        "TN": 0,
+        "accuracy": 0.8,
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8888888888888888
+      },
+      "fields": {
+        "activity_type": {
+          "TP": 8,
+          "FP": 2,
+          "FN": 0,
+          "TN": 0,
+          "accuracy": 0.8,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8888888888888888
+        },
+        "participants": {
+          "TP": 8,
+          "FP": 0,
+          "FN": 0,
+          "TN": 2,
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "duplicate_of": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 2,
+          "TN": 8,
+          "accuracy": 0.8,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "pii": {
+        "TP": 41,
+        "FP": 0,
+        "FN": 5,
+        "TN": 0,
+        "accuracy": 0.8913043478260869,
+        "precision": 1.0,
+        "recall": 0.8913043478260869,
+        "f1": 0.9425287356321839,
+        "items": 46,
+        "leaked": 5
+      },
+      "confusion_matrices": {
+        "activity_type": {
+          "family planning outreach": {
+            "family planning outreach": 2
+          },
+          "null": {
+            "other": 1,
+            "community health visit": 1
+          },
+          "savings group meeting": {
+            "savings group meeting": 1
+          },
+          "menstrual hygiene session": {
+            "menstrual hygiene session": 1
+          },
+          "gender-based violence dialogue": {
+            "gender-based violence dialogue": 1
+          },
+          "cancer screening": {
+            "cancer screening": 2
+          },
+          "agriculture training": {
+            "agriculture training": 1
+          }
+        }
+      }
+    }
+  },
+  "extractors": {
+    "nuextract": {
+      "model": "numind/NuExtract-2.0-2B",
+      "solution": {
+        "records": [
+          {
+            "id": "1",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "family planning outreach",
+              "location": "dispensary",
+              "participant_count": 42,
+              "referrals": 6,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "2",
+            "predicted": {
+              "status": "planned",
+              "activity_type": "family planning outreach",
+              "location": "[LOCATION]",
+              "participant_count": 42,
+              "referrals": 6,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "3",
+            "predicted": {
+              "status": "neither",
+              "activity_type": "other",
+              "location": "[LOCATION]",
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "4",
+            "predicted": {
+              "status": "planned",
+              "activity_type": "savings group meeting",
+              "location": "[LOCATION]",
+              "participant_count": 25,
+              "referrals": 4,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "savings group meeting",
+              "participant_count": 25
+            }
+          },
+          {
+            "id": "5",
+            "predicted": {
+              "status": "neither",
+              "activity_type": "menstrual hygiene session",
+              "location": "[LOCATION]",
+              "participant_count": 60,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "menstrual hygiene session",
+              "participant_count": 60
+            }
+          },
+          {
+            "id": "6",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "gender-based violence dialogue",
+              "location": "chief's camp in [LOCATION]",
+              "participant_count": 38,
+              "referrals": 3,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "gender-based violence dialogue",
+              "participant_count": 35
+            }
+          },
+          {
+            "id": "7",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "[LOCATION]",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          },
+          {
+            "id": "8",
+            "predicted": {
+              "status": "planned",
+              "activity_type": "community health visit",
+              "location": "[LOCATION]",
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "9",
+            "predicted": {
+              "status": "planned",
+              "activity_type": "agriculture training",
+              "location": "[LOCATION]",
+              "participant_count": 18,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "agriculture training",
+              "participant_count": 18
+            }
+          },
+          {
+            "id": "10",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "screening camp",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          }
+        ],
+        "metrics": {
+          "fields": {
+            "activity_type": {
+              "TP": 8,
+              "FP": 2,
+              "FN": 0,
+              "TN": 0,
+              "accuracy": 0.8,
+              "precision": 0.8,
+              "recall": 1.0,
+              "f1": 0.8888888888888888
+            },
+            "participant_count": {
+              "TP": 7,
+              "FP": 1,
+              "FN": 1,
+              "TN": 2,
+              "accuracy": 0.9,
+              "precision": 0.875,
+              "recall": 0.875,
+              "f1": 0.875
+            }
+          },
+          "confusion_matrices": {
+            "activity_type": {
+              "family planning outreach": {
+                "family planning outreach": 2
+              },
+              "null": {
+                "other": 1,
+                "community health visit": 1
+              },
+              "savings group meeting": {
+                "savings group meeting": 1
+              },
+              "menstrual hygiene session": {
+                "menstrual hygiene session": 1
+              },
+              "gender-based violence dialogue": {
+                "gender-based violence dialogue": 1
+              },
+              "cancer screening": {
+                "cancer screening": 2
+              },
+              "agriculture training": {
+                "agriculture training": 1
+              }
+            }
+          }
+        }
+      },
+      "pipeline": {
+        "records": [
+          {
+            "id": "1",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "family planning outreach",
+              "location": "[ORG]",
+              "participant_count": 42,
+              "referrals": 6,
+              "needs_review": [
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "2",
+            "predicted": {
+              "status": "neither",
+              "activity_type": "family planning outreach",
+              "location": "[ORG]",
+              "participant_count": 42,
+              "referrals": 6,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "3",
+            "predicted": {
+              "status": "neither",
+              "activity_type": "other",
+              "location": "[LOCATION]",
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "4",
+            "predicted": {
+              "status": "planned",
+              "activity_type": "savings group meeting",
+              "location": "[LOCATION]",
+              "participant_count": 25,
+              "referrals": 4,
+              "needs_review": [
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "savings group meeting",
+              "participant_count": 25
+            }
+          },
+          {
+            "id": "5",
+            "predicted": {
+              "status": "neither",
+              "activity_type": "menstrual hygiene session",
+              "location": "[ORG]",
+              "participant_count": 60,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "menstrual hygiene session",
+              "participant_count": 60
+            }
+          },
+          {
+            "id": "6",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "gender-based violence dialogue",
+              "location": "chief's camp",
+              "participant_count": 35,
+              "referrals": 3,
+              "needs_review": [
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "gender-based violence dialogue",
+              "participant_count": 35
+            }
+          },
+          {
+            "id": "7",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "[LOCATION]",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": [
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          },
+          {
+            "id": "8",
+            "predicted": {
+              "status": "neither",
+              "activity_type": "community health visit",
+              "location": "[LOCATION]",
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "9",
+            "predicted": {
+              "status": "planned",
+              "activity_type": "agriculture training",
+              "location": "[LOCATION]",
+              "participant_count": 18,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "agriculture training",
+              "participant_count": 18
+            }
+          },
+          {
+            "id": "10",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "Nakuru level 5",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          }
+        ],
+        "metrics": {
+          "fields": {
+            "activity_type": {
+              "TP": 8,
+              "FP": 2,
+              "FN": 0,
+              "TN": 0,
+              "accuracy": 0.8,
+              "precision": 0.8,
+              "recall": 1.0,
+              "f1": 0.8888888888888888
+            },
+            "participant_count": {
+              "TP": 8,
+              "FP": 0,
+              "FN": 0,
+              "TN": 2,
+              "accuracy": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "confusion_matrices": {
+            "activity_type": {
+              "family planning outreach": {
+                "family planning outreach": 2
+              },
+              "null": {
+                "other": 1,
+                "community health visit": 1
+              },
+              "savings group meeting": {
+                "savings group meeting": 1
+              },
+              "menstrual hygiene session": {
+                "menstrual hygiene session": 1
+              },
+              "gender-based violence dialogue": {
+                "gender-based violence dialogue": 1
+              },
+              "cancer screening": {
+                "cancer screening": 2
+              },
+              "agriculture training": {
+                "agriculture training": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "flan-t5": {
+      "model": "google/flan-t5-base",
+      "solution": {
+        "records": [
+          {
+            "id": "1",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "family planning outreach",
+              "location": "[LOCATION] dispensary",
+              "participant_count": 42,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "2",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "family planning outreach",
+              "location": "[LOCATION] outreach",
+              "participant_count": 42,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "3",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "community health visit",
+              "location": null,
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "4",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "savings group meeting",
+              "location": "[LOCATION]",
+              "participant_count": 25,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "savings group meeting",
+              "participant_count": 25
+            }
+          },
+          {
+            "id": "5",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "community health visit",
+              "location": "[LOCATION]",
+              "participant_count": 60,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "menstrual hygiene session",
+              "participant_count": 60
+            }
+          },
+          {
+            "id": "6",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "gender-based violence dialogue",
+              "location": "chief's camp",
+              "participant_count": 35,
+              "referrals": 3,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "gender-based violence dialogue",
+              "participant_count": 35
+            }
+          },
+          {
+            "id": "7",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "[LOCATION]",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": [
+                "participant_count",
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          },
+          {
+            "id": "8",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "community health visit",
+              "location": "Mama",
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "9",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "agriculture training",
+              "location": "[LOCATION]",
+              "participant_count": 18,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "agriculture training",
+              "participant_count": 18
+            }
+          },
+          {
+            "id": "10",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "[LOCATION]",
+              "participant_count": 28,
+              "referrals": null,
+              "needs_review": [
+                "participant_count"
+              ]
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          }
+        ],
+        "metrics": {
+          "fields": {
+            "activity_type": {
+              "TP": 7,
+              "FP": 3,
+              "FN": 1,
+              "TN": 0,
+              "accuracy": 0.7,
+              "precision": 0.7,
+              "recall": 0.875,
+              "f1": 0.7777777777777778
+            },
+            "participant_count": {
+              "TP": 8,
+              "FP": 0,
+              "FN": 0,
+              "TN": 2,
+              "accuracy": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "confusion_matrices": {
+            "activity_type": {
+              "family planning outreach": {
+                "family planning outreach": 2
+              },
+              "null": {
+                "community health visit": 2
+              },
+              "savings group meeting": {
+                "savings group meeting": 1
+              },
+              "menstrual hygiene session": {
+                "community health visit": 1
+              },
+              "gender-based violence dialogue": {
+                "gender-based violence dialogue": 1
+              },
+              "cancer screening": {
+                "cancer screening": 2
+              },
+              "agriculture training": {
+                "agriculture training": 1
+              }
+            }
+          }
+        }
+      },
+      "pipeline": {
+        "records": [
+          {
+            "id": "1",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "family planning outreach",
+              "location": "[ORG]",
+              "participant_count": 42,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "2",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "family planning outreach",
+              "location": "[ORG] outreach",
+              "participant_count": 42,
+              "referrals": 42,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "family planning outreach",
+              "participant_count": 42
+            }
+          },
+          {
+            "id": "3",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "community health visit",
+              "location": null,
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "4",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "savings group meeting",
+              "location": "[LOCATION]",
+              "participant_count": 25,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "savings group meeting",
+              "participant_count": 25
+            }
+          },
+          {
+            "id": "5",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "community health visit",
+              "location": "[ORG]",
+              "participant_count": 60,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "menstrual hygiene session",
+              "participant_count": 60
+            }
+          },
+          {
+            "id": "6",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "gender-based violence dialogue",
+              "location": "chief's camp",
+              "participant_count": 35,
+              "referrals": 3,
+              "needs_review": [
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "gender-based violence dialogue",
+              "participant_count": 35
+            }
+          },
+          {
+            "id": "7",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "[LOCATION]",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": [
+                "referrals"
+              ]
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          },
+          {
+            "id": "8",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "community health visit",
+              "location": "[LOCATION]",
+              "participant_count": null,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": null,
+              "participant_count": null
+            }
+          },
+          {
+            "id": "9",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "agriculture training",
+              "location": "[LOCATION]",
+              "participant_count": 18,
+              "referrals": null,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "agriculture training",
+              "participant_count": 18
+            }
+          },
+          {
+            "id": "10",
+            "predicted": {
+              "status": "completed",
+              "activity_type": "cancer screening",
+              "location": "Nakuru",
+              "participant_count": 28,
+              "referrals": 3,
+              "needs_review": []
+            },
+            "expected": {
+              "activity_type": "cancer screening",
+              "participant_count": 28
+            }
+          }
+        ],
+        "metrics": {
+          "fields": {
+            "activity_type": {
+              "TP": 7,
+              "FP": 3,
+              "FN": 1,
+              "TN": 0,
+              "accuracy": 0.7,
+              "precision": 0.7,
+              "recall": 0.875,
+              "f1": 0.7777777777777778
+            },
+            "participant_count": {
+              "TP": 8,
+              "FP": 0,
+              "FN": 0,
+              "TN": 2,
+              "accuracy": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "confusion_matrices": {
+            "activity_type": {
+              "family planning outreach": {
+                "family planning outreach": 2
+              },
+              "null": {
+                "community health visit": 2
+              },
+              "savings group meeting": {
+                "savings group meeting": 1
+              },
+              "menstrual hygiene session": {
+                "community health visit": 1
+              },
+              "gender-based violence dialogue": {
+                "gender-based violence dialogue": 1
+              },
+              "cancer screening": {
+                "cancer screening": 2
+              },
+              "agriculture training": {
+                "agriculture training": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

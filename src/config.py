@@ -18,4 +18,7 @@ RELEVANCE_COUNT_PLANS = True
 RELEVANCE_MIN_WORDS = 4
 RELEVANCE_SKIP_QUESTIONS = True
 
+# Extraction: "nuextract" (numind/NuExtract-2.0-2B) or "flan-t5" (google/flan-t5-base).
+EXTRACTION_BACKEND = "nuextract"
+
 OUTPUT_DIR = Path("output")
