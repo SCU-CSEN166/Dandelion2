@@ -1,0 +1,11 @@
+message_id,expected_relevance,predicted_relevance,relevance_correct,expected_activity_type,predicted_activity_type,activity_exact_string_match,activity_interpretation,expected_participants,predicted_participants,participants_correct,expected_duplicate_of,predicted_duplicate_of,duplicate_correct
+msg01,Event,Event,True,Family planning outreach,Family planning outreach,True,Exact match,42,42,True,none,none,True
+msg02,Event,Event,True,Family planning outreach,Family planning outreach,True,Exact match,42,42,True,1,none,False
+msg03,Chit-chat,Event,False,,Other,,N/A — TA label is Chit-chat,,,,none,none,True
+msg04,Event,Event,True,Women's group table banking (savings) meeting,Savings group meeting,False,Semantically correct but less specific: 'Savings group meeting' vs. women's group table banking (savings) meeting,25,25,True,none,none,True
+msg05,Event,Event,True,Menstrual hygiene session and sanitary pad distribution,Menstrual hygiene session,False,Partially specific: captured menstrual hygiene session but omitted sanitary pad distribution,60,60,True,none,none,True
+msg06,Event,Event,True,Gender-based violence awareness dialogue,Gender-based violence dialogue,False,Semantically correct: omitted only the word 'awareness',35,35,True,none,none,True
+msg07,Event,Event,True,Cervical cancer screening camp,Cancer screening,False,Correct general category but less specific: cancer screening vs. cervical cancer screening camp,28,28,True,none,none,True
+msg08,Chit-chat,Event,False,,Community health visit,,N/A — TA label is Chit-chat,,,,none,none,True
+msg09,Event,Event,True,Kitchen garden training,Agriculture training,False,Related but broader: agriculture training vs. kitchen garden training,18,18,True,none,none,True
+msg10,Event,Event,True,Cervical cancer screening camp,Cancer screening,False,Correct general category but less specific: cancer screening vs. cervical cancer screening camp,28,28,True,7,none,False
