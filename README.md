@@ -321,6 +321,7 @@ This is the relevance result when planned events count as relevant. It found all
 ### Prioritized improvement plan
 
 | Priority | Details | Why? |
+|---|---|---|
 | Fix relevance distinction | distinguish actual field activities from the ordinary social plans | false Events records contaminate Dandelion's actual structured data |
 | Improve duplicate detection | detect semantically equivalent event reports | current system still missed 2/2 true duplicates | 
 | Improve ASR on higher impact data | local names, Kenyan location names, phone numbers, test Whisper Large | more specified for actual data Dandelion would have |
