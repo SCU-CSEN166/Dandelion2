@@ -4,21 +4,21 @@ import json
 from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+OUTPUT_DIR = Path("output")
 
-# Reviewed public places/organizations the anonymizer may leave unmasked, e.g. "Nakuru".
-# Kenya's 47 counties plus a few public organizations. Never derive this list from evaluation labels.
+# Where main.py --transcript-cache keeps transcripts between runs. They are raw, un-anonymized
+# speech: fine to commit for our test data, never for real Dandelion messages.
+TRANSCRIPT_CACHE = OUTPUT_DIR / "transcript_cache.json"
+
+# Public places the anonymizer leaves visible, e.g. "Nakuru": Kenya's counties plus a few
+# public organizations. Never build this list from evaluation labels; it would inflate the scores.
 PUBLIC_ENTITIES: list[str] = json.loads((DATA_DIR / "public_entities.json").read_text(encoding="utf-8"))
 
-# Anonymization: run GLiNER alongside BERT (each catches names the other misses).
+# BERT and GLiNER each catch names the other misses, so run both.
 USE_GLINER = True
 
-# Relevance: planned activities count as relevant, and short messages ("nice", "got it")
-# and questions are ruled irrelevant before the model is asked.
-RELEVANCE_COUNT_PLANS = True
-RELEVANCE_MIN_WORDS = 4
-RELEVANCE_SKIP_QUESTIONS = True
+RELEVANCE_COUNT_PLANS = True     # planned activities count as relevant, not only completed ones
+RELEVANCE_MIN_WORDS = 4          # shorter messages ("nice", "got it") are irrelevant
+RELEVANCE_SKIP_QUESTIONS = True  # questions are irrelevant; the answer is its own message
 
-# Extraction: "nuextract" (numind/NuExtract-2.0-2B) or "flan-t5" (google/flan-t5-base).
-EXTRACTION_BACKEND = "nuextract"
-
-OUTPUT_DIR = Path("output")
+EXTRACTION_BACKEND = "nuextract"  # or "flan-t5"

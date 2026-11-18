@@ -1,8 +1,9 @@
-"""Turn any supported input into a list of `Message` records.
+"""Step 1: turn any supported input into a list of `Message` records.
+
+    uv run -m src.ingest data/WhatsAppExports/export2
 
     from src.ingest import load
     messages = load("data/WhatsAppExports/export.zip")
-    records = [message.to_dict() for message in messages]
 """
 
 import json
@@ -12,11 +13,13 @@ from ..utils import write_json
 from .base import SOURCES, Source, register
 from .schema import Attachment, Message
 
-# Importing a module registers its Source. Auto-detection tries them in this
-# order, so the generic plain-text fallback must come last.
-from . import whatsapp, audio_folder, json_source, text_source  # noqa: F401, E402
+# Importing a module registers its Source, and auto-detection tries them in this order:
+# the plain-text fallback must come last, so import sorters must leave this line alone.
+# isort: off
+from . import whatsapp, audio_folder, json_source, text_source  # noqa: F401
+# isort: on
 
-__all__ = ["Attachment", "Message", "Source", "register", "load", "save_json", "load_json"]
+__all__ = ["Attachment", "Message", "Source", "load", "load_json", "register", "save_json"]
 
 
 def load(path: str | Path, source: str | None = None, **options) -> list[Message]:

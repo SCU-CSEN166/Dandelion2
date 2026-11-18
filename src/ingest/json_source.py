@@ -1,13 +1,14 @@
-"""JSON / JSONL datasets: the synthetic test set, Hugging Face exports, etc.
+"""JSON / JSONL datasets, such as the synthetic test set or Hugging Face exports.
+
+    uv run -m src.ingest data/synthetic_unanonymized.json
 
 Accepted shapes:
     [ {...}, {...} ]                      a list of records
     { "records": [ {...}, ... ], ... }    any top-level key holding a list of records
     one {...} per line                    .jsonl
 
-Each record's fields are matched to `Message` fields by common names (see
-`ALIASES`), or explicitly via `fields=`. Every field that isn't used is kept in
-`metadata`, so labels such as the synthetic set's "entities" survive for evaluation.
+Record fields are matched to `Message` fields by common names (`ALIASES`), or by
+`fields=`. Unused fields are kept in `metadata`, so labels survive for evaluation.
 """
 
 import json
@@ -47,34 +48,30 @@ class JsonSource(Source):
         return [self._to_message(record, index, path) for index, record in enumerate(records)]
 
     def _to_message(self, record: dict[str, Any], index: int, path: Path) -> Message:
-        rest = dict(record)
-
-        def take(field: str) -> Any:
-            keys = [self.fields[field]] if field in self.fields else ALIASES[field]
-            for key in keys:
-                if key in rest:
-                    return rest.pop(key)
-            return None
-
-        record_id = take("id")
-        text = take("text")
-        timestamp = _parse_timestamp(take("timestamp"), rest)
-        audio = take("audio")
-        # Hugging Face audio columns look like {"path": ..., "array": [...], "sampling_rate": ...}
-        if isinstance(audio, dict):
+        rest = dict(record)  # fields not taken here end up in metadata
+        record_id = self._take(rest, "id")
+        text = self._take(rest, "text")
+        timestamp = _parse_timestamp(self._take(rest, "timestamp"), rest)
+        audio = self._take(rest, "audio")
+        if isinstance(audio, dict):  # Hugging Face audio column: {"path", "array", "sampling_rate"}
             audio = audio.get("path")
         attachments = [_audio_attachment(audio, path.parent)] if isinstance(audio, str) else []
-
         return Message(
             id=f"{self.name}:{path.stem}:{record_id if record_id is not None else index}",
             source=self.name,
             text=str(text or ""),
-            sender=take("sender"),
+            sender=self._take(rest, "sender"),
             timestamp=timestamp,
-            conversation=take("conversation") or path.stem,
+            conversation=self._take(rest, "conversation") or path.stem,
             attachments=attachments,
             metadata=rest,
         )
+
+    def _take(self, record: dict[str, Any], field: str) -> Any:
+        """Remove and return the value for `field` under its configured or alias key (None if absent)."""
+        keys = [self.fields[field]] if field in self.fields else ALIASES[field]
+        key = next((key for key in keys if key in record), None)
+        return record.pop(key) if key is not None else None
 
 
 def _audio_attachment(audio_path: str, base_dir: Path) -> Attachment:

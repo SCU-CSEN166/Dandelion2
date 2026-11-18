@@ -1,4 +1,8 @@
-"""python -m src.ingest data/WhatsAppExports/export.zip [-o messages.json]"""
+"""Print (or save) the messages in any supported input, as JSON.
+
+    uv run -m src.ingest data/WhatsAppExports/export2
+    uv run -m src.ingest data/WhatsAppExports/export.zip -o messages.json
+"""
 
 import argparse
 import json

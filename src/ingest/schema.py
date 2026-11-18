@@ -1,8 +1,6 @@
-"""Common record format that every input source is normalized into.
+"""The record format every input source produces.
 
-Downstream steps (transcription, anonymization, relevance, extraction) only
-see `Message` objects, so they don't care whether the data came from a
-WhatsApp export, the synthetic dataset, or a speech corpus.
+Later steps only see `Message` objects, so they work the same for any input.
 """
 
 from dataclasses import asdict, dataclass, field
@@ -44,12 +42,13 @@ class Message:
     is_system: bool = False  # WhatsApp notices like "Messages are end-to-end encrypted"
     metadata: dict[str, Any] = field(default_factory=dict)  # source-specific extras
 
-    # Filled in by later pipeline steps
+    # Filled in by the pipeline steps
     anonymized_text: str | None = None
     anonymized_sender: str | None = None  # stable pseudonym, e.g. "Sender 1"
     redactions: list[dict[str, Any]] = field(default_factory=list)  # spans into full_text
     relevance: dict[str, Any] | None = None  # {"label": "relevant" | "irrelevant", "score": ...}
     extraction: dict[str, Any] | None = None  # activity fields; only for relevant messages
+    duplicate_of: str | None = None  # id of an earlier message that may report the same activity
 
     @property
     def audio(self) -> list[Attachment]:

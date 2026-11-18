@@ -1,7 +1,8 @@
-"""Plain text: one message per line (or per blank-line-separated block).
+"""Plain text: one message per line, or per paragraph.
 
-This is the fallback for .txt files that aren't WhatsApp exports, so it must be
-registered after `WhatsAppSource`.
+    uv run -m src.ingest notes.txt
+
+The fallback for .txt files that aren't WhatsApp exports, so it is registered last.
 """
 
 from pathlib import Path

@@ -1,101 +1,63 @@
 """Evaluate activity-field extraction against labeled messages.
 
-    uv run -m src.evaluation.extraction data/whatsapp_labels.json                  # NuExtract-2.0-2B
-    uv run -m src.evaluation.extraction data/whatsapp_labels.json --model flan-t5  # google/flan-t5-base
+    uv run -m src.evaluation.extraction data/whatsapp_labels.json                  # NuExtract
+    uv run -m src.evaluation.extraction data/whatsapp_labels.json --model flan-t5  # Flan-T5
 
-Both models fill the same template and are scored identically, so their reports compare directly.
-
-Not from an earlier commit: written in the same style as anonymization.py and
-classification.py. Test data: Risha's data/whatsapp_labels.json, which labels status,
-activity_type, location, participant_count and referrals for each message.
-
-Each labeled message's text is extracted on its own: no earlier messages as context
-and no anonymization, so this measures the model alone. A value counts as correct
-only when it equals the label exactly.
-
-Most labels are null (e.g. 24 of 31 messages have no participant count), so accuracy
-alone rewards extracting nothing. Each field is therefore scored like slot filling:
-TP = value extracted and correct, FP = value extracted but wrong or not labeled,
-FN = labeled value missed or wrong, TN = both null. A wrong value is both an FP and
-an FN. Precision says how far extracted values can be trusted; recall says how many
-labeled values were found. Accuracy (share of records matching exactly, nulls
-included) is kept for reference. One-of-a-list fields (status, activity_type) also
-get a confusion matrix: {labeled value: {extracted value: count}}.
+Each message is extracted on its own, without context or anonymization, so this measures
+the model alone. A value is correct only when it equals the label exactly. Fields are
+scored as slot filling (see metrics.py); choice fields also get a confusion matrix.
 """
+
 import argparse
 import json
 from pathlib import Path
 
-from src.evaluation.anonymization import metrics
-from src.extract import EXTRACTORS, make_extractor
+from src.evaluation.metrics import confusion_matrix, slot_scores
+from src.extract import EXTRACTORS, Extractor, make_extractor
+from src.utils import write_json
 
-NULL = 'null'  # stands in for None as a confusion-matrix key (JSON keys must be strings)
-
-
-def slot_counts(pairs):
-    """(TP, FP, FN, TN) over (predicted, expected) pairs; see the module docstring."""
-    tp = fp = fn = tn = 0
-    for predicted, expected in pairs:
-        if predicted is not None and predicted == expected:
-            tp += 1
-        elif predicted is None and expected is None:
-            tn += 1
-        else:
-            fp += predicted is not None
-            fn += expected is not None
-    return tp, fp, fn, tn
+DEFAULT_MODEL = "nuextract"
+OUTPUT_DIR = Path("output/evaluations")
 
 
-def confusion_matrix(pairs):
-    matrix = {}
-    for predicted, expected in pairs:
-        row = matrix.setdefault(NULL if expected is None else str(expected), {})
-        column = NULL if predicted is None else str(predicted)
-        row[column] = row.get(column, 0) + 1
-    return matrix
-
-
-def evaluate(records, extractor):
-    outputs = []
+def evaluate(records: list[dict], extractor: Extractor) -> dict:
     fields = list(extractor.template)
+    outputs = []
     pairs = {field: [] for field in fields}
-    for i, record in enumerate(records):
-        predicted = extractor.extract(record['text'])
+    for index, record in enumerate(records):
+        predicted = extractor.extract(record["text"])
         expected = {field: record[field] for field in fields}
-        outputs.append({'id': record.get('message_id', i), 'predicted': predicted, 'expected': expected})
+        outputs.append({"id": record.get("message_id", index), "predicted": predicted, "expected": expected})
         for field in fields:
             pairs[field].append((predicted[field], expected[field]))
-    total = len(records)
-    scores = {}
-    for field in fields:
-        exact = sum(predicted == expected for predicted, expected in pairs[field])
-        # metrics()' own accuracy would count a wrong value twice (as FP and FN), so use exact matches.
-        scores[field] = {**metrics(*slot_counts(pairs[field])), 'accuracy': exact / total if total else None}
-    return {'records': outputs, 'metrics': {
-        'records': total,
-        'fields': scores,
-        'confusion_matrices': {field: confusion_matrix(pairs[field]) for field in fields
-                               if isinstance(extractor.template[field], list)}}}
+    choice_fields = [field for field in fields if isinstance(extractor.template[field], list)]
+    return {"records": outputs, "metrics": {
+        "records": len(records),
+        "fields": {field: slot_scores(pairs[field]) for field in fields},
+        "confusion_matrices": {field: confusion_matrix(pairs[field]) for field in choice_fields}}}
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('input', type=Path)
-    parser.add_argument('--model', choices=list(EXTRACTORS), default='nuextract', help='which extraction model to use')
-    parser.add_argument('--output', type=Path, help='default: output/evaluations/extraction.json '
-                                                    '(extraction_flan-t5.json for --model flan-t5)')
+def default_output(model: str) -> Path:
+    """extraction.json for NuExtract, extraction_<model>.json for the others."""
+    suffix = "" if model == DEFAULT_MODEL else f"_{model}"
+    return OUTPUT_DIR / f"extraction{suffix}.json"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("input", type=Path)
+    parser.add_argument("--model", choices=list(EXTRACTORS), default=DEFAULT_MODEL, help="extraction model")
+    parser.add_argument("--output", type=Path, help="default: output/evaluations/extraction[_<model>].json")
     args = parser.parse_args()
-    suffix = '' if args.model == 'nuextract' else f'_{args.model}'
-    output = args.output or Path(f'output/evaluations/extraction{suffix}.json')
-    records = json.loads(args.input.read_text(encoding='utf-8'))
+
+    records = json.loads(args.input.read_text(encoding="utf-8"))
     extractor = make_extractor(args.model)
     result = evaluate(records, extractor)
-    report = {'models': {'extraction': extractor.model_name}, 'dataset': str(args.input),
-              'metrics': result['metrics'], 'records': result['records']}
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    print(json.dumps(report['metrics'], indent=2))
+    report = {"models": {"extraction": extractor.model_name}, "dataset": str(args.input),
+              "metrics": result["metrics"], "records": result["records"]}
+    write_json(args.output or default_output(args.model), report)
+    print(json.dumps(report["metrics"], indent=2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

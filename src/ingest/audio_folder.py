@@ -1,11 +1,10 @@
-"""A folder of standalone voice notes / recordings: one message per file.
+"""A folder of voice notes or recordings: one message per file.
 
-Video files (e.g. .mp4 recordings) are reduced to audio-only .mp3 with ffmpeg
-before transcription, so the pipeline only ever sees audio. The .mp3 copies go
-in `mp3_dir` (default output/audio/<folder name>/, which is not committed) and
-are reused on later runs unless the original is newer.
+    uv run main.py --input data/dandelion_audio
 
-    uv run main.py --folder data/dandelion_audio
+Videos (e.g. .mp4) are converted to audio-only .mp3 with ffmpeg, so later steps only
+see audio. The copies go in output/audio/<folder name>/ and are reused until the
+original changes.
 """
 
 import shutil
@@ -17,7 +16,7 @@ from .base import Source, register
 from .schema import Attachment, Message, kind_from_filename
 
 MEDIA_KINDS = ("audio", "video")
-MP3_QUALITY = "4"  # libmp3lame VBR quality: 0 best .. 9 smallest; 4 is plenty for speech
+MP3_QUALITY = "4"  # ffmpeg VBR scale, 0 (best) to 9 (smallest); 4 is plenty for speech
 
 
 def _media_files(folder: Path) -> list[Path]:
@@ -26,7 +25,7 @@ def _media_files(folder: Path) -> list[Path]:
 
 
 def to_mp3(source: Path, target: Path) -> Path:
-    """Write the audio track of `source` to `target` as mp3 (video stream dropped)."""
+    """Write the audio track of `source` to `target` as mp3, unless `target` is already up to date."""
     if target.exists() and target.stat().st_mtime >= source.stat().st_mtime:
         return target
     if shutil.which("ffmpeg") is None:

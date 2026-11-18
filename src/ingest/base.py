@@ -1,8 +1,7 @@
-"""Interface every input source implements.
+"""The interface every input source implements.
 
-To add a new input format (e.g. the synthetic JSON dataset or a Hugging Face
-speech corpus), subclass `Source`, implement `can_load` and `load`, and
-decorate the class with `@register`. `ingest.load(path)` will then pick it up.
+To add an input format: subclass `Source`, implement `can_load` and `load`, and
+decorate the class with `@register`. `ingest.load(path)` then picks it up.
 """
 
 from abc import ABC, abstractmethod
@@ -28,5 +27,6 @@ SOURCES: dict[str, type[Source]] = {}
 
 
 def register(cls: type[Source]) -> type[Source]:
+    """Class decorator that makes a Source available to `ingest.load`."""
     SOURCES[cls.name] = cls
     return cls

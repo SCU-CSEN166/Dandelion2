@@ -1,26 +1,27 @@
 """WhatsApp "Export chat" files: the .zip, an unzipped folder, or the bare .txt.
 
-Both export layouts are supported:
+    uv run -m src.ingest data/WhatsAppExports/export2
+
+Both layouts are supported:
     iOS:      [11/3/26, 12:43:47 AM] Name: text
     Android:  11/3/26, 12:43 AM - Name: text
 
-Lines that don't start with a timestamp are continuations of the previous
-message. Attached media is extracted next to the zip (or `media_dir`) so later
-steps such as transcription can open it by path.
+Lines without a timestamp continue the previous message. Media is extracted next
+to the zip (or into `media_dir`) so transcription can open it by path.
 """
 
 import re
 import zipfile
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path, PurePosixPath
-from typing import Callable
 
 from .base import Source, register
 from .schema import Attachment, AttachmentKind, Message, kind_from_filename
 
-LRM = "‎"  # left-to-right mark; iOS prefixes system notices and attachment lines with it
-_INVISIBLE = dict.fromkeys(map(ord, "‎‏﻿"))  # LRM, RLM, BOM: deleted
+LRM = "\u200e"  # left-to-right mark; iOS puts one before system notices and attachments
+_INVISIBLE = dict.fromkeys(map(ord, "\u200e\u200f\ufeff"))  # LRM, RLM, BOM: deleted
 _NARROW_NO_BREAK_SPACE = 0x202F  # newer exports put one before AM/PM
 _NO_BREAK_SPACE = 0xA0
 _SPACES = {_NARROW_NO_BREAK_SPACE: " ", _NO_BREAK_SPACE: " "}
@@ -65,6 +66,14 @@ class _Entry:
     line_number: int  # 1-based line in the chat .txt
 
 
+@dataclass
+class _Chat:
+    """What every message in one export shares."""
+    conversation: str
+    resolve: Resolver  # attachment filename -> local path
+    dayfirst: bool
+
+
 @register
 class WhatsAppSource(Source):
     name = "whatsapp"
@@ -90,35 +99,34 @@ class WhatsAppSource(Source):
     def load(self, path: Path) -> list[Message]:
         path = Path(path)
         text, resolve = _open(path, self.media_dir)
-        conversation = path.stem
         entries = _group_entries(text)
         dayfirst = self.dayfirst if self.dayfirst is not None else _guess_dayfirst([entry.date for entry in entries])
-        return [
-            self._to_message(entry, f"{self.name}:{conversation}:{index}", conversation, resolve, dayfirst)
-            for index, entry in enumerate(entries)
-        ]
+        chat = _Chat(conversation=path.stem, resolve=resolve, dayfirst=dayfirst)
+        return [self._to_message(entry, index, chat) for index, entry in enumerate(entries)]
 
-    def _to_message(self, entry: _Entry, message_id: str, conversation: str,
-                    resolve: Resolver, dayfirst: bool) -> Message:
-        sender_match = _SENDER.match(entry.body)
-        if sender_match:
-            sender = sender_match["sender"].translate(_INVISIBLE).lstrip(_UNSAVED_CONTACT_PREFIX)
-            raw_text = sender_match["text"]
-        else:
-            sender, raw_text = None, entry.body
-        text, attachments = _split_attachments(raw_text.translate(_INVISIBLE), resolve)
+    def _to_message(self, entry: _Entry, index: int, chat: _Chat) -> Message:
+        sender, raw_text = _split_sender(entry.body)
+        text, attachments = _split_attachments(raw_text.translate(_INVISIBLE), chat.resolve)
         return Message(
-            id=message_id,
+            id=f"{self.name}:{chat.conversation}:{index}",
             source=self.name,
             text=text,
             sender=sender,
-            timestamp=_parse_timestamp(entry.date, entry.time, dayfirst),
-            conversation=conversation,
+            timestamp=_parse_timestamp(entry.date, entry.time, chat.dayfirst),
+            conversation=chat.conversation,
             attachments=attachments,
             # Android notices have no sender; iOS ones are marked with a leading LRM.
             is_system=sender is None or (raw_text.startswith(LRM) and not attachments),
             metadata={"export_format": entry.export_format, "line": entry.line_number},
         )
+
+
+def _split_sender(body: str) -> tuple[str | None, str]:
+    """(sender, text); the sender is None for notices such as "Messages are end-to-end encrypted"."""
+    match = _SENDER.match(body)
+    if not match:
+        return None, body
+    return match["sender"].translate(_INVISIBLE).lstrip(_UNSAVED_CONTACT_PREFIX), match["text"]
 
 
 def _group_entries(text: str) -> list[_Entry]:

@@ -1,23 +1,50 @@
-"""Dandelion pipeline entry point. Edit the settings below, then:
+"""Dandelion pipeline entry point.
+
+Run the inputs listed in INPUTS below:
 
     uv run main.py
 
-Or run the whole pipeline on one message instead of INPUTS (prints the result and
-writes no files):
+Run other inputs instead. Any mix of files and folders works; the format is detected:
+
+    # a folder of voice notes or videos
+    uv run main.py --input data/dandelion_audio
+    # a WhatsApp export: unzipped folder, .zip, or just the chat .txt (no media)
+    uv run main.py --input data/WhatsAppExports/export2
+    uv run main.py --input "data/WhatsAppExports/export/WhatsApp Chat - dandelion africa.zip"
+    uv run main.py --input data/WhatsAppExports/export2/_chat.txt
+    # JSON / JSONL records: one file, several files, or a whole folder of them
+    uv run main.py --input data/synthetic_unanonymized.json
+    uv run main.py --input data/synthetic_unanonymized.json data/whatsapp_labels.json
+    uv run main.py --input my_reports/*.json
+    # plain text, one message per line
+    uv run main.py --input notes.txt
+
+Each input is cut to its first LIMIT (20) messages; --limit changes that, and 0 means all:
+
+    uv run main.py --input data/WhatsAppExports/export2 --limit 0
+
+Run one message (prints the result and writes no files):
 
     uv run main.py --message "Today we held a youth health session with 20 girls"
     uv run main.py --audio data/WhatsAppExports/export2/00003084-AUDIO-2026-11-04-16-05-11.opus
 
-Or run a folder of voice notes / recordings (.mp4 etc. are converted to audio-only .mp3 first):
+Other options:
 
-    uv run main.py --folder data/dandelion_audio
+    # reuse transcripts from earlier runs (see below)
+    uv run main.py --input data/dandelion_audio --transcript-cache
+    # a different speech-to-text model
+    uv run main.py --input data/dandelion_audio --asr-model openai/whisper-small.en
+
+--transcript-cache reuses audio already transcribed with the same model, from
+output/transcript_cache.json or the path given after it (see src/transcribe.py).
 
 Steps:
-    1) Parse input (WhatsApp export, JSON/JSONL, plain text)  -> src.ingest
+    1) Parse input (WhatsApp, audio folder, JSON, plain text) -> src.ingest
     2) Transcribe audio attachments                           -> src.transcribe
     3) Anonymize                                              -> src.anonymize
     4) Determine relevance                                    -> src.relevance
     5) Extract to JSON                                        -> src.extract
+    6) Flag possible duplicates                               -> src.duplicates
 
 Settings shared with the evaluation scripts (e.g. PUBLIC_ENTITIES) live in src/config.py.
 """
@@ -27,16 +54,27 @@ import csv
 import json
 from pathlib import Path
 
-from src.anonymize import Anonymizer, CombinedNER, GlinerNER, anonymize
-from src.config import (EXTRACTION_BACKEND, OUTPUT_DIR, PUBLIC_ENTITIES, RELEVANCE_COUNT_PLANS, RELEVANCE_MIN_WORDS,
-                        RELEVANCE_SKIP_QUESTIONS, USE_GLINER)
+from src.anonymize import Anonymizer, CombinedNER, GlinerNER, anonymize, bert_ner
+from src.config import (
+    EXTRACTION_BACKEND,
+    OUTPUT_DIR,
+    PUBLIC_ENTITIES,
+    RELEVANCE_COUNT_PLANS,
+    RELEVANCE_MIN_WORDS,
+    RELEVANCE_SKIP_QUESTIONS,
+    TRANSCRIPT_CACHE,
+    USE_GLINER,
+)
+from src.duplicates import mark_duplicates
 from src.extract import extract, make_extractor
 from src.ingest import Attachment, Message, load
 from src.relevance import RelevanceClassifier, classify
-from src.transcribe import transcribe
+from src.transcribe import DEFAULT_MODEL as DEFAULT_ASR_MODEL
+from src.transcribe import Transcriber, TranscriptCache, transcribe
 from src.utils import write_json
 
-# Any mix of WhatsApp exports (.zip/.txt/folder), .json/.jsonl, or plain .txt
+# Run when no --input is given. Any mix of WhatsApp exports (.zip/.txt/folder), folders of
+# audio or video, .json/.jsonl, or plain .txt.
 INPUTS = [
     "data/WhatsAppExports/export2",
 ]
@@ -50,7 +88,7 @@ CSV_RELEVANCE_LABELS = {"relevant": "Event", "irrelevant": "Not relevant"}
 CSV_NONE = "none"
 
 # Speed knobs for test runs
-LIMIT: int | None = 20   # only the first N messages of each input; None = all
+LIMIT = 20               # only the first N messages of each input; 0 = all (or use --limit)
 EXTRACTION_CONTEXT = 5   # earlier messages used to read status; 0 = faster, less accurate
 
 # Console summary layout
@@ -75,6 +113,8 @@ def summarize(message: Message) -> str:
     if message.extraction:
         found_fields = {field: value for field, value in message.extraction.items() if value}
         line += f"\n{'':<{EXTRACTION_INDENT}}-> {found_fields}"
+    if message.duplicate_of:
+        line += f"\n{'':<{EXTRACTION_INDENT}}-> possible duplicate of {message.duplicate_of}"
     return line
 
 
@@ -98,6 +138,7 @@ def report(message: Message) -> dict:
         "text": message.anonymized_text,
         "relevance_score": round(message.relevance["score"], SCORE_DECIMALS),
         **message.extraction,
+        "duplicate_of": message.duplicate_of,
     }
 
 
@@ -115,7 +156,7 @@ def csv_rows(messages: list[Message]) -> list[dict]:
             "relevance": CSV_RELEVANCE_LABELS[message.relevance["label"]] if message.relevance else CSV_NONE,
             "activity_type": activity.capitalize() if activity else CSV_NONE,
             "participants": participants if participants is not None else CSV_NONE,
-            "duplicate_of": CSV_NONE,  # duplicate detection not implemented yet
+            "duplicate_of": row_ids.get(message.duplicate_of, CSV_NONE),
         })
     return rows
 
@@ -137,12 +178,19 @@ def single_message(text: str, audio_path: str | None) -> Message:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the Dandelion pipeline on INPUTS, or on one message.")
+    parser.add_argument("--input", "--folder", dest="inputs", nargs="+", metavar="PATH",
+                        help="run these files or folders instead of INPUTS (any supported format)")
+    parser.add_argument("--limit", type=int, default=LIMIT,
+                        help="only the first N messages of each input; 0 = all (default: %(default)s)")
     parser.add_argument("--message", help="run only this message text (no files are written)")
     parser.add_argument("--audio", help="run only this audio file as a voice note (with --message: text + audio)")
-    parser.add_argument("--folder", help="run this folder of voice notes / recordings instead of INPUTS")
+    parser.add_argument("--asr-model", default=DEFAULT_ASR_MODEL, help="speech-to-text model (default: %(default)s)")
+    parser.add_argument("--transcript-cache", nargs="?", const=TRANSCRIPT_CACHE, type=Path, metavar="PATH",
+                        help=f"reuse and save transcripts in this JSON file (default path: {TRANSCRIPT_CACHE})")
     args = parser.parse_args()
-    if args.folder and not Path(args.folder).is_dir():
-        parser.error(f"folder not found: {args.folder}")
+    missing = [path for path in args.inputs or [] if not Path(path).exists()]
+    if missing:
+        parser.error(f"input not found: {', '.join(missing)}")
     if args.audio and not Path(args.audio).is_file():
         parser.error(f"audio file not found: {args.audio}")
     return args
@@ -162,22 +210,25 @@ def main() -> None:
         messages = [single_message(args.message or "", args.audio)]
         print("1) Loaded 1 message from the command line", flush=True)
     else:
-        # Drop notices like "Messages are end-to-end encrypted", then apply LIMIT per input
-        inputs = [args.folder] if args.folder else INPUTS
+        # Drop notices like "Messages are end-to-end encrypted", then apply the limit per input
+        inputs = args.inputs or INPUTS
+        limit = args.limit or None  # 0 means no limit
         messages = []
         for path in inputs:
-            messages += [message for message in load(path) if not message.is_system][:LIMIT]
+            messages += [message for message in load(path) if not message.is_system][:limit]
         print(f"1) Loaded {len(messages)} messages from {len(inputs)} input(s)", flush=True)
 
     # 2) Transcribe (audio transcripts then show up in message.full_text)
     audio_count = sum(len(message.audio) for message in messages)
-    print(f"2) Transcribing {audio_count} audio attachment(s)", flush=True)
-    transcribe(messages)
+    print(f"2) Transcribing {audio_count} audio attachment(s) with {args.asr_model}", flush=True)
+    cache = TranscriptCache(args.transcript_cache) if args.transcript_cache else None
+    reused = transcribe(messages, Transcriber(model=args.asr_model), cache)
+    if cache:
+        print(f"   {reused} reused from {args.transcript_cache}", flush=True)
 
     # 3) Anonymize (fills anonymized_text, redactions, anonymized_sender)
     print("3) Anonymizing", flush=True)
-    # BERT + GLiNER together when USE_GLINER (Anonymizer().ner is the default BERT pipeline).
-    ner = CombinedNER(Anonymizer().ner, GlinerNER()) if USE_GLINER else None
+    ner = CombinedNER(bert_ner(), GlinerNER()) if USE_GLINER else None  # None: BERT alone
     anonymize(messages, Anonymizer(ner=ner, public_entities=PUBLIC_ENTITIES))
 
     # 4) Determine relevance on the anonymized text (fills relevance)
@@ -188,6 +239,10 @@ def main() -> None:
     # 5) Extract activity fields from relevant messages (fills extraction)
     print("5) Extracting activity fields", flush=True)
     extract(messages, make_extractor(EXTRACTION_BACKEND), context_size=EXTRACTION_CONTEXT)
+
+    # 6) Flag messages that may repeat an earlier report (fills duplicate_of)
+    print("6) Flagging possible duplicates", flush=True)
+    mark_duplicates(messages)
 
     for message in messages:
         print(summarize(message))
