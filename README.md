@@ -329,10 +329,10 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 - **Feedback received from another team:** [Summary]
 
 ### Responsible AI assessment
-- **Potential harms or affected users:** [Who could be affected and how?]
-- **Privacy and data handling:** [How sensitive information is protected]
+- **Potential harms or affected users:** One potential problem is data being wrongly extracted and leading to an incorrect conclusion for those looking at the data. For example, if the extraction model mistakenly extracts participant count as 20, even though the message indicated there were only 2 participants, that could be harmful for Dandelion if there is confusion on how many people will be at a certain location.
+- **Privacy and data handling:** We are using local models from Huggingface, so there is no privacy concerns with model use. However, there will need to be consideration for how data is collected and stored in this folder. For example, this folder might contain real data from many sources that must be protected from someone accessing it.
 - **Reliability and unsupported claims:** [How outputs are verified or uncertainty is communicated]
-- **Fairness, accessibility, and usability:** [Relevant concerns and tests]
+- **Fairness, accessibility, and usability:** This system performs best with a powerful GPU and system. Colab is adequate, however Colab might require usage credits which requires payments.
 - **Human oversight:** [Where a human should review or correct outputs]
 - **Remaining limitations:** [What should not be trusted or deployed yet]
 
