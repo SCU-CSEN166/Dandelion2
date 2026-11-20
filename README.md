@@ -339,7 +339,7 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 ### Final improvements and outcomes
 | Feedback / issue | Change made | Worked? (Yes / Partly / No) | Evidence | Remaining limitation |
 |---|---|---|---|---|
-| NuExtract crashed using Apple MPS during full pipeline smoke test | Forced CPU execution | Partly | CPU run reached Step 6 and produced correct structured result. | CPU is slower, and the workaround is not yet a normal documented CLI/device option. |
+| NuExtract and FlanT5 both perform better in some tasks and worse in other tasks. Neither one is perfect | Allow either NuExtract or FlanT5 to run in our system | Partly. This issue is not gone, but it gives the user more control over which model they want to use. | src/extract.py | Still having to decide the tradeoff between wanting participant_count to be more accurate by using FlanT5 or wanting activity type to be more accurate and using NuExtract |
 
 ### Individual contributions during that week
 | Member | Final implementation / evaluation / documentation contribution | Result (worked / partly / failed) | Evidence | Reflection / remaining work |
