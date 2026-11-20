@@ -1,0 +1,146 @@
+{
+  "description": "Synthetic Dandelion-style duplicate development pairs. These are development cases for evaluating duplicate detection; they are separate from the TA hidden test.",
+  "cases": [
+    {
+      "id": "dup01",
+      "expected_duplicate": true,
+      "reason": "Same family planning outreach, same place and count, paraphrased wording.",
+      "message_a": {"text": "Today we held a family planning outreach in Nakuru with 42 women attending.", "extraction": {"activity_type": "family planning outreach", "location": "Nakuru", "participant_count": 42, "referrals": 3, "status": "completed"}},
+      "message_b": {"text": "The Nakuru family planning session finished today. We reached 42 women and referred 3 for follow-up.", "extraction": {"activity_type": "family planning outreach", "location": "Nakuru", "participant_count": 42, "referrals": 3, "status": "completed"}}
+    },
+    {
+      "id": "dup02",
+      "expected_duplicate": true,
+      "reason": "Same cervical screening event, one report is much shorter.",
+      "message_a": {"text": "Cervical cancer screening camp at Rongai served 28 women this morning.", "extraction": {"activity_type": "cancer screening", "location": "Rongai", "participant_count": 28, "referrals": 2, "status": "completed"}},
+      "message_b": {"text": "Rongai screening completed, 28 participants and 2 referrals.", "extraction": {"activity_type": "cancer screening", "location": "Rongai", "participant_count": 28, "referrals": 2, "status": "completed"}}
+    },
+    {
+      "id": "dup03",
+      "expected_duplicate": true,
+      "reason": "Same GBV dialogue with a small participant-count discrepancy between reports.",
+      "message_a": {"text": "We completed a gender based violence dialogue in Molo with 35 participants.", "extraction": {"activity_type": "gender-based violence dialogue", "location": "Molo", "participant_count": 35, "referrals": 1, "status": "completed"}},
+      "message_b": {"text": "Molo GBV dialogue is done. I counted 34 people and one referral.", "extraction": {"activity_type": "gender-based violence dialogue", "location": "Molo", "participant_count": 34, "referrals": 1, "status": "completed"}}
+    },
+    {
+      "id": "dup04",
+      "expected_duplicate": true,
+      "reason": "Same agriculture training, but the activity wording is broader in one extraction.",
+      "message_a": {"text": "Kitchen garden training in Baringo reached 18 farmers today.", "extraction": {"activity_type": "kitchen garden training", "location": "Baringo", "participant_count": 18, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "We finished agriculture training for 18 farmers in Baringo.", "extraction": {"activity_type": "agriculture training", "location": "Baringo", "participant_count": 18, "referrals": 0, "status": "completed"}}
+    },
+    {
+      "id": "dup05",
+      "expected_duplicate": true,
+      "reason": "Same menstrual hygiene session, second report emphasizes pad distribution.",
+      "message_a": {"text": "Menstrual hygiene session at Kuresoi had 60 girls attend and pads were distributed.", "extraction": {"activity_type": "menstrual hygiene session", "location": "Kuresoi", "participant_count": 60, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "We distributed sanitary pads after today's Kuresoi hygiene session. Attendance was 60.", "extraction": {"activity_type": "menstrual hygiene session", "location": "Kuresoi", "participant_count": 60, "referrals": 0, "status": "completed"}}
+    },
+    {
+      "id": "dup06",
+      "expected_duplicate": true,
+      "reason": "Same table-banking meeting, terminology differs between reports.",
+      "message_a": {"text": "The women's table banking meeting ended with 25 members and four loans approved.", "extraction": {"activity_type": "table banking meeting", "location": "Njoro", "participant_count": 25, "referrals": 4, "status": "completed"}},
+      "message_b": {"text": "Njoro savings group met today. 25 women attended and 4 loans were given.", "extraction": {"activity_type": "savings group meeting", "location": "Njoro", "participant_count": 25, "referrals": 4, "status": "completed"}}
+    },
+    {
+      "id": "dup07",
+      "expected_duplicate": true,
+      "reason": "Same outreach after location has been masked in both reports.",
+      "message_a": {"text": "Family planning outreach in [LOCATION] reached 31 women and 4 were referred.", "extraction": {"activity_type": "family planning outreach", "location": "[LOCATION]", "participant_count": 31, "referrals": 4, "status": "completed"}},
+      "message_b": {"text": "Today's [LOCATION] family planning activity had 31 participants with four clinic referrals.", "extraction": {"activity_type": "family planning outreach", "location": "[LOCATION]", "participant_count": 31, "referrals": 4, "status": "completed"}}
+    },
+    {
+      "id": "dup08",
+      "expected_duplicate": true,
+      "reason": "Same event with little shared vocabulary but several matching event fields.",
+      "message_a": {"text": "Youth health outreach concluded successfully near the clinic.", "extraction": {"activity_type": "youth health outreach", "location": "Naivasha", "participant_count": 22, "referrals": 2, "status": "completed"}},
+      "message_b": {"text": "22 young people participated; two needed follow-up services.", "extraction": {"activity_type": "youth health outreach", "location": "Naivasha", "participant_count": 22, "referrals": 2, "status": "completed"}}
+    },
+    {
+      "id": "dup09",
+      "expected_duplicate": true,
+      "reason": "Same screening event, ASR-style spelling change in the place name.",
+      "message_a": {"text": "Cancer screening at Kampi ya Moto had 28 women attend.", "extraction": {"activity_type": "cancer screening", "location": "Kampi ya Moto", "participant_count": 28, "referrals": 1, "status": "completed"}},
+      "message_b": {"text": "Campi Amoto screening finished with 28 participants and one referral.", "extraction": {"activity_type": "cancer screening", "location": "Campi Amoto", "participant_count": 28, "referrals": 1, "status": "completed"}}
+    },
+    {
+      "id": "dup10",
+      "expected_duplicate": true,
+      "reason": "Same event, second message is a follow-up summary with no location field.",
+      "message_a": {"text": "Nutrition training in Gilgil was completed with 30 caregivers attending.", "extraction": {"activity_type": "nutrition training", "location": "Gilgil", "participant_count": 30, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "Quick update: the nutrition training finished and we had 30 caregivers.", "extraction": {"activity_type": "nutrition training", "location": null, "participant_count": 30, "referrals": 0, "status": "completed"}}
+    },
+
+    {
+      "id": "nondup01",
+      "expected_duplicate": false,
+      "reason": "Same activity type and count, but clearly different locations.",
+      "message_a": {"text": "Family planning outreach in Nakuru reached 40 women.", "extraction": {"activity_type": "family planning outreach", "location": "Nakuru", "participant_count": 40, "referrals": 2, "status": "completed"}},
+      "message_b": {"text": "Family planning outreach in Molo reached 40 women.", "extraction": {"activity_type": "family planning outreach", "location": "Molo", "participant_count": 40, "referrals": 2, "status": "completed"}}
+    },
+    {
+      "id": "nondup02",
+      "expected_duplicate": false,
+      "reason": "Same location and activity, but participant counts are very different.",
+      "message_a": {"text": "Nakuru cervical screening served 18 women in the morning.", "extraction": {"activity_type": "cancer screening", "location": "Nakuru", "participant_count": 18, "referrals": 1, "status": "completed"}},
+      "message_b": {"text": "Nakuru cervical screening served 61 women during the afternoon session.", "extraction": {"activity_type": "cancer screening", "location": "Nakuru", "participant_count": 61, "referrals": 5, "status": "completed"}}
+    },
+    {
+      "id": "nondup03",
+      "expected_duplicate": false,
+      "reason": "Same place and count, different activity.",
+      "message_a": {"text": "Molo family planning outreach had 25 participants.", "extraction": {"activity_type": "family planning outreach", "location": "Molo", "participant_count": 25, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "Molo agriculture training had 25 participants.", "extraction": {"activity_type": "agriculture training", "location": "Molo", "participant_count": 25, "referrals": 0, "status": "completed"}}
+    },
+    {
+      "id": "nondup04",
+      "expected_duplicate": false,
+      "reason": "One is a completed event and the other is only a future plan.",
+      "message_a": {"text": "The youth health session happened today with 20 participants.", "extraction": {"activity_type": "youth health session", "location": "Nakuru", "participant_count": 20, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "We plan to hold a youth health session next week for about 20 people.", "extraction": {"activity_type": "youth health session", "location": "Nakuru", "participant_count": 20, "referrals": 0, "status": "planned"}}
+    },
+    {
+      "id": "nondup05",
+      "expected_duplicate": false,
+      "reason": "Same broad topic but different event formats and counts.",
+      "message_a": {"text": "GBV awareness dialogue in Njoro had 35 participants.", "extraction": {"activity_type": "gender-based violence dialogue", "location": "Njoro", "participant_count": 35, "referrals": 1, "status": "completed"}},
+      "message_b": {"text": "GBV referral training for staff in Njoro had 12 participants.", "extraction": {"activity_type": "GBV referral training", "location": "Njoro", "participant_count": 12, "referrals": 0, "status": "completed"}}
+    },
+    {
+      "id": "nondup06",
+      "expected_duplicate": false,
+      "reason": "Two menstrual-health events at the same place with different attendance and purpose.",
+      "message_a": {"text": "Kuresoi menstrual hygiene session reached 60 school girls.", "extraction": {"activity_type": "menstrual hygiene session", "location": "Kuresoi", "participant_count": 60, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "Kuresoi menstrual health parent meeting reached 24 caregivers.", "extraction": {"activity_type": "parent health meeting", "location": "Kuresoi", "participant_count": 24, "referrals": 0, "status": "completed"}}
+    },
+    {
+      "id": "nondup07",
+      "expected_duplicate": false,
+      "reason": "Same activity type and masked location, but very different counts indicate separate events.",
+      "message_a": {"text": "Family planning outreach in [LOCATION] reached 15 women.", "extraction": {"activity_type": "family planning outreach", "location": "[LOCATION]", "participant_count": 15, "referrals": 1, "status": "completed"}},
+      "message_b": {"text": "Family planning outreach in [LOCATION] reached 72 women.", "extraction": {"activity_type": "family planning outreach", "location": "[LOCATION]", "participant_count": 72, "referrals": 8, "status": "completed"}}
+    },
+    {
+      "id": "nondup08",
+      "expected_duplicate": false,
+      "reason": "Same count and similar wording but different locations and different activities.",
+      "message_a": {"text": "Training finished in Rongai with 30 participants.", "extraction": {"activity_type": "agriculture training", "location": "Rongai", "participant_count": 30, "referrals": 0, "status": "completed"}},
+      "message_b": {"text": "Training finished in Gilgil with 30 participants.", "extraction": {"activity_type": "nutrition training", "location": "Gilgil", "participant_count": 30, "referrals": 0, "status": "completed"}}
+    },
+    {
+      "id": "nondup09",
+      "expected_duplicate": false,
+      "reason": "Two separate screenings in the same place with clearly different counts.",
+      "message_a": {"text": "Morning cancer screening in Naivasha had 28 participants.", "extraction": {"activity_type": "cancer screening", "location": "Naivasha", "participant_count": 28, "referrals": 2, "status": "completed"}},
+      "message_b": {"text": "Second cancer screening in Naivasha had 53 participants.", "extraction": {"activity_type": "cancer screening", "location": "Naivasha", "participant_count": 53, "referrals": 6, "status": "completed"}}
+    },
+    {
+      "id": "nondup10",
+      "expected_duplicate": false,
+      "reason": "Similar livelihood wording but distinct activities and counts.",
+      "message_a": {"text": "Savings group meeting in Njoro had 25 members.", "extraction": {"activity_type": "savings group meeting", "location": "Njoro", "participant_count": 25, "referrals": 4, "status": "completed"}},
+      "message_b": {"text": "Business skills training in Njoro had 26 members attend.", "extraction": {"activity_type": "business skills training", "location": "Njoro", "participant_count": 26, "referrals": 0, "status": "completed"}}
+    }
+  ]
+}
