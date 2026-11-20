@@ -368,29 +368,54 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 [Python version, libraries, compute requirements, model access]
 
 ### Installation
+1) Visit https://colab.research.google.com and open a new notebook.
+2) In Colab, click runtime -> Change runtime type, and select T4 GPU and save.
+3) Paste into first code block:
+```python
+
+import os
+if not os.path.exists("/content/Dandelion2"):
+    !git clone https://github.com/SCU-CSEN166/Dandelion2.git /content/Dandelion2
+%cd /content/Dandelion2
+!git pull
+```
+4) Install dependencies:
 ```bash
-# Add installation commands here
+!pip install -q uv
+!uv pip install --system -q "transformers>=5.22.1" "gliner>=0.2.30" "word2number>=1.1" "jiwer>=4.0.0"
 ```
 
 ### Run the system
+Example commands (Note: first time running these commands takes time since it has to download the model on huggingface. Subsequent runs on the same Colab will be faster):
+
 ```bash
-# Add an example command here
+!python main.py --input data/dandelion_audio
+```
+```bash
+!python main.py --input data/afrispeech_kenya
+```
+```bash
+!python main.py --message "Grace Wanjiru is handling them. Her number is 0712 345 678 if the clinic needs to reach her."
+```
+```bash
+!python main.py --audio data/afrispeech_kenya/clip_00.wav
 ```
 
 ### Run evaluation
 ```bash
-# Add an example evaluation command here
+!python -m src.evaluation.hidden_test --pipeline-output output/reports.csv
 ```
 
 ### Repository structure
 ```text
-project/
+Dandelion2/
 ├── README.md
-├── requirements.txt
+├── pyproject.toml
 ├── src/
-├── tests/
-├── evaluation/
-└── examples/
+    ├── anonymize.py, duplicates.py, extract.py, relevance.py, transcribe.py
+    ├── evaluation/ # .py scripts used for evaluation
+├── output/ # all RESULTS from running code (including evaluation results)
+├── data/ # all DATA used by code (raw data and solutions for evaluation data)
 ```
 
 
