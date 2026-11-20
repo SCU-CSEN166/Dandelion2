@@ -10,6 +10,7 @@ extracted fields. The thresholds are first guesses; tune them on labeled duplica
 from __future__ import annotations
 
 import re
+from difflib import SequenceMatcher
 from itertools import combinations
 from typing import Any
 
@@ -32,13 +33,17 @@ MASK = re.compile(r"\[[A-Z_]+\]")  # what anonymize() puts in place of private t
 MATCHING_FIELD_SIMILARITY = 0.8  # a field this similar counts as matching
 
 # Final score = EVENT_WEIGHT * event similarity + TEXT_WEIGHT * text similarity, when fields were extracted.
-EVENT_WEIGHT = 0.55
-TEXT_WEIGHT = 0.45
+EVENT_WEIGHT = 0.70
+TEXT_WEIGHT = 0.30
 
 # A pair also needs real word overlap, or strong agreement on several fields (a paraphrase).
 MIN_TEXT_SIMILARITY = 0.25
 STRONG_EVENT_SIMILARITY = 0.8
 MIN_MATCHING_FIELDS = 2
+
+ACTIVITY_CONFLICT_THRESHOLD = 0.45
+LOCATION_CONFLICT_THRESHOLD = 0.60
+COUNT_CONFLICT_THRESHOLD = 0.60
 
 SCORE_DECIMALS = 3
 
@@ -83,6 +88,9 @@ def find_duplicate_candidates(messages: list[Message], threshold: float = DEFAUL
 
 def _compare(left: Message, right: Message, threshold: float) -> dict[str, Any] | None:
     """The pair as a candidate, or None if it doesn't look like a duplicate."""
+    if _has_event_conflict(left.extraction, right.extraction):
+        return None
+
     text_score = _text_similarity(left.anonymized_text, right.anonymized_text)
     event_score, matching_fields = _event_similarity(left.extraction, right.extraction)
     score = EVENT_WEIGHT * event_score + TEXT_WEIGHT * text_score if event_score else text_score
@@ -137,7 +145,55 @@ def _field_similarity(field: str, left: Any, right: Any) -> float:
             return _count_similarity(int(left), int(right))
         except (TypeError, ValueError):
             return float(str(left).casefold() == str(right).casefold())
+    if field in {"activity_type", "location"}:
+        return _phrase_similarity(left, right)
     return float(str(left).strip().casefold() == str(right).strip().casefold())
+
+
+def _phrase_similarity(left: Any, right: Any) -> float:
+    """Approximate similarity for short extracted phrases, robust to wording and ASR spelling changes."""
+    left_text = " ".join(re.findall(r"[a-z0-9]+", str(left).casefold()))
+    right_text = " ".join(re.findall(r"[a-z0-9]+", str(right).casefold()))
+    if not left_text or not right_text:
+        return 0.0
+    if left_text == right_text:
+        return 1.0
+
+    left_words, right_words = set(left_text.split()), set(right_text.split())
+    token_score = 2 * len(left_words & right_words) / (len(left_words) + len(right_words))
+    char_score = SequenceMatcher(None, left_text, right_text).ratio()
+    return max(token_score, char_score)
+
+
+def _has_event_conflict(left: dict | None, right: dict | None) -> bool:
+    """Reject pairs with strong evidence they are different events."""
+    if not left or not right:
+        return False
+
+    left_status, right_status = left.get("status"), right.get("status")
+    if _present(left_status) and _present(right_status):
+        if str(left_status).strip().casefold() != str(right_status).strip().casefold():
+            return True
+
+    left_activity, right_activity = left.get("activity_type"), right.get("activity_type")
+    if _present(left_activity) and _present(right_activity):
+        if _phrase_similarity(left_activity, right_activity) < ACTIVITY_CONFLICT_THRESHOLD:
+            return True
+
+    left_location, right_location = left.get("location"), right.get("location")
+    if _present(left_location) and _present(right_location):
+        if _phrase_similarity(left_location, right_location) < LOCATION_CONFLICT_THRESHOLD:
+            return True
+
+    left_count, right_count = left.get("participant_count"), right.get("participant_count")
+    if _present(left_count) and _present(right_count):
+        try:
+            if _count_similarity(int(left_count), int(right_count)) < COUNT_CONFLICT_THRESHOLD:
+                return True
+        except (TypeError, ValueError):
+            pass
+
+    return False
 
 
 def _count_similarity(left: int, right: int) -> float:
