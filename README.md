@@ -322,10 +322,10 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 **Deliverable during Week 10 Lab:** Document peer-testing feedback, Responsible AI concerns, changes made in response, and the final runnable system. Submit the final project report as instructed.
 
 ### Peer testing
-- **Team evaluated:** [Team ID]
+- **Team evaluated:** Dandelion 3
 - **One thing that worked well:** [Evidence]
 - **One meaningful failure:** [Reproduction steps or example]
-- **One actionable recommendation:** [Specific fix]
+- **One actionable recommendation:** One recommendatuon we have is to normalize phone numbers before anonymization and expand phone matching to separators (periods, spaces, hyphens). We also think it could be helpful to test specfically Kenyan forms such 0712.345.678, 0712 345 678, 0712-345-678 and +254712345678.
 - **Feedback received from another team:** [Summary]
 
 ### Responsible AI assessment
@@ -339,7 +339,7 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 ### Final improvements and outcomes
 | Feedback / issue | Change made | Worked? (Yes / Partly / No) | Evidence | Remaining limitation |
 |---|---|---|---|---|
-| [Issue] | [Change] | [Status] | [Link or metric] | [Limitation] |
+| NuExtract crashed using Apple MPS during full pipeline smoke test | Forced CPU execution | Partly | CPU run reached Step 6 and produced correct structured result. | CPU is slower, and the workaround is not yet a normal documented CLI/device option. |
 
 ### Individual contributions during that week
 | Member | Final implementation / evaluation / documentation contribution | Result (worked / partly / failed) | Evidence | Reflection / remaining work |
