@@ -344,7 +344,7 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 ### Individual contributions during that week
 | Member | Final implementation / evaluation / documentation contribution | Result (worked / partly / failed) | Evidence | Reflection / remaining work |
 |---|---|---|---|---|
-| [Name] | [Specific work] | [Status] | [Link] | [Reflection] |
+| Oliver Ortiz | In our Repo, I wrote up the setup and reproducibility guide which can run on Google Colab for peer reviewing and so that Dandelion Africa can test our model. During peer reviewing, I cloned Dandelion 3's repo to a Colab and ran their system on test data, reporting the results to the group for further analysis. I also looked further into one limitation I saw in Dandelion 3's system and reported it to our README | Worked. The setup instructions seemed to allow for easy setup, atleast for our peer reviewers. I was also able to successfully run Dandelion 3's system with their setup instructions. | https://github.com/SCU-CSEN166/Dandelion2/commit/37c655ea58ae4b7e7f8c8fc62a0e4ae6e0a964fa for setup commit. | Overall, we have created a very thorough and robust system that can be run with various types of data and will produce a formatted result that can be used in various ways. There are of course issues with some our models, and some of our metrics are not as high as we hoped, however we found that with human oversight, this data and end-to-end pipeline can help Dandelion Africa organize and archive their work. |
 
 
 
