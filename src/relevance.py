@@ -20,7 +20,9 @@ COMPLETED_ONLY_HYPOTHESES = (
 )
 WITH_PLANS_HYPOTHESES = (
     "a message about a community health, outreach, training or livelihood activity that happened or is planned",
-    "casual conversation, greetings or unrelated information",
+    # Week 9: social plans named explicitly, because counting plans let hidden-test chit-chat
+    # like "let's plan to visit her this weekend" through as an Event.
+    "casual conversation, greetings, social plans like visits, gifts, food or transport, or unrelated information",
 )
 
 RELEVANT = "relevant"

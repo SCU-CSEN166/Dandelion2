@@ -40,7 +40,8 @@ PII_PATTERNS = [
         # Kenyan mobiles: +254 7xx / +254 1xx, or 07xx / 01xx.
         ("PHONE", r"(?<!\w)(?P<value>(?:\+?254[\s.-]?[17]|0[17])(?:[\s.-]?\d){8})(?!\w)"),
         # The same as speech-to-text writes them: stray separators ("079--0-100-274"), maybe a digit short.
-        ("PHONE", r"(?<![\w.])(?P<value>0[\s.-]*[17](?:[\s.-]*\d){7,8})(?!\d)"),
+        # Commas too: Whisper writes slowly read digits as "0722, 000, 917", which left "000, 917" visible.
+        ("PHONE", r"(?<![\w.])(?P<value>0[\s.,-]*[17](?:[\s.,-]*\d){7,8})(?!\d)"),
         # Anything number-like after "my number is" / "call me on", spoken digit words included.
         ("PHONE", (rf"\b(?:number\s+is|number\s*:|(?:call|reach|contact|text)\s+(?:me|her|him|us|them)\s+on)\s*"
                    rf"(?P<value>\d(?:[\d.\-]|\s(?=[\d.\-]|{_SPOKEN_DIGIT_WORDS}\b)|{_SPOKEN_DIGIT_WORDS}\b)*\d)")),
