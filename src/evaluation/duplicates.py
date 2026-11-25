@@ -91,9 +91,11 @@ def main() -> None:
     data = json.loads(args.input.read_text(encoding="utf-8"))
     cases = data["cases"] if isinstance(data, dict) else data
     result = evaluate(cases, args.threshold)
+    holdout_input = args.input.name == "duplicate_unseen_cases.json"
     report = {
         "dataset": str(args.input),
-        "note": "Development-only duplicate evaluation; do not tune on the TA hidden test.",
+        "note": ("Unseen holdout result for post-selection reporting; do not tune against this set."
+                 if holdout_input else "Development-set duplicate evaluation; keep separate from unseen holdout data."),
         **result,
     }
     if args.sweep:

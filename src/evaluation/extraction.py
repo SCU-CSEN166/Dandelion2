@@ -26,15 +26,18 @@ def evaluate(records: list[dict], extractor: Extractor) -> dict:
     pairs = {field: [] for field in fields}
     for index, record in enumerate(records):
         predicted = extractor.extract(record["text"])
-        expected = {field: record[field] for field in fields}
+        # New output fields may not have labels in older evaluation sets. Keep the
+        # prediction for inspection, but only score fields with a ground-truth label.
+        expected = {field: record[field] for field in fields if field in record}
         outputs.append({"id": record.get("message_id", index), "predicted": predicted, "expected": expected})
         for field in fields:
-            pairs[field].append((predicted[field], expected[field]))
+            if field in expected:
+                pairs[field].append((predicted[field], expected[field]))
     choice_fields = [field for field in fields if isinstance(extractor.template[field], list)]
     return {"records": outputs, "metrics": {
         "records": len(records),
-        "fields": {field: slot_scores(pairs[field]) for field in fields},
-        "confusion_matrices": {field: confusion_matrix(pairs[field]) for field in choice_fields}}}
+        "fields": {field: slot_scores(pairs[field]) if pairs[field] else None for field in fields},
+        "confusion_matrices": {field: confusion_matrix(pairs[field]) for field in choice_fields if pairs[field]}}}
 
 
 def default_output(model: str) -> Path:

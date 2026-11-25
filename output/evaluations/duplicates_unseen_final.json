@@ -1,0 +1,307 @@
+{
+  "dataset": "data/duplicate_unseen_cases.json",
+  "note": "Unseen holdout result for post-selection reporting; do not tune against this set.",
+  "threshold": 0.62,
+  "case_count": 20,
+  "positive_cases": 10,
+  "negative_cases": 10,
+  "metrics": {
+    "TP": 10,
+    "FP": 1,
+    "FN": 0,
+    "TN": 9,
+    "accuracy": 0.95,
+    "precision": 0.9090909090909091,
+    "recall": 1.0,
+    "f1": 0.9523809523809523
+  },
+  "cases": [
+    {
+      "id": "hold_dup01",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same maternal health outreach, paraphrased wording, same location and count.",
+      "score": 0.752,
+      "text_similarity": 0.4,
+      "event_similarity": 0.903,
+      "evidence": [
+        "overlapping content words",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup02",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same nutrition event with a one-person count discrepancy.",
+      "score": 0.825,
+      "text_similarity": 0.429,
+      "event_similarity": 0.994,
+      "evidence": [
+        "overlapping content words",
+        "matching activity type",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup03",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same savings event, terminology changes from table banking to savings meeting.",
+      "score": 0.709,
+      "text_similarity": 0.381,
+      "event_similarity": 0.85,
+      "evidence": [
+        "overlapping content words",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup04",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same cancer screening with ASR-style spelling variation in location.",
+      "score": 0.74,
+      "text_similarity": 0.308,
+      "event_similarity": 0.925,
+      "evidence": [
+        "overlapping content words",
+        "matching activity type",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup05",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same agriculture event, second report has no location field.",
+      "score": 0.658,
+      "text_similarity": 0.375,
+      "event_similarity": 0.779,
+      "evidence": [
+        "overlapping content words",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup06",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same youth health event after private location is masked.",
+      "score": 0.702,
+      "text_similarity": 0.375,
+      "event_similarity": 0.841,
+      "evidence": [
+        "overlapping content words",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup07",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same menstrual health event, second report focuses on supplies distributed.",
+      "score": 0.8,
+      "text_similarity": 0.333,
+      "event_similarity": 1.0,
+      "evidence": [
+        "overlapping content words",
+        "matching activity type",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup08",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same GBV event with acronym vs full wording and little shared surface text.",
+      "score": 0.644,
+      "text_similarity": 0.19,
+      "event_similarity": 0.838,
+      "evidence": [
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup09",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same family planning outreach with two-person attendance discrepancy.",
+      "score": 0.816,
+      "text_similarity": 0.4,
+      "event_similarity": 0.994,
+      "evidence": [
+        "overlapping content words",
+        "matching activity type",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_dup10",
+      "expected_duplicate": true,
+      "predicted_duplicate": true,
+      "correct": true,
+      "reason": "Same completed business training, paraphrased activity label.",
+      "score": 0.744,
+      "text_similarity": 0.286,
+      "event_similarity": 0.94,
+      "evidence": [
+        "overlapping content words",
+        "matching activity type",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_nondup01",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Same activity and count but different locations.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup02",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Same location and activity but clearly separate attendance totals.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup03",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Same place and count but different activities.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup04",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "One event is completed and the other is only planned.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup05",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Same broad health theme and location but distinct activity types and counts.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup06",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Masked locations and similar activity wording, but counts strongly indicate separate events.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup07",
+      "expected_duplicate": false,
+      "predicted_duplicate": true,
+      "correct": false,
+      "reason": "Same location and similar counts but different event purposes.",
+      "score": 0.688,
+      "text_similarity": 0.364,
+      "event_similarity": 0.827,
+      "evidence": [
+        "overlapping content words",
+        "matching location",
+        "matching participant count",
+        "matching referrals",
+        "matching status"
+      ]
+    },
+    {
+      "id": "hold_nondup08",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Two separate screening events in same place, different counts and referrals.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup09",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Same count and generic wording but locations and activities differ.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    },
+    {
+      "id": "hold_nondup10",
+      "expected_duplicate": false,
+      "predicted_duplicate": false,
+      "correct": true,
+      "reason": "Same livelihood category and location, but activities and attendance differ enough to be separate events.",
+      "score": null,
+      "text_similarity": null,
+      "event_similarity": null,
+      "evidence": []
+    }
+  ]
+}

@@ -26,10 +26,11 @@ def require_anonymized(messages: list[Message]) -> None:
             raise ValueError(f"{message.id} has not been anonymized; run anonymize() first")
 
 
-def torch_device(allow_mps: bool = True) -> str:
+def torch_device(allow_mps: bool = False) -> str:
     """The fastest available device: "cuda", then "mps" (Apple silicon) if allowed, else "cpu".
 
-    Some pipelines pass allow_mps=False because they fail or run slower on MPS.
+    MPS is disabled by default because the NuExtract backend has crashed on Apple Silicon.
+    Callers can opt in explicitly with allow_mps=True after validating their model/device.
     """
     import torch  # imported here so loading data never waits for torch
 
