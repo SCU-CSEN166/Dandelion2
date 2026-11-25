@@ -1,0 +1,158 @@
+{
+  "models": {
+    "distil-small": "distil-whisper/distil-small.en",
+    "whisper-small": "openai/whisper-small.en",
+    "whisper-large": "openai/whisper-large-v3"
+  },
+  "dataset": "data/nigerian_accented/ground_truth.json",
+  "device": "cuda",
+  "recordings": 10,
+  "recordings_scored": 10,
+  "runtime_note": "inference time excludes ffmpeg conversion; model load time is reported separately",
+  "results": {
+    "distil-small": {
+      "load_seconds": 6.588830830999996,
+      "clip_seconds": [
+        1.445135649000008,
+        0.3071923770000353,
+        0.30226446799997575,
+        0.4036282330000063,
+        1.2682920119999608,
+        0.8386273400000164,
+        0.854097352999986,
+        0.350043769000024,
+        1.482629223999993,
+        0.4667641110000318
+      ],
+      "inference_seconds": 7.718674536000037,
+      "metrics": {
+        "wer": 0.4259818731117825,
+        "cer": 0.20242424242424242
+      },
+      "audio_seconds": 155.128125,
+      "seconds_per_audio_second": 0.04975677064362144,
+      "seconds_per_clip_mean": 0.7718674536000038,
+      "entity_metrics": null
+    },
+    "whisper-small": {
+      "load_seconds": 9.539197428000023,
+      "clip_seconds": [
+        0.9905768279999734,
+        0.5653334200000018,
+        0.5581291080000028,
+        0.9066093359999741,
+        3.7941263629999753,
+        1.791361897999991,
+        2.306742571999962,
+        0.7576266869999699,
+        3.1871782560000383,
+        0.7602419759999748
+      ],
+      "inference_seconds": 15.617926443999863,
+      "metrics": {
+        "wer": 0.36253776435045315,
+        "cer": 0.18424242424242424
+      },
+      "audio_seconds": 155.128125,
+      "seconds_per_audio_second": 0.10067759436916976,
+      "seconds_per_clip_mean": 1.5617926443999863,
+      "entity_metrics": null
+    },
+    "whisper-large": {
+      "load_seconds": 18.275100743000053,
+      "clip_seconds": [
+        1.8636940899999672,
+        1.2560951639999303,
+        1.178395984999952,
+        2.1090779109999858,
+        8.848363179000103,
+        4.36525916100004,
+        5.730709192000063,
+        1.928186289999985,
+        9.108021334,
+        2.155751230999954
+      ],
+      "inference_seconds": 38.54355353699998,
+      "metrics": {
+        "wer": 0.3685800604229607,
+        "cer": 0.17696969696969697
+      },
+      "audio_seconds": 155.128125,
+      "seconds_per_audio_second": 0.248462704857678,
+      "seconds_per_clip_mean": 3.854355353699998,
+      "entity_metrics": null
+    }
+  },
+  "records": [
+    {
+      "filename": "clip_00.mp3",
+      "reference_transcript": "Niger Delta is sometimes called the Oil Rivers because it was once a major producer of palm oil",
+      "distil-small": "Ninja Delta is sometimes called the oil rivers because it was once a major producer of palm oil.",
+      "whisper-small": "Ninja delta is sometimes called the oil rivers because it was once a major producer of palm oil.",
+      "whisper-large": "Niger Delta is sometimes called the oil rivers because it was once a major producer of palm oil."
+    },
+    {
+      "filename": "clip_01.mp3",
+      "reference_transcript": "Invoices are always issued with terms of payment.",
+      "distil-small": "Invoices are always issued with terms of payment.",
+      "whisper-small": "Invoices are always issued with terms of payment.",
+      "whisper-large": "Invoices are always issued with terms of payment."
+    },
+    {
+      "filename": "clip_02.mp3",
+      "reference_transcript": "It is thirty five degrees with drizzle in Uyo",
+      "distil-small": "It is 35 degrees with drizzle in Uyo.",
+      "whisper-small": "It is 35 degrees with drizzle in Uyo.",
+      "whisper-large": "It is 35 degrees with drizzle in Uyo."
+    },
+    {
+      "filename": "clip_03.mp3",
+      "reference_transcript": "Aromatherapy has shown some tentative benefits for anxiety reduction in people with cancer when done with massages",
+      "distil-small": "Aromatherapy has shown some tentative benefits for anxiety reduction in people with cancer when done with massages.",
+      "whisper-small": "Aromatherapy has shown some tentative benefits for anxiety reduction in people with cancer when done with massages.",
+      "whisper-large": "Aromatherapy has shown some tentative benefits for anxiety reduction in people with cancer when done with massages."
+    },
+    {
+      "filename": "clip_04.mp3",
+      "reference_transcript": " There's ok There's a bird. It's hanging on a branch with a lot of flowers. Like the branch has a lot of leafs small flower leafs. Umm all over it. Ok. Umm. No no no no no. Yeah plenty leaf's. It's facing the right the bird id white from it's neck down but the upper part of the body is brown. It's facing the right.",
+      "distil-small": "I don't know. Okay. There's a bird. He's hanging on a branch with a lot of flowers. Like, the branch has a lot of leaves, not flowers, leaves all over it. No, no, no, no, no. Yeah, plenty is facing the right. The bird is white from the neck down, but the upper part of the body is brown it's facing the right",
+      "whisper-small": "I don't know. There's a bird. He's hanging on a branch with a lot of flowers. The branch has a lot of leaves, not flowers, leaves all over it. No, no, no no no no no yeah plenty leaves he's facing the right the bird is white from the neck down but the upper part of the body is brown. It's facing the right.",
+      "whisper-large": "There's a bird. He's hanging on a branch with a lot of flowers. The branch has a lot of leaves. Not flowers, leaves. All over it. No, no, no, no, no. Yeah, plenty leaves. He's facing the right. The bird is white from the neck down, but the upper part of the body is brown it's facing the right"
+    },
+    {
+      "filename": "clip_05.mp3",
+      "reference_transcript": "This is like a dog the dog is facing forward it mouth is open it's like um it's sitting on the grass but there's still sand there's a sandy part in the grass the dog is white and black.",
+      "distil-small": "This is like a dog. The dog is facing forward. Its mouth is open. It's like, it's on, this is on the grass, but there's still sand. There's a sandy parts in the grass. The dog is white and black.",
+      "whisper-small": "This is like a dog. The dog is facing forward. Its mouth is open. This is on the grass, but there's still sand. There's sandy parts in the grass. The dog is white and black.",
+      "whisper-large": "This is like a dog. The dog is facing forward. Its mouth is open. It's sitting on the grass but there's still sand. There's sandy parts in the grass. The dog is white and black."
+    },
+    {
+      "filename": "clip_06.mp3",
+      "reference_transcript": "So these are two dogs, one is wearing glasses one is not or maybe its wearing I don't know but glass is pink. the white one is wearing like a pink light pink glasses then the brown one brown and black is wearing a dark shades. Ok. their mouth are both hanging open? yes.  yes. Ok we got it.",
+      "distil-small": "So these are two doors, one is wearing glasses, one is not, or maybe is wearing, I don't know, but the glass is pink. The white one is wearing like a pink, light pink glasses, then the brown one, brown and black is wearing the dark shades yes yes",
+      "whisper-small": "So these are two dolls, one is wearing glasses, one is not, or maybe is wearing, I don't know, but the glasses pink. The white one is wearing like a pink, light pink glasses, then the brown one, brown and black is wearing the dark shades yes yes",
+      "whisper-large": "So these are two dogs. One is wearing glasses. One is not. Or maybe he's wearing, I don't know. But the glass is pink. The white one is wearing like a pink, light pink glasses. Then the brown one, one brown and black is wearing a dark shades yes yes"
+    },
+    {
+      "filename": "clip_07.mp3",
+      "reference_transcript": "Ashes and Embers is the story of a moody and disillusioned Black veteran of the Vietnam War.",
+      "distil-small": "Ash is an embers as the story of a moody and disillusioned black veterinarian of the Vietnam War.",
+      "whisper-small": "Ashes and Embers is the story of a moody and disillusioned black veteran of the Vietnam War.",
+      "whisper-large": "Ashes and Embers is the story of a moody and disillusioned black veteran of the Vietnam War."
+    },
+    {
+      "filename": "clip_08.mp3",
+      "reference_transcript": "Got it? I got it.  Ok. Yes. I can see a bird standing on a branch of a its not tree kinda eh its something like, maybe a tree I don't know very tiny its standing on a tiny branch. It is it is ehhh it has something in the mouth. Ok. It is looking like directly to the left the background is white with a blurry black.  Yes. I 've Found it. Yes click on it if you can see it. ",
+      "distil-small": "I can't say a bird standing on a branch of a tree, kind of. Something like maybe a tree, I don't know. It's very tiny. It's standing on a tiny branch. It is, it is, it is, it is, it is, it is, it is, it is, looking directly to the left. The background is white, so it's a blurry black head. Yes, click on it. You can see it.",
+      "whisper-small": "I can't say a bird standing on a branch of a, it's not a tree kind of, it's something like, maybe a tree, I don't know, it's very tiny, it's standing on a tiny branch. It has something in the mouth. It is looking directly to the left. The background is white, so it's a blurry black. Yes, click on it if you can see.",
+      "whisper-large": "Okay. Yes. I can see a bird standing on a branch of a... It's not a tree, kind of. It's something like maybe a tree. I don't know. It's very tiny. It's standing on a tiny branch. It has something in the mouth. It is looking directly to the left. The background is white with a blurry black. Yes, click on it. You can see it."
+    },
+    {
+      "filename": "clip_09.mp3",
+      "reference_transcript": "The Niger is the third-longest river in Africa exceeded only by the Nile and the Congo River",
+      "distil-small": "The Nanga is the third longest river in Africa exceeded only by the Nile and the Congo River.",
+      "whisper-small": "Denanga is the third longest river in Africa, exceeded only by the Nile and the Congo River.",
+      "whisper-large": "The Niger is the third longest river in Africa, exceeded only by the Nile and the Congo River."
+    }
+  ]
+}
