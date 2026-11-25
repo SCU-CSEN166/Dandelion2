@@ -1,0 +1,206 @@
+{
+  "models": {
+    "distil-small": "distil-whisper/distil-small.en",
+    "whisper-small": "openai/whisper-small.en",
+    "whisper-large": "openai/whisper-large-v3"
+  },
+  "dataset": "data/dandelion_audio/asr_ground_truth.json",
+  "device": "cuda",
+  "recordings": 10,
+  "recordings_scored": 10,
+  "runtime_note": "inference time excludes ffmpeg conversion; model load time is reported separately",
+  "results": {
+    "distil-small": {
+      "load_seconds": 2.5598835030000373,
+      "clip_seconds": [
+        3.440597218999983,
+        1.5662480700000287,
+        1.540933999999993,
+        1.5179374220000454,
+        1.6900627299999087,
+        1.6492209739999453,
+        1.7957852480000156,
+        1.9510623910000504,
+        2.0208566869999913,
+        1.3651346650000278
+      ],
+      "inference_seconds": 18.53783940599999,
+      "metrics": {
+        "wer": 0.16705607476635514,
+        "cer": 0.07541322314049587
+      },
+      "audio_seconds": 373.3068125,
+      "seconds_per_audio_second": 0.04965845461499578,
+      "seconds_per_clip_mean": 1.853783940599999,
+      "entity_metrics": {
+        "names": {
+          "exact_hits": 5,
+          "targets": 20,
+          "exact_recall": 0.25
+        },
+        "locations": {
+          "exact_hits": 4,
+          "targets": 15,
+          "exact_recall": 0.26666666666666666
+        },
+        "phone_numbers": {
+          "exact_hits": 1,
+          "targets": 10,
+          "exact_recall": 0.1
+        }
+      }
+    },
+    "whisper-small": {
+      "load_seconds": 4.7229984729999615,
+      "clip_seconds": [
+        5.194179603999942,
+        4.311098281,
+        4.178529486999992,
+        4.43723469300005,
+        4.416904261000013,
+        4.355309506000026,
+        4.683729717000006,
+        3.665819911999961,
+        4.584667772000103,
+        3.7480606980000175
+      ],
+      "inference_seconds": 43.57553393100011,
+      "metrics": {
+        "wer": 0.19158878504672897,
+        "cer": 0.11074380165289256
+      },
+      "audio_seconds": 373.3068125,
+      "seconds_per_audio_second": 0.11672847232328531,
+      "seconds_per_clip_mean": 4.3575533931000106,
+      "entity_metrics": {
+        "names": {
+          "exact_hits": 8,
+          "targets": 20,
+          "exact_recall": 0.4
+        },
+        "locations": {
+          "exact_hits": 5,
+          "targets": 15,
+          "exact_recall": 0.3333333333333333
+        },
+        "phone_numbers": {
+          "exact_hits": 9,
+          "targets": 10,
+          "exact_recall": 0.9
+        }
+      }
+    },
+    "whisper-large": {
+      "load_seconds": 7.6350978350000105,
+      "clip_seconds": [
+        12.770921850000036,
+        10.918568628000003,
+        11.223964946000024,
+        11.315268045000039,
+        11.774125045999995,
+        12.027933158999986,
+        11.849799383000004,
+        10.458934118000002,
+        12.107933719000016,
+        9.956693724999923
+      ],
+      "inference_seconds": 114.40414261900003,
+      "metrics": {
+        "wer": 0.09345794392523364,
+        "cer": 0.0512396694214876
+      },
+      "audio_seconds": 373.3068125,
+      "seconds_per_audio_second": 0.306461438120688,
+      "seconds_per_clip_mean": 11.440414261900003,
+      "entity_metrics": {
+        "names": {
+          "exact_hits": 9,
+          "targets": 20,
+          "exact_recall": 0.45
+        },
+        "locations": {
+          "exact_hits": 6,
+          "targets": 15,
+          "exact_recall": 0.4
+        },
+        "phone_numbers": {
+          "exact_hits": 10,
+          "targets": 10,
+          "exact_recall": 1.0
+        }
+      }
+    }
+  },
+  "records": [
+    {
+      "filename": "msg01.mp4",
+      "reference_transcript": "Habari team, this is Grace Wanjiru, the CHV from Rongai. I want to report on today's family planning outreach at Kampi ya Moto dispensary. We started at nine in the morning with a short talk on the different methods, then the nurse, Sister Mary Chebet, gave services. In total, forty-two women came, and most of them were young mothers. Six women were referred to Rongai Health Centre for implants because we ran out of stock. One mama asked to be called for follow-up, her number is 0711 000 482. I will send the register tomorrow. Thank you.",
+      "distil-small": "Harberry team, this is Grace Wanjiro, the CHV from Romei. I want to report on today's family planning outreach at Campi Amoto Dispensary. We started at 9 in the morning with a short talk on the different methods than the nurse Sister Mary Chebert gave services. In total 42 women came and most of them were young mothers. Six women were referred to wrong eye health center for implants because we ran out of stock. One mama asked to be called for follow-up, her number is 0711100 for 82. I will send the register tomorrow. Thank you.",
+      "whisper-small": "Hubberry team, this is Grace Wanjiru, the CHV from Romai. I want to report on today's family planning outreach at Campi Amoto dispensary. We started at 9 in the morning with a short talk on the different methods then the nurse sister Mary Chebet gave services. In total, 42 women came and most of them were young mothers. Six women were referred to Rongai Health Centre for implants because we ran out of stock. One mama asked to be called for follow-up, her number is 0711000482. I will send the register tomorrow. Thank you.",
+      "whisper-large": "Harbury team, this is Grace Wanjiru, the CHV from Rongai. I want to report on today's family planning outreach at Kampia Moto Dispensary. We started at 9 in the morning with a short talk on the different methods, then the nurse, Sister Mary Chabet, gave services. In total, 42 women came, and most of them were young mothers. Six women were referred to Rongai Health Center for implants because we ran out of stock. One mama asked to be called for follow-up, her number is 0711 000 482. I will send the register tomorrow. Thank you."
+    },
+    {
+      "filename": "msg02.mp4",
+      "reference_transcript": "Good evening everyone, it's Faith Achieng. I was also at the Kampi ya Moto outreach today with Grace. Just to confirm the numbers, we served forty-two women on family planning, and six were referred for implants. The turnout was very good, even though the rain started around noon. The women asked if we can come back next month, so maybe we can plan that. If anyone needs the photos, call me on 0722 000 917 and I will share them on WhatsApp. Asante.",
+      "distil-small": "Good evening everyone, its faith aching. I was also at the Campiamoto outreach today with grace. Just to confirm the numbers, we served 42 women on family planning and 6 were referred for implants. The turnout was very good even though the rain started around noon. The women asked if we can come back next month, so maybe we can plan that. If anyone needs the photos, call me on 072-200917 and I will share them on what's up. Asante.",
+      "whisper-small": "Good evening everyone, it's faith aching. I was also at the Campiamoto outreach today with grace. Just to confirm the numbers, we served 42 women on family planning and 6 were referred for implants. The turnout was very good even though the rain started around noon. The women asked if we can come back next month, so maybe we can plan that. If anyone needs the photos, call me on 0722 000 917 and I will share them on WhatsApp. Asante.",
+      "whisper-large": "Good evening everyone, it's Faith Aking. I was also at the Campia Moto Outreach today with Grace. Just to confirm the numbers, we served 42 women on family planning and 6 were referred for implants. The turnout was very good, even though the rain started around noon. The women asked if we can come back next month, so maybe we can plan that. If anyone needs the photos, call me on 0722 000 917 and I will share them on WhatsApp. Asante"
+    },
+    {
+      "filename": "msg03.mp4",
+      "reference_transcript": "Hello ladies, it's Rose Njeri here. Sorry I missed the meeting this morning, the matatu from Solai broke down on the way and we waited for almost two hours. Eeh, it was really bad. Anyway, I hope everyone is fine. Please remind me, who is bringing the tea and mandazi for Saturday? I can bring sugar. Also, if someone has a charger for a Tecno phone, I left mine at home. You can reach me on 0733 000 156. Okay, see you soon, bye bye.",
+      "distil-small": "Hello ladies, it's Rose in Jerry here. Sorry I missed the meeting this morning, the Matatu from Solai broke down on the way and we waited for almost two hours. It was really bad. Anyway, I hope everyone is fine. Please remind me who is bringing the tea and Mendozzi for Saturday. I can bring sugar. Also, if someone has a charger for a techno phone, I left mine at home. You can reach me on 0733-100156. Okay, see you soon, bye bye.",
+      "whisper-small": "hello ladies it's rose in jerry here sorry i missed the meeting this morning the matatu from soli broke down on the way and we waited for almost two hours it it was really bad, I hope everyone is fine. Please remind me who is bringing the tea and mandozzi for Saturday. I can bring sugar. Also, if someone has a charger for a techno phone, I left mine at home. You can reach me on 0733 000 156. Okay, see you soon, bye bye!",
+      "whisper-large": "Hello ladies, it's Rose Ingeri here. Sorry I missed the meeting this morning, the matatu from Solai broke down on the way and we waited for almost 2 hours. It was really bad. Anyway, I hope everyone is fine. Please remind me who is bringing the tea and mandotsi for Saturday. I can bring sugar. Also, if someone has a charger for a technophone, I left mine at home. You can reach me on 0733 000 156. Okay, see you soon, bye bye."
+    },
+    {
+      "filename": "msg04.mp4",
+      "reference_transcript": "Hi team, Beatrice Atieno here, reporting from the Tumaini women's group meeting in Mogotio. Today was our monthly table banking day. Twenty-five members attended out of thirty. Together they saved eighteen thousand shillings, and we gave out four small loans to members who are starting businesses, mostly selling vegetables and second-hand clothes. The treasurer, Mama Lucy Kiprop, recorded everything in the book. Our next meeting is on the fifteenth. If you need the records, Lucy's number is 0745 000 638.",
+      "distil-small": "High team Beatrice Artino here reporting from the too many women's group meeting in Nagoshio. Today was our monthly table banking day. 25 members attended out of 30. Together they saved 18,000 shillings and we gave out four small loans to members who are starting businesses, mostly selling vegetables and second-hand clothes. The treasurer, Mama Lucy Kiprop, recorded everything in the book. Our next meeting is on the 15th. If you need the records, Lucy's number is 074500638.",
+      "whisper-small": "Hi team, Beatrice Artino here, reporting from the too many women's group meeting in Mogoshio. Today was our monthly table banking day. 25 members attended out of 30. Together they saved 18,000 shillings, and we gave out 4 small loans to members who are starting businesses, mostly selling vegetables and second-hand clothes. The treasurer, Mama Lucy Kiprop, recorded everything in the book. Our next meeting is on the 15th. If you need the records, Lucy's number is 0745000638.",
+      "whisper-large": "Hi team, Beatrice Ortino here, reporting from the Too Many Women's group meeting in Nogoshio. Today was our monthly table banking day. 25 members attended out of 30. Together they saved 18,000 shillings, and we gave out four small loans to members who are starting businesses, mostly selling vegetables and second-hand clothes. The treasurer, Mama Lucy Kiprop, recorded everything in the book. Our next meeting is on the 15th. If you need the records, Lucy's number is 0745 000 638."
+    },
+    {
+      "filename": "msg05.mp4",
+      "reference_transcript": "Morning everyone, this is Janet Mwangi. Yesterday we went to Sarambei Primary School for the menstrual hygiene session with the girls in class six to eight. Sixty girls attended. We talked about periods, how to use and dispose of pads safely, and why they should not miss school. At the end, every girl received a pack of reusable sanitary pads. The head teacher, Mrs. Esther Koech, has asked us to come back and also talk to the mothers. Her phone number is 0790 000 274 if someone wants to follow up.",
+      "distil-small": "Morning everyone, this is Janet Mongi. Yesterday we went to Sarambia Primary School for the Menstral hygiene session with the girls in class 6-8. 60 girls attended. We talked about periods, how to use and dispose of pads safely, and why they should not miss school. At the end, every girl received a pack of reusable sanitary pads. The head teacher, Mrs. Esther Coach, has asked us to come back and also talk to the mothers. Her phone number is 079--0-100-274 if someone wants to follow up.",
+      "whisper-small": "morning everyone this is janet mongi yesterday we went to sarambia primary school for the menstrual hygiene session with the girls in class 6 to 8 60 girls attended we about periods, how to use and dispose of pads safely, and why they should not miss school. At the end, every girl received a pack of reusable sanitary pads. The head teacher, Mrs. Esther Coach, has asked us to come back and also talk to the mothers. Her phone number is 0790-000-274 if someone wants to follow up.",
+      "whisper-large": "Morning everyone, this is Janet Mwangi. Yesterday we went to Sarambia Primary School for the menstrual hygiene session with the girls in class 6-8. 60 girls attended. We talked about periods, how to use and dispose of pads safely, and why they should not miss school. At the end, every girl received a pack of reusable sanitary pads. The head teacher, Mrs. Esther Koch, has asked us to come back and also talk to the mothers. Her phone number is 0790-000-274 if someone wants to follow up."
+    },
+    {
+      "filename": "msg06.mp4",
+      "reference_transcript": "Hello team, it's Mercy Wambui. I want to share about the community dialogue on gender-based violence we held this afternoon at the chief's camp in Solai. Thirty-five women attended, plus a few village elders. The police gender desk officer, Corporal Ann Mutua, explained how to report cases and where survivors can get help. Some women shared their stories, it was very emotional. Three women asked for private follow-up, and we connected them with the counsellor. For anything about this session, you can call me on 0701 000 593.",
+      "distil-small": "Hello team, it's Masi Wambui. I want to share about the community dialogue on gender-based violence we held this afternoon at the chief's camp in Solai. 35 women attended plus a few village elders. The police gender desk officer, corporal and mutual explained how to report cases and where survivors can get help. Some women shared their stories, but it was very emotional. Three women asked for private follow-up, and we connected them with the counselor. For anything about this session, you can call me on 0701-100993.",
+      "whisper-small": "Hello team, this is Masi Wambui. I want to share about the community dialogue on gender-based violence we held this afternoon at the Chiefs Camp in Soly. 35 women attended, plus a few village elders. The police gender desk officer, Corporal and Muchua, explained how to report cases and where survivors can get help. Some women shared their stories, but it was very emotional. Three women asked for private follow-up, and we connected them with a counselor. For anything about this session, you can call me on 0701 000 593.",
+      "whisper-large": "Hello team, it's Masi Wambui. I want to share about the community dialogue on gender-based violence we held this afternoon at the Chief's Camp in Solai. 35 women attended, plus a few village elders. The police gender desk officer, Corporal Enmuchwa, explained how to report cases and where survivors can get help. Some women shared their stories. It was very emotional. Three women asked for private follow-up, and we connected them with a counselor. For anything about this session, you can call me on 0701-000-593."
+    },
+    {
+      "filename": "msg07.mp4",
+      "reference_transcript": "Hi everyone, Sister Nancy Cherono here. Today we did the cervical cancer screening camp at Rongai Health Centre. We screened twenty-eight women. Most results were normal, but three women had positive results, so we referred them to Nakuru Level Five Hospital for further treatment. One of them is Mrs. Agnes Wairimu, and she has agreed to go on Monday. Please, whoever is going to Nakuru that day, help her with transport. Her number is 0768 000 341. I will upload the full report later.",
+      "distil-small": "Hi everyone, sister Nancy Sherono here. Today we did the cervical cancer screening camp at Rongai Health Center. We screened 28 women. Most results were normal but three women had positive results so we referred them to Nakuru level 5 hospital for father treatment. One of them is Mrs. Agnes Yairimu and she has a bridge to go on Monday. Please, whoever is going to Nakuru that day, help her with transport. Her number is 076-8-0-0-341. I will upload the full report later.",
+      "whisper-small": "Hi everyone, sister Nancy share ono here. Today we did the cervical cancer screening camp at wrong eye health center. We screened 28 women. Most results were normal, but three women had positive results, so we referred them to Nakuru Level 5 Hospital for father treatment. One of them is Mrs. Agnes Wairimu and she has a bridge to go on Monday. Please, whoever is going to Nakuru that day, help her with transport. Her number is 0768000341. I will upload the full report later.",
+      "whisper-large": "Hi everyone, Sister Nancy Shaono here. Today we did the cervical cancer screening camp at Rongai Health Center. We screened 28 women. Most results were normal, but three women had positive results, so we referred them to Nakuru Level 5 Hospital for further treatment. One of them is Mrs. Agnes Wairimu, and she has agreed to go on Monday. Please, whoever is going to Nakuru that day, help her with transport. Her number is 0768 000 341. I will upload the full report later."
+    },
+    {
+      "filename": "msg08.mp4",
+      "reference_transcript": "Eeh, congratulations to Mama Purity Jeptoo on the new baby! We are so happy for you. Ladies, let's plan to visit her this weekend at her home in Kabarak, after church. I suggest we each contribute two hundred shillings for a small gift, maybe a baby blanket and some unga. Send your contribution to Ruth on M-Pesa, her number is 0756 000 819. And please, don't forget to bring your own chairs, last time we were standing. Okay, have a blessed evening.",
+      "distil-small": "E. Congratulations to Mama Piridae-Jep-2 on the new baby. We are so happy for you. Ladies, let's plan to visit her this weekend at her home in Cabarac after church. I suggest we each contribute 200 shillings for a small gift, maybe a baby blanket and some anger. Send your contribution to Ruth on empesa. Her number is 0756000819. And please don't forget to bring your own chairs last time we were standing. Okay, have a blessed evening.",
+      "whisper-small": "Congratulations to mama pyridijep2 on the new baby. We are so happy for you. Ladies, let's plan to visit her this weekend at her home in Kabarak after church. I suggest we each contribute 200 shillings for a small gift, have a blessed evening.",
+      "whisper-large": "Eee, congratulations to Mama Puradi Jeptu on the new baby. We are so happy for you. Ladies, let's plan to visit her this weekend at her home in Kabarak, after church. I suggest we each contribute 200 shillings for a small gift, maybe a baby blanket and some anger. Send your contribution to Ruth on M-Pesa, her number is 0756-000-819. And please, don't forget to bring your own chairs, last time we were standing. Okay, have a blessed evening."
+    },
+    {
+      "filename": "msg09.mp4",
+      "reference_transcript": "Hello team, this is Caroline Nyambura reporting from Kampi ya Moto. Today we held the kitchen garden training for women farmers. Eighteen women attended. The agriculture officer, Mr. Peter Langat, showed them how to make a sack garden and how to make compost from kitchen waste. Each woman received seedlings of sukuma wiki and spinach to plant at home. Next month we will visit their homes to see how the gardens are doing. If you want to join the follow-up visits, call me on 0712 000 765.",
+      "distil-small": "Hello, Tim, this is Caroline Nambura reporting from Campiamoto. Today we held the kitchen garden training for women farmers. 18 women attended. The agriculture officer, Mr. Peter Langett, showed them how to make a sack garden and how to make compost from kitchen waste. Each woman received seedlings of succuma wiki and spinach to plant at home. Next month we will visit their homes to see how the gardens are doing. If you want to join the follow-up visits, call me on 07-1-2-0-0-765.",
+      "whisper-small": "Hello team, this is Caroline Nambura reporting from Campiamoto. Today we held the kitchen garden training for women farmers. 18 women attended. The agriculture officer, Mr. Peter Langat, showed them how to make a sack garden and how to make compost from kitchen waste. Each woman received seedlings of succumauma wiki and spinach to plant at home. Next month we will visit their homes to see how the gardens are doing. If you want to join the follow up visits, call me on 0712 000 765.",
+      "whisper-large": "Hello team, this is Caroline Nayambura reporting from Camp Yamoto. Today we held the kitchen garden training for women farmers. 18 women attended. The agriculture officer, Mr. Peter Langert, showed them how to make a sack garden and how to make compost from kitchen waste. Each woman received seedlings of sukuma wiki and spinach to plant at home. Next month we will visit their homes to see how the gardens are doing. If you want to join the follow-up visits, call me on 0712 000 765."
+    },
+    {
+      "filename": "msg10.mp4",
+      "reference_transcript": "Good evening, this is Joyce Muthoni. I was helping Sister Nancy at the screening camp in Rongai today. Just adding to her report: we had twenty-eight women screened for cervical cancer, and three were referred to Nakuru Level Five. The women were very happy because many of them had never been screened before. Next time we should bring more chairs and water because the queue was long. My number is 0729 000 408 if you need anything from me.",
+      "distil-small": "Good evening, this is Jay Smuthoni. I was helping Sister Nancy at the screening camp in Rongai today. Just adding to her report, we had 28 women screened for cervical cancer and 3 were referred to Nakuru level 5. The women were very happy because many of them had never been screened before. Next time we should bring more chairs and water because the queue was long. My number is 0.729-0-408 if you need anything from me.",
+      "whisper-small": "Good evening, this is Jai Smuthoni. I was helping sister Nancy at the screening camp in Rongai today. Just adding to her report, we had 28 women screened for cervical cancer and 3 were referred to Nakuru level 5. The women were very happy because many of them had never been screened before. Next time we should bring more chairs and water because the queue was long. My number is 0729 000 408 if you need anything from me.",
+      "whisper-large": "Good evening, this is Joyce Muthoni. I was helping Sister Nancy at the screening camp in Rongai today. Just adding to her report, we had 28 women screened for cervical cancer, and three were referred to Nakuru Level 5. The women were very happy because many of them had never been screened before. Next time we should bring more chairs and water because the queue was long. My number is 0729 000 408 if you need anything from me."
+    }
+  ]
+}
