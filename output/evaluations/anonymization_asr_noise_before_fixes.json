@@ -1,0 +1,402 @@
+{
+  "dataset": "data/synthetic_unanonymized.json",
+  "seed": 166,
+  "results": {
+    "clean": {
+      "metrics": {
+        "TP": 63,
+        "FP": 16,
+        "FN": 3,
+        "TN": 20,
+        "accuracy": 0.814,
+        "precision": 0.797,
+        "recall": 0.955,
+        "f1": 0.869
+      },
+      "pii_recall_by_label": {
+        "CASE_NUMBER": 1.0,
+        "DATE_OF_BIRTH": 1.0,
+        "EMAIL": 1.0,
+        "HEALTH_RECORD_NO": 1.0,
+        "LOCATION_SPECIFIC": 0.75,
+        "MPESA_CODE": 1.0,
+        "NATIONAL_ID": 1.0,
+        "ORG_IDENTIFYING": 1.0,
+        "PERSON": 1.0,
+        "PHONE": 1.0
+      },
+      "leaked_examples": [
+        {
+          "id": "rec_001",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "Kiptoim village"
+        },
+        {
+          "id": "rec_005",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "mau narok"
+        },
+        {
+          "id": "rec_019",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "TENGES"
+        }
+      ]
+    },
+    "lowercase_no_punctuation": {
+      "metrics": {
+        "TP": 42,
+        "FP": 15,
+        "FN": 24,
+        "TN": 21,
+        "accuracy": 0.618,
+        "precision": 0.737,
+        "recall": 0.636,
+        "f1": 0.683
+      },
+      "pii_recall_by_label": {
+        "CASE_NUMBER": 0.0,
+        "DATE_OF_BIRTH": 1.0,
+        "EMAIL": 1.0,
+        "HEALTH_RECORD_NO": 0.0,
+        "LOCATION_SPECIFIC": 0.75,
+        "MPESA_CODE": 0.0,
+        "NATIONAL_ID": 1.0,
+        "ORG_IDENTIFYING": 0.0,
+        "PERSON": 0.571,
+        "PHONE": 1.0
+      },
+      "leaked_examples": [
+        {
+          "id": "rec_001",
+          "label": "PERSON",
+          "leaked": "mercy wanjiku"
+        },
+        {
+          "id": "rec_001",
+          "label": "PERSON",
+          "leaked": "esther jepkoech"
+        },
+        {
+          "id": "rec_001",
+          "label": "PERSON",
+          "leaked": "esther"
+        },
+        {
+          "id": "rec_002",
+          "label": "ORG_IDENTIFYING",
+          "leaked": "tumaini women self-help group"
+        },
+        {
+          "id": "rec_002",
+          "label": "PERSON",
+          "leaked": "rose kibet"
+        },
+        {
+          "id": "rec_002",
+          "label": "MPESA_CODE",
+          "leaked": "sck7h2lq9d"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "faith nasieku"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "linet chebet"
+        },
+        {
+          "id": "rec_003",
+          "label": "ORG_IDENTIFYING",
+          "leaked": "kapkures girls secondary school"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "linet"
+        }
+      ],
+      "example_text": "chp mercy wanjiku visited the household of esther jepkoech in kiptoim village baringo county esther id no 29845107 received a 3-month injectable and her son brian kiprotich was screened for malnutrition follow-up phone 0721 448 903"
+    },
+    "spoken_digits": {
+      "metrics": {
+        "TP": 57,
+        "FP": 17,
+        "FN": 9,
+        "TN": 19,
+        "accuracy": 0.745,
+        "precision": 0.77,
+        "recall": 0.864,
+        "f1": 0.814
+      },
+      "pii_recall_by_label": {
+        "CASE_NUMBER": 1.0,
+        "DATE_OF_BIRTH": 1.0,
+        "EMAIL": 1.0,
+        "HEALTH_RECORD_NO": 1.0,
+        "LOCATION_SPECIFIC": 0.75,
+        "MPESA_CODE": 1.0,
+        "NATIONAL_ID": 0.0,
+        "ORG_IDENTIFYING": 1.0,
+        "PERSON": 0.971,
+        "PHONE": 0.571
+      },
+      "leaked_examples": [
+        {
+          "id": "rec_001",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "Kiptoim village"
+        },
+        {
+          "id": "rec_001",
+          "label": "NATIONAL_ID",
+          "leaked": "two nine eight four five one zero seven"
+        },
+        {
+          "id": "rec_003",
+          "label": "PHONE",
+          "leaked": "two five four seven three three nine zero five two one seven"
+        },
+        {
+          "id": "rec_005",
+          "label": "PERSON",
+          "leaked": "wanjiru"
+        },
+        {
+          "id": "rec_005",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "mau narok"
+        },
+        {
+          "id": "rec_006",
+          "label": "NATIONAL_ID",
+          "leaked": "three one two zero seven seven six four"
+        },
+        {
+          "id": "rec_006",
+          "label": "PHONE",
+          "leaked": "two five four seven one one nine zero two three eight four"
+        },
+        {
+          "id": "rec_019",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "TENGES"
+        },
+        {
+          "id": "rec_019",
+          "label": "PHONE",
+          "leaked": "two five four seven two two three eight zero nine one five"
+        }
+      ],
+      "example_text": "CHP Mercy Wanjiku visited the household of Esther Jepkoech in Kiptoim village, Baringo County. Esther (ID No. two nine eight four five one zero seven) received a 3-month injectable, and her son Brian Kiprotich was screened for malnutrition. Follow-up phone: zero seven two one four four eight nine zero three."
+    },
+    "comma_digits": {
+      "metrics": {
+        "TP": 61,
+        "FP": 16,
+        "FN": 5,
+        "TN": 20,
+        "accuracy": 0.794,
+        "precision": 0.792,
+        "recall": 0.924,
+        "f1": 0.853
+      },
+      "pii_recall_by_label": {
+        "CASE_NUMBER": 1.0,
+        "DATE_OF_BIRTH": 1.0,
+        "EMAIL": 1.0,
+        "HEALTH_RECORD_NO": 1.0,
+        "LOCATION_SPECIFIC": 0.75,
+        "MPESA_CODE": 1.0,
+        "NATIONAL_ID": 1.0,
+        "ORG_IDENTIFYING": 1.0,
+        "PERSON": 1.0,
+        "PHONE": 0.714
+      },
+      "leaked_examples": [
+        {
+          "id": "rec_001",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "Kiptoim village"
+        },
+        {
+          "id": "rec_003",
+          "label": "PHONE",
+          "leaked": "+254, 733, 905, 217"
+        },
+        {
+          "id": "rec_005",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "mau narok"
+        },
+        {
+          "id": "rec_006",
+          "label": "PHONE",
+          "leaked": "+254, 711, 902, 384"
+        },
+        {
+          "id": "rec_019",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "TENGES"
+        }
+      ],
+      "example_text": "CHP Mercy Wanjiku visited the household of Esther Jepkoech in Kiptoim village, Baringo County. Esther (ID No. 29845107) received a 3-month injectable, and her son Brian Kiprotich was screened for malnutrition. Follow-up phone: 0721, 448, 903."
+    },
+    "misspelled_names": {
+      "metrics": {
+        "TP": 53,
+        "FP": 15,
+        "FN": 13,
+        "TN": 21,
+        "accuracy": 0.725,
+        "precision": 0.779,
+        "recall": 0.803,
+        "f1": 0.791
+      },
+      "pii_recall_by_label": {
+        "CASE_NUMBER": 1.0,
+        "DATE_OF_BIRTH": 1.0,
+        "EMAIL": 1.0,
+        "HEALTH_RECORD_NO": 1.0,
+        "LOCATION_SPECIFIC": 0.833,
+        "MPESA_CODE": 1.0,
+        "NATIONAL_ID": 1.0,
+        "ORG_IDENTIFYING": 1.0,
+        "PERSON": 0.686,
+        "PHONE": 1.0
+      },
+      "leaked_examples": [
+        {
+          "id": "rec_001",
+          "label": "PERSON",
+          "leaked": "m ercy wanjiu"
+        },
+        {
+          "id": "rec_001",
+          "label": "PERSON",
+          "leaked": "ester"
+        },
+        {
+          "id": "rec_002",
+          "label": "PERSON",
+          "leaked": "rse kib et"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "l inet chubet"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "linot"
+        },
+        {
+          "id": "rec_005",
+          "label": "PERSON",
+          "leaked": "wnjiru"
+        },
+        {
+          "id": "rec_005",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "mau narok"
+        },
+        {
+          "id": "rec_010",
+          "label": "PERSON",
+          "leaked": "ke vin"
+        },
+        {
+          "id": "rec_010",
+          "label": "PERSON",
+          "leaked": "peer mutoi"
+        },
+        {
+          "id": "rec_018",
+          "label": "PERSON",
+          "leaked": "anes"
+        }
+      ],
+      "example_text": "CHP m ercy wanjiu visited the household of esthor jpkoech in Kiptoim village, Baringo County. ester (ID No. 29845107) received a 3-month injectable, and her son briin kiprotuch was screened for malnutrition. Follow-up phone: 0721 448 903."
+    },
+    "all_combined": {
+      "metrics": {
+        "TP": 34,
+        "FP": 14,
+        "FN": 32,
+        "TN": 22,
+        "accuracy": 0.549,
+        "precision": 0.708,
+        "recall": 0.515,
+        "f1": 0.596
+      },
+      "pii_recall_by_label": {
+        "CASE_NUMBER": 0.0,
+        "DATE_OF_BIRTH": 1.0,
+        "EMAIL": 1.0,
+        "HEALTH_RECORD_NO": 0.0,
+        "LOCATION_SPECIFIC": 0.5,
+        "MPESA_CODE": 0.0,
+        "NATIONAL_ID": 0.0,
+        "ORG_IDENTIFYING": 0.333,
+        "PERSON": 0.543,
+        "PHONE": 0.571
+      },
+      "leaked_examples": [
+        {
+          "id": "rec_001",
+          "label": "PERSON",
+          "leaked": "ester"
+        },
+        {
+          "id": "rec_001",
+          "label": "NATIONAL_ID",
+          "leaked": "two nine eight four five one zero seven"
+        },
+        {
+          "id": "rec_002",
+          "label": "ORG_IDENTIFYING",
+          "leaked": "tumaini women self-help group"
+        },
+        {
+          "id": "rec_002",
+          "label": "PERSON",
+          "leaked": "rse kib et"
+        },
+        {
+          "id": "rec_002",
+          "label": "MPESA_CODE",
+          "leaked": "sck7h2lq9d"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "l inet chubet"
+        },
+        {
+          "id": "rec_003",
+          "label": "PERSON",
+          "leaked": "linot"
+        },
+        {
+          "id": "rec_003",
+          "label": "PHONE",
+          "leaked": "two five four seven three three nine zero five two one seven"
+        },
+        {
+          "id": "rec_004",
+          "label": "PERSON",
+          "leaked": "pu rity naseri an"
+        },
+        {
+          "id": "rec_004",
+          "label": "LOCATION_SPECIFIC",
+          "leaked": "olkiramatian"
+        }
+      ],
+      "example_text": "chp m ercy wanjiu visited the household of esthor jpkoech in kiptoim village baringo county ester id no two nine eight four five one zero seven received a 3-month injectable and her son briin kiprotuch was screened for malnutrition follow-up phone zero seven two one four four eight nine zero three"
+    }
+  }
+}
