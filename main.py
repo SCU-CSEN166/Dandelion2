@@ -83,7 +83,8 @@ REPORTS_OUTPUT = OUTPUT_DIR / "reports.json"    # only relevant messages, with e
 CSV_OUTPUT = OUTPUT_DIR / "reports.csv"         # every message, one row each, in Dandelion's format
 
 # CSV export format
-CSV_COLUMNS = ["Message_id", "anonymized_text", "relevance", "activity_type", "participants", "duplicate_of"]
+CSV_COLUMNS = ["Message_id", "anonymized_text", "relevance", "activity_type", "participants", "duplicate_of",
+               "activity_description", "needs_review", "review_reasons"]
 CSV_RELEVANCE_LABELS = {"relevant": "Event", "irrelevant": "Not relevant"}
 CSV_NONE = "none"
 
@@ -130,6 +131,8 @@ def anonymized_record(message: Message) -> dict:
 
 def report(message: Message) -> dict:
     """One flat activity record for staff to review."""
+    fields = message.extraction or {}
+    reasons = review_reasons(message)
     return {
         "id": message.id,
         "conversation": message.conversation,
@@ -137,9 +140,31 @@ def report(message: Message) -> dict:
         "sender": message.anonymized_sender,
         "text": message.anonymized_text,
         "relevance_score": round(message.relevance["score"], SCORE_DECIMALS),
-        **message.extraction,
+        **{key: value for key, value in fields.items() if key != "needs_review"},
+        "extraction_review_fields": fields.get("needs_review", []),
         "duplicate_of": message.duplicate_of,
+        "needs_review": bool(reasons),
+        "review_reasons": reasons,
     }
+
+
+def review_reasons(message: Message) -> list[str]:
+    """Explain why a person should inspect this record before relying on it."""
+    reasons = []
+    if message.audio:
+        reasons.append("Check the audio transcript, especially names, locations, and phone numbers.")
+    if message.redactions:
+        reasons.append("Verify that personal information was fully redacted.")
+    if message.relevance and message.relevance.get("uncertain"):
+        reasons.append("Review the relevance decision; its score is near the classification cutoff.")
+    fields = message.extraction or {}
+    for field in fields.get("needs_review", []):
+        reasons.append(f"Verify the extracted {field.replace('_', ' ')}.")
+    if fields.get("activity_type") == "other":
+        reasons.append("Review the activity category; the model returned 'other'.")
+    if message.duplicate_of:
+        reasons.append(f"Check whether this is a duplicate of {message.duplicate_of}.")
+    return reasons
 
 
 def csv_rows(messages: list[Message]) -> list[dict]:
@@ -157,6 +182,9 @@ def csv_rows(messages: list[Message]) -> list[dict]:
             "activity_type": activity.capitalize() if activity else CSV_NONE,
             "participants": participants if participants is not None else CSV_NONE,
             "duplicate_of": row_ids.get(message.duplicate_of, CSV_NONE),
+            "activity_description": fields.get("activity_description") or CSV_NONE,
+            "needs_review": "TRUE" if review_reasons(message) else "FALSE",
+            "review_reasons": "; ".join(review_reasons(message)) or CSV_NONE,
         })
     return rows
 

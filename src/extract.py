@@ -38,7 +38,10 @@ TEMPLATE = {
     "activity_type": ["family planning outreach", "youth health session", "savings group meeting",
                       "business training", "community health visit", "nutrition talk",
                       "menstrual hygiene session", "gender-based violence dialogue",
-                      "cancer screening", "agriculture training", "other"],
+                      "cancer screening", "agriculture training", "maternal health session",
+                      "health education session", "community outreach", "other"],
+    # Keep a useful, source-grounded description even when the category is broad or "other".
+    "activity_description": VERBATIM_STRING,
     "location": VERBATIM_STRING,
     "participant_count": INTEGER,
     "referrals": INTEGER,
@@ -61,6 +64,8 @@ FLAN_QUESTIONS = {
               "the future (planned), or is there no activity (neither)?",
     "activity_type": "Does this message report a community activity? If so, which type? "
                      "Small talk, logistics and follow-up details are \"none\".",
+    "activity_description": "What specific community activity is described? Copy a short phrase from "
+                           "the message. Answer none if no activity is described.",
     "location": "Where did the activity take place? Copy the place name from the message.",
     "participant_count": "How many people attended or were reached? Answer with a number.",
     "referrals": "How many people were referred to a clinic or need follow-up? This is not the number "

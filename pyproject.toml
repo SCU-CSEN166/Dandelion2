@@ -1,7 +1,7 @@
 [project]
 name = "dandelion2"
 version = "0.1.0"
-description = "Add your description here"
+description = "Privacy-aware pipeline for transcribing and structuring synthetic and public Dandelion-style field reports"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -13,19 +13,35 @@ dependencies = [
     "pillow>=13.0.0",
     "requests>=2.34.2",
     "sentence-transformers>=6.2.0",
-    "torch>=2.15.0",
-    "torchvision>=0.29.2",
     "transformers>=5.22.1",
     "twilio>=9.12.0",
     "whatstk>=0.10.0",
     "word2number>=1.1",
 ]
 
-# CUDA builds of PyTorch on Windows/Linux (uses an NVIDIA GPU when present; still runs on CPU
-# without one). macOS has no CUDA, so it keeps the regular PyPI build.
+[project.optional-dependencies]
+# Choose one extra when syncing. CPU is the portable default for laptops and Mac; GPU avoids
+# installing CUDA libraries on machines that cannot use them.
+cpu = ["torch>=2.15.0", "torchvision>=0.29.2"]
+gpu = ["torch>=2.15.0", "torchvision>=0.29.2"]
+
 [tool.uv.sources]
-torch = [{ index = "pytorch-cu132", marker = "sys_platform != 'darwin'" }]
-torchvision = [{ index = "pytorch-cu132", marker = "sys_platform != 'darwin'" }]
+torch = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu132", extra = "gpu" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu132", extra = "gpu" },
+]
+
+[tool.uv]
+conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [[tool.uv.index]]
 name = "pytorch-cu132"
