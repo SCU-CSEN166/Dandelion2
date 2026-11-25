@@ -1,0 +1,505 @@
+{
+  "description": "Unseen synthetic Dandelion-style duplicate holdout pairs. Created after the duplicate detector was improved; do not tune src/duplicates.py on these cases.",
+  "cases": [
+    {
+      "id": "hold_dup01",
+      "expected_duplicate": true,
+      "reason": "Same maternal health outreach, paraphrased wording, same location and count.",
+      "message_a": {
+        "text": "Maternal health outreach in Kericho reached 36 mothers today and 5 were referred.",
+        "extraction": {
+          "activity_type": "maternal health outreach",
+          "location": "Kericho",
+          "participant_count": 36,
+          "referrals": 5,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "We finished today's Kericho mothers health session with 36 attendees; five need clinic follow-up.",
+        "extraction": {
+          "activity_type": "maternal health session",
+          "location": "Kericho",
+          "participant_count": 36,
+          "referrals": 5,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup02",
+      "expected_duplicate": true,
+      "reason": "Same nutrition event with a one-person count discrepancy.",
+      "message_a": {
+        "text": "Nutrition education in Narok ended with 27 caregivers attending.",
+        "extraction": {
+          "activity_type": "nutrition training",
+          "location": "Narok",
+          "participant_count": 27,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Narok nutrition session is complete. I counted 26 caregivers.",
+        "extraction": {
+          "activity_type": "nutrition training",
+          "location": "Narok",
+          "participant_count": 26,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup03",
+      "expected_duplicate": true,
+      "reason": "Same savings event, terminology changes from table banking to savings meeting.",
+      "message_a": {
+        "text": "Table banking group in Eldama Ravine met this afternoon with 19 members.",
+        "extraction": {
+          "activity_type": "table banking meeting",
+          "location": "Eldama Ravine",
+          "participant_count": 19,
+          "referrals": 2,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "The Eldama Ravine savings group meeting finished; 19 women attended and two loans were approved.",
+        "extraction": {
+          "activity_type": "savings group meeting",
+          "location": "Eldama Ravine",
+          "participant_count": 19,
+          "referrals": 2,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup04",
+      "expected_duplicate": true,
+      "reason": "Same cancer screening with ASR-style spelling variation in location.",
+      "message_a": {
+        "text": "Cervical screening in Kiamunyi served 44 women today.",
+        "extraction": {
+          "activity_type": "cancer screening",
+          "location": "Kiamunyi",
+          "participant_count": 44,
+          "referrals": 3,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "The screening at Kiamooni is done, 44 participants and three referrals.",
+        "extraction": {
+          "activity_type": "cancer screening",
+          "location": "Kiamooni",
+          "participant_count": 44,
+          "referrals": 3,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup05",
+      "expected_duplicate": true,
+      "reason": "Same agriculture event, second report has no location field.",
+      "message_a": {
+        "text": "Kitchen garden training in Kabarnet reached 21 farmers this morning.",
+        "extraction": {
+          "activity_type": "kitchen garden training",
+          "location": "Kabarnet",
+          "participant_count": 21,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Quick report: agriculture training finished with 21 farmers attending.",
+        "extraction": {
+          "activity_type": "agriculture training",
+          "location": null,
+          "participant_count": 21,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup06",
+      "expected_duplicate": true,
+      "reason": "Same youth health event after private location is masked.",
+      "message_a": {
+        "text": "Youth health session at [LOCATION] had 32 participants and 4 referrals.",
+        "extraction": {
+          "activity_type": "youth health session",
+          "location": "[LOCATION]",
+          "participant_count": 32,
+          "referrals": 4,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Today's [LOCATION] youth outreach finished with 32 young people; four were referred.",
+        "extraction": {
+          "activity_type": "youth health outreach",
+          "location": "[LOCATION]",
+          "participant_count": 32,
+          "referrals": 4,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup07",
+      "expected_duplicate": true,
+      "reason": "Same menstrual health event, second report focuses on supplies distributed.",
+      "message_a": {
+        "text": "Menstrual health education in Marigat reached 48 girls today.",
+        "extraction": {
+          "activity_type": "menstrual hygiene session",
+          "location": "Marigat",
+          "participant_count": 48,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "After the Marigat hygiene talk we distributed pads to all 48 girls who attended.",
+        "extraction": {
+          "activity_type": "menstrual hygiene session",
+          "location": "Marigat",
+          "participant_count": 48,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup08",
+      "expected_duplicate": true,
+      "reason": "Same GBV event with acronym vs full wording and little shared surface text.",
+      "message_a": {
+        "text": "Gender based violence awareness dialogue in Mogotio concluded successfully with 33 participants.",
+        "extraction": {
+          "activity_type": "gender-based violence dialogue",
+          "location": "Mogotio",
+          "participant_count": 33,
+          "referrals": 2,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Mogotio GBV session done: 33 people joined and two were linked for follow-up.",
+        "extraction": {
+          "activity_type": "GBV awareness dialogue",
+          "location": "Mogotio",
+          "participant_count": 33,
+          "referrals": 2,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup09",
+      "expected_duplicate": true,
+      "reason": "Same family planning outreach with two-person attendance discrepancy.",
+      "message_a": {
+        "text": "Family planning outreach in Litein served 52 women and 6 referrals were made.",
+        "extraction": {
+          "activity_type": "family planning outreach",
+          "location": "Litein",
+          "participant_count": 52,
+          "referrals": 6,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Litein family planning activity ended with about 50 women; six needed referral.",
+        "extraction": {
+          "activity_type": "family planning outreach",
+          "location": "Litein",
+          "participant_count": 50,
+          "referrals": 6,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_dup10",
+      "expected_duplicate": true,
+      "reason": "Same completed business training, paraphrased activity label.",
+      "message_a": {
+        "text": "Business skills training in Bomet finished today with 24 participants.",
+        "extraction": {
+          "activity_type": "business skills training",
+          "location": "Bomet",
+          "participant_count": 24,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "We completed the Bomet livelihood entrepreneurship session for 24 people.",
+        "extraction": {
+          "activity_type": "business training",
+          "location": "Bomet",
+          "participant_count": 24,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup01",
+      "expected_duplicate": false,
+      "reason": "Same activity and count but different locations.",
+      "message_a": {
+        "text": "Nutrition training in Kericho had 28 caregivers.",
+        "extraction": {
+          "activity_type": "nutrition training",
+          "location": "Kericho",
+          "participant_count": 28,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Nutrition training in Narok had 28 caregivers.",
+        "extraction": {
+          "activity_type": "nutrition training",
+          "location": "Narok",
+          "participant_count": 28,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup02",
+      "expected_duplicate": false,
+      "reason": "Same location and activity but clearly separate attendance totals.",
+      "message_a": {
+        "text": "Morning youth health session in Bomet reached 17 participants.",
+        "extraction": {
+          "activity_type": "youth health session",
+          "location": "Bomet",
+          "participant_count": 17,
+          "referrals": 1,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Afternoon youth health session in Bomet reached 56 participants.",
+        "extraction": {
+          "activity_type": "youth health session",
+          "location": "Bomet",
+          "participant_count": 56,
+          "referrals": 5,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup03",
+      "expected_duplicate": false,
+      "reason": "Same place and count but different activities.",
+      "message_a": {
+        "text": "Mogotio cancer screening had 30 participants.",
+        "extraction": {
+          "activity_type": "cancer screening",
+          "location": "Mogotio",
+          "participant_count": 30,
+          "referrals": 3,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Mogotio agriculture training had 30 participants.",
+        "extraction": {
+          "activity_type": "agriculture training",
+          "location": "Mogotio",
+          "participant_count": 30,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup04",
+      "expected_duplicate": false,
+      "reason": "One event is completed and the other is only planned.",
+      "message_a": {
+        "text": "The menstrual hygiene session in Marigat finished with 40 girls.",
+        "extraction": {
+          "activity_type": "menstrual hygiene session",
+          "location": "Marigat",
+          "participant_count": 40,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "We plan another menstrual hygiene session in Marigat next week for around 40 girls.",
+        "extraction": {
+          "activity_type": "menstrual hygiene session",
+          "location": "Marigat",
+          "participant_count": 40,
+          "referrals": 0,
+          "status": "planned"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup05",
+      "expected_duplicate": false,
+      "reason": "Same broad health theme and location but distinct activity types and counts.",
+      "message_a": {
+        "text": "Kericho family planning outreach reached 41 women.",
+        "extraction": {
+          "activity_type": "family planning outreach",
+          "location": "Kericho",
+          "participant_count": 41,
+          "referrals": 4,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Kericho cervical screening served 43 women.",
+        "extraction": {
+          "activity_type": "cancer screening",
+          "location": "Kericho",
+          "participant_count": 43,
+          "referrals": 6,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup06",
+      "expected_duplicate": false,
+      "reason": "Masked locations and similar activity wording, but counts strongly indicate separate events.",
+      "message_a": {
+        "text": "Savings group meeting at [LOCATION] had 14 members.",
+        "extraction": {
+          "activity_type": "savings group meeting",
+          "location": "[LOCATION]",
+          "participant_count": 14,
+          "referrals": 1,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Savings group meeting at [LOCATION] had 63 members.",
+        "extraction": {
+          "activity_type": "savings group meeting",
+          "location": "[LOCATION]",
+          "participant_count": 63,
+          "referrals": 7,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup07",
+      "expected_duplicate": false,
+      "reason": "Same location and similar counts but different event purposes.",
+      "message_a": {
+        "text": "Kabarnet nutrition session had 22 caregivers.",
+        "extraction": {
+          "activity_type": "nutrition training",
+          "location": "Kabarnet",
+          "participant_count": 22,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Kabarnet business skills session had 23 participants.",
+        "extraction": {
+          "activity_type": "business skills training",
+          "location": "Kabarnet",
+          "participant_count": 23,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup08",
+      "expected_duplicate": false,
+      "reason": "Two separate screening events in same place, different counts and referrals.",
+      "message_a": {
+        "text": "First Litein cancer screening served 25 women.",
+        "extraction": {
+          "activity_type": "cancer screening",
+          "location": "Litein",
+          "participant_count": 25,
+          "referrals": 2,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Second Litein cancer screening served 49 women.",
+        "extraction": {
+          "activity_type": "cancer screening",
+          "location": "Litein",
+          "participant_count": 49,
+          "referrals": 8,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup09",
+      "expected_duplicate": false,
+      "reason": "Same count and generic wording but locations and activities differ.",
+      "message_a": {
+        "text": "Training in Narok finished with 26 people.",
+        "extraction": {
+          "activity_type": "agriculture training",
+          "location": "Narok",
+          "participant_count": 26,
+          "referrals": 0,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Training in Bomet finished with 26 people.",
+        "extraction": {
+          "activity_type": "nutrition training",
+          "location": "Bomet",
+          "participant_count": 26,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "hold_nondup10",
+      "expected_duplicate": false,
+      "reason": "Same livelihood category and location, but activities and attendance differ enough to be separate events.",
+      "message_a": {
+        "text": "Eldama Ravine savings group meeting had 18 members.",
+        "extraction": {
+          "activity_type": "savings group meeting",
+          "location": "Eldama Ravine",
+          "participant_count": 18,
+          "referrals": 2,
+          "status": "completed"
+        }
+      },
+      "message_b": {
+        "text": "Eldama Ravine business training had 31 participants.",
+        "extraction": {
+          "activity_type": "business skills training",
+          "location": "Eldama Ravine",
+          "participant_count": 31,
+          "referrals": 0,
+          "status": "completed"
+        }
+      }
+    }
+  ]
+}
