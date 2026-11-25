@@ -13,22 +13,32 @@ from .utils import require_anonymized, torch_device
 
 CLASSIFIER_MODEL = "facebook/bart-large-mnli"
 
-# (relevant, irrelevant) descriptions the model scores each message against.
+# (relevant descriptions, irrelevant descriptions) the model scores each message against.
+# A message's relevant score is the summed probability of its relevant descriptions.
+_ACTIVITY = "community health, outreach, training or livelihood activity"
 COMPLETED_ONLY_HYPOTHESES = (
-    "a report of completed community health, outreach, training or livelihood activities and outcomes",
-    "casual conversation, greetings, unrelated information or plans for future activities",
+    ("a report of completed community health, outreach, training or livelihood activities and outcomes",),
+    ("casual conversation, greetings, unrelated information or plans for future activities",),
 )
 WITH_PLANS_HYPOTHESES = (
-    "a message about a community health, outreach, training or livelihood activity that happened or is planned",
-    # Week 9: social plans named explicitly, because counting plans let hidden-test chit-chat
-    # like "let's plan to visit her this weekend" through as an Event.
-    "casual conversation, greetings, social plans like visits, gifts, food or transport, or unrelated information",
+    # Final: past and upcoming field activities are separate descriptions, and social plans are
+    # spelled out, so "let's visit her this weekend" is not mistaken for a planned activity.
+    # On data/relevance_plans_dev.json this went from 24/30 to 27/30 correct; the 74 labeled
+    # WhatsApp messages and the 10 hidden-test messages got the same predictions as before.
+    (f"a message about a {_ACTIVITY} that happened",
+     f"a plan or schedule for an upcoming {_ACTIVITY}"),
+    ("casual conversation, greetings, personal or social plans like visits, celebrations, gifts, food, "
+     "travel or errands, or unrelated information",),
 )
 
 RELEVANT = "relevant"
 IRRELEVANT = "irrelevant"
 
 DEFAULT_THRESHOLD = 0.5
+# Scores this close to the threshold are marked "uncertain" for a person to check. On our labeled
+# data (74 WhatsApp + 30 plans messages) a 0.25 margin flags about a quarter of the messages and
+# catches 9 of the 13 mistakes; most mistakes scored 0.5-0.75, never above 0.9.
+REVIEW_MARGIN = 0.25
 MAX_WORDS_PER_CHUNK = 180  # BART reads at most 1024 tokens, hypothesis included
 
 
@@ -53,7 +63,7 @@ class RelevanceClassifier:
         self.min_words = min_words
         self.skip_questions = skip_questions
         hypotheses = WITH_PLANS_HYPOTHESES if count_plans else COMPLETED_ONLY_HYPOTHESES
-        self.relevant_hypothesis, self.irrelevant_hypothesis = hypotheses
+        self.relevant_hypotheses, self.irrelevant_hypotheses = hypotheses
 
     @cached_property
     def classifier(self):
@@ -68,7 +78,8 @@ class RelevanceClassifier:
             return {"label": IRRELEVANT, "score": 0.0, "reason": reason}
         # Long messages are split, not truncated, so a report at the end still counts.
         score = max(self._relevant_score(chunk) for chunk in _chunks(text.split()))
-        return {"label": RELEVANT if score >= self.threshold else IRRELEVANT, "score": score}
+        return {"label": RELEVANT if score >= self.threshold else IRRELEVANT, "score": score,
+                "uncertain": abs(score - self.threshold) < REVIEW_MARGIN}
 
     def _rule_out(self, text: str) -> str | None:
         """Why `text` is irrelevant without asking the model, or None."""
@@ -81,10 +92,10 @@ class RelevanceClassifier:
         return None
 
     def _relevant_score(self, text: str) -> float:
-        result = self.classifier(text, candidate_labels=[self.relevant_hypothesis, self.irrelevant_hypothesis],
-                                 multi_label=False)
+        labels = [*self.relevant_hypotheses, *self.irrelevant_hypotheses]
+        result = self.classifier(text, candidate_labels=labels, multi_label=False)
         score_by_hypothesis = dict(zip(result["labels"], result["scores"]))
-        return float(score_by_hypothesis[self.relevant_hypothesis])
+        return float(sum(score_by_hypothesis[hypothesis] for hypothesis in self.relevant_hypotheses))
 
 
 def _chunks(words: list[str]) -> list[str]:

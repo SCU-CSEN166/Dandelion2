@@ -15,15 +15,22 @@
       "recall": 0.9642857142857143,
       "f1": 0.84375
     },
-    "classification_labeled_records": 74
+    "classification_labeled_records": 74,
+    "review_flags": {
+      "flagged": 18,
+      "records": 74,
+      "mistakes": 10,
+      "mistakes_flagged": 8
+    }
   },
   "records": [
     {
       "id": "msg_001",
-      "text": "Today we held a family planning out outreach in [LOCATION]. 31 women attended and 4 were referred to the clinic for follow-up.",
+      "text": "Today we held a family planning out outreach in Nakuru. 31 women attended and 4 were referred to the clinic for follow-up.",
       "classification": {
         "label": "relevant",
-        "score": 0.9821128249168396
+        "score": 0.9607819020748138,
+        "uncertain": false
       }
     },
     {
@@ -40,7 +47,8 @@
       "text": "It went well! We had 31 women attend and 4 were referred to the clinic for follow-up.",
       "classification": {
         "label": "relevant",
-        "score": 0.9652612209320068
+        "score": 0.9484583996236324,
+        "uncertain": false
       }
     },
     {
@@ -48,7 +56,8 @@
       "text": "Nothing major, but a few people came late and we’re still waiting on one follow-up form.",
       "classification": {
         "label": "relevant",
-        "score": 0.8629148602485657
+        "score": 0.8175208419561386,
+        "uncertain": false
       }
     },
     {
@@ -56,7 +65,8 @@
       "text": "[PERSON] is handling them. Her number is [PHONE] if the clinic needs to reach her.",
       "classification": {
         "label": "relevant",
-        "score": 0.8735073804855347
+        "score": 0.8224861025810242,
+        "uncertain": false
       }
     },
     {
@@ -64,7 +74,8 @@
       "text": "We’re planning another youth health session on Friday morning. We’re expecting around 25–30 students but the final number isn’t confirmed yet.",
       "classification": {
         "label": "relevant",
-        "score": 0.9670785665512085
+        "score": 0.9454676806926727,
+        "uncertain": false
       }
     },
     {
@@ -72,15 +83,17 @@
       "text": "I think 9am but I’ll double check.",
       "classification": {
         "label": "relevant",
-        "score": 0.6017853021621704
+        "score": 0.6687379479408264,
+        "uncertain": true
       }
     },
     {
       "id": "msg_008",
-      "text": "Also just to confirm, today’s [ORG] outreach was 31 women and 4 referrals.",
+      "text": "Also just to confirm, today’s Nakuru outreach was 31 women and 4 referrals.",
       "classification": {
         "label": "relevant",
-        "score": 0.9683619141578674
+        "score": 0.9638612233102322,
+        "uncertain": false
       }
     },
     {
@@ -88,15 +101,17 @@
       "text": "I’ll send the full participant details later once everything is finalized.",
       "classification": {
         "label": "relevant",
-        "score": 0.9140148162841797
+        "score": 0.77879998087883,
+        "uncertain": false
       }
     },
     {
       "id": "msg_010",
-      "text": "we finished the youth health session in [LOCATION] this afternoon, 42 students came",
+      "text": "we finished the youth health session in Baringo this afternoon, 42 students came",
       "classification": {
         "label": "relevant",
-        "score": 0.9800772070884705
+        "score": 0.9779006838798523,
+        "uncertain": false
       }
     },
     {
@@ -104,7 +119,8 @@
       "text": "ya menstrual health + reproductive health. 2 students also asked for clinic referrals",
       "classification": {
         "label": "relevant",
-        "score": 0.9071421027183533
+        "score": 0.9067779704928398,
+        "uncertain": false
       }
     },
     {
@@ -112,7 +128,8 @@
       "text": "just recommended rn, i dont think theyve gone to the clinic yet",
       "classification": {
         "label": "relevant",
-        "score": 0.7309495806694031
+        "score": 0.7730788588523865,
+        "uncertain": false
       }
     },
     {
@@ -120,15 +137,17 @@
       "text": "also the facilitator was [PERSON] and her number is [PHONE] if anyone needs to follow up",
       "classification": {
         "label": "relevant",
-        "score": 0.7842514514923096
+        "score": 0.6596565544605255,
+        "uncertain": true
       }
     },
     {
       "id": "msg_014",
-      "text": "theres one planned for thursday in [LOCATION] but the final count isnt confirmed yet",
+      "text": "theres one planned for thursday in Nakuru but the final count isnt confirmed yet",
       "classification": {
         "label": "relevant",
-        "score": 0.9454490542411804
+        "score": 0.9048964381217957,
+        "uncertain": false
       }
     },
     {
@@ -136,7 +155,8 @@
       "text": "10am i think but lemme double check",
       "classification": {
         "label": "relevant",
-        "score": 0.6392362117767334
+        "score": 0.6738593578338623,
+        "uncertain": true
       }
     },
     {
@@ -144,7 +164,8 @@
       "text": "also just confirming todays one was 42 students + 2 referrals",
       "classification": {
         "label": "relevant",
-        "score": 0.9389396905899048
+        "score": 0.9410045370459557,
+        "uncertain": false
       }
     },
     {
@@ -152,7 +173,8 @@
       "text": "yes they finish this morning, around 19 women was there",
       "classification": {
         "label": "relevant",
-        "score": 0.8656184673309326
+        "score": 0.7561593502759933,
+        "uncertain": false
       }
     },
     {
@@ -160,7 +182,8 @@
       "text": "both i think, they did savings first and then short business training after",
       "classification": {
         "label": "relevant",
-        "score": 0.9643537402153015
+        "score": 0.9495701789855957,
+        "uncertain": false
       }
     },
     {
@@ -168,7 +191,8 @@
       "text": "yes 2 women got loans but i dont have full details yet",
       "classification": {
         "label": "relevant",
-        "score": 0.8787474632263184
+        "score": 0.8274183571338654,
+        "uncertain": false
       }
     },
     {
@@ -176,7 +200,8 @@
       "text": "one name is [PERSON]. other one not written in update",
       "classification": {
         "label": "relevant",
-        "score": 0.5995221734046936
+        "score": 0.634270042181015,
+        "uncertain": true
       }
     },
     {
@@ -184,7 +209,8 @@
       "text": "also [PERSON] number is [PHONE] for follow up",
       "classification": {
         "label": "relevant",
-        "score": 0.7681421637535095
+        "score": 0.5693353414535522,
+        "uncertain": true
       }
     },
     {
@@ -201,7 +227,8 @@
       "text": "next tuesday but location not confirm yet",
       "classification": {
         "label": "relevant",
-        "score": 0.844261109828949
+        "score": 0.7044879794120789,
+        "uncertain": true
       }
     },
     {
@@ -209,7 +236,8 @@
       "text": "they visited 14 homes today and around 21 women received health information",
       "classification": {
         "label": "relevant",
-        "score": 0.9898410439491272
+        "score": 0.9922268614172935,
+        "uncertain": false
       }
     },
     {
@@ -217,7 +245,8 @@
       "text": "message says 3 women need follow up but not clear if referral already done",
       "classification": {
         "label": "relevant",
-        "score": 0.752164363861084
+        "score": 0.7292931824922562,
+        "uncertain": true
       }
     },
     {
@@ -225,7 +254,8 @@
       "text": "it says [LOCATION] area",
       "classification": {
         "label": "relevant",
-        "score": 0.8270857930183411
+        "score": 0.775645911693573,
+        "uncertain": false
       }
     },
     {
@@ -233,7 +263,8 @@
       "text": "yes [PERSON] was leading. number is [PHONE]",
       "classification": {
         "label": "relevant",
-        "score": 0.755161702632904
+        "score": 0.6326004937291145,
+        "uncertain": true
       }
     },
     {
@@ -241,7 +272,8 @@
       "text": "yes one more msg says “household visits done, 20+ women reached and 3 need follow up in [PERSON]”",
       "classification": {
         "label": "relevant",
-        "score": 0.9927642345428467
+        "score": 0.9617338478565216,
+        "uncertain": false
       }
     },
     {
@@ -249,7 +281,8 @@
       "text": "also btw who is uploading this data to github later",
       "classification": {
         "label": "relevant",
-        "score": 0.7449132204055786
+        "score": 0.709130734205246,
+        "uncertain": true
       }
     },
     {
@@ -257,7 +290,8 @@
       "text": "yall think we're gonna get the midterm back soon🙁",
       "classification": {
         "label": "relevant",
-        "score": 0.6307109594345093
+        "score": 0.6665409654378891,
+        "uncertain": true
       }
     },
     {
@@ -265,7 +299,8 @@
       "text": "lowkey i was losing sleep for it",
       "classification": {
         "label": "relevant",
-        "score": 0.8373099565505981
+        "score": 0.692086860537529,
+        "uncertain": true
       }
     },
     {
@@ -300,7 +335,8 @@
       "text": "this is our sample test data",
       "classification": {
         "label": "relevant",
-        "score": 0.7031874656677246
+        "score": 0.6982578784227371,
+        "uncertain": true
       }
     },
     {
@@ -389,7 +425,8 @@
       "text": "okay yeah thats prob important to separate",
       "classification": {
         "label": "relevant",
-        "score": 0.7475767731666565
+        "score": 0.6783136278390884,
+        "uncertain": true
       }
     },
     {
@@ -478,7 +515,8 @@
       "text": "okay better leave second one blank then",
       "classification": {
         "label": "irrelevant",
-        "score": 0.21348261833190918
+        "score": 0.3835315853357315,
+        "uncertain": true
       }
     },
     {
@@ -486,7 +524,8 @@
       "text": "yes dont assume anything if not there",
       "classification": {
         "label": "irrelevant",
-        "score": 0.4753211736679077
+        "score": 0.4186824858188629,
+        "uncertain": true
       }
     },
     {
@@ -512,7 +551,8 @@
       "text": "okay good this one has completed event + future event also",
       "classification": {
         "label": "relevant",
-        "score": 0.9254228472709656
+        "score": 0.7404970079660416,
+        "uncertain": true
       }
     },
     {
@@ -529,7 +569,8 @@
       "text": "i got update from community health visit",
       "classification": {
         "label": "relevant",
-        "score": 0.9888620972633362
+        "score": 0.9695715010166168,
+        "uncertain": false
       }
     },
     {
@@ -564,7 +605,8 @@
       "text": "yeah i think so, because its not saying they actually went clinic",
       "classification": {
         "label": "relevant",
-        "score": 0.5301337242126465
+        "score": 0.6409947425127029,
+        "uncertain": true
       }
     },
     {
@@ -599,7 +641,8 @@
       "text": "okay thats pii for anonymization too",
       "classification": {
         "label": "irrelevant",
-        "score": 0.10634292662143707
+        "score": 0.24894554913043976,
+        "uncertain": false
       }
     },
     {
@@ -625,7 +668,8 @@
       "text": "sounds same event but numbers little different",
       "classification": {
         "label": "relevant",
-        "score": 0.8130066394805908
+        "score": 0.8268959522247314,
+        "uncertain": false
       }
     },
     {
@@ -633,7 +677,8 @@
       "text": "yeah maybe duplicate but not exact",
       "classification": {
         "label": "relevant",
-        "score": 0.5840251445770264
+        "score": 0.5142627060413361,
+        "uncertain": true
       }
     },
     {

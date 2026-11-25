@@ -1,0 +1,298 @@
+{
+  "models": {
+    "ner": "dslim/bert-base-NER",
+    "classification": "facebook/bart-large-mnli"
+  },
+  "dataset": "data/relevance_plans_dev.json",
+  "metrics": {
+    "classification": {
+      "TP": 15,
+      "FP": 3,
+      "FN": 0,
+      "TN": 12,
+      "accuracy": 0.9,
+      "precision": 0.8333333333333334,
+      "recall": 1.0,
+      "f1": 0.9090909090909091
+    },
+    "classification_labeled_records": 30,
+    "review_flags": {
+      "flagged": 9,
+      "records": 30,
+      "mistakes": 3,
+      "mistakes_flagged": 1
+    }
+  },
+  "records": [
+    {
+      "id": "plan_01",
+      "text": "We're doing a health session at the dispensary tomorrow, please come by 9.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9795160591602325,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_02",
+      "text": "Next Tuesday we will hold the family planning outreach in [LOCATION], expecting about 40 women.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9837637543678284,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_03",
+      "text": "The youth sexual health talk at the secondary school is moved to Friday afternoon.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9707766175270081,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_04",
+      "text": "Reminder: table banking meeting for the women's group is on the 15th, bring the record book.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.831841766834259,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_05",
+      "text": "We plan to distribute sanitary pads to the class 7 girls next week, the boxes arrive Monday.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9869056344032288,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_06",
+      "text": "Cervical screening camp is confirmed for Saturday at the health centre, nurses will be there from 8.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9840603470802307,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_07",
+      "text": "tomorrow we go door to door for the immunization follow ups in the village",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9545688927173615,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_08",
+      "text": "Next month we will visit the farmers' homes to check on their kitchen gardens.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9636373221874237,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_09",
+      "text": "the [ORG] community dialogue at the chief's camp will be on thursday, elders are invited",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9047505855560303,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_10",
+      "text": "We're training 20 new community health volunteers on Wednesday, the agriculture officer will also come.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9793912619352341,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_11",
+      "text": "Planning a nutrition and cooking demo for mothers with young babies this weekend.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9715971052646637,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_12",
+      "text": "on monday we start the HIV testing outreach at the market, need two more volunteers",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9811408519744873,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_13",
+      "text": "The savings group will give out loans at next week's meeting, 6 members applied.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.901845172047615,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_14",
+      "text": "We will screen the children for malnutrition at the school on Friday.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9769861400127411,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "plan_15",
+      "text": "Menstrual hygiene session with the mothers is scheduled for after the parents' meeting next Thursday.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.9694664776325226,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "social_01",
+      "text": "Ladies let's meet for lunch on Sunday after church, I'll bring chapati.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.236345075070858,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "social_02",
+      "text": "Who is going to town tomorrow? I need someone to pick up my parcel.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.45754677057266235,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_03",
+      "text": "We should all go to [PERSON]'s wedding next month, let's contribute for a gift.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.1673937663435936,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "social_04",
+      "text": "I will be travelling to my mother's place this weekend so I won't be on the group much.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.33327919244766235,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_05",
+      "text": "Let's plan a small party for the end of the year, everyone bring a dish.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.3982478603720665,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_06",
+      "text": "Tomorrow I'm taking my son to buy school uniform, I'll be late to reply.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.27556002140045166,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_07",
+      "text": "who wants to share a matatu to the meeting on saturday, we can split the fare",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.4038841277360916,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_08",
+      "text": "Let's go and greet [PERSON] at the hospital tomorrow, she is still admitted after her operation.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.34727446734905243,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_09",
+      "text": "There is a fundraiser for the church roof next Saturday, please come and support.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.8679089993238449,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "social_10",
+      "text": "I'm planning to start a small business selling mandazi, any advice ladies?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "social_11",
+      "text": "next week i will send everyone the photos from the party, my phone is full rn",
+      "classification": {
+        "label": "relevant",
+        "score": 0.500895544886589,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_12",
+      "text": "We are going to watch the football match at the hotel on Sunday, who is coming?",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.0,
+        "reason": "question"
+      }
+    },
+    {
+      "id": "social_13",
+      "text": "Let's each bring a chair and some soda for the birthday on Friday.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.3239659145474434,
+        "uncertain": true
+      }
+    },
+    {
+      "id": "social_14",
+      "text": "I'll be at the market tomorrow if anyone wants me to buy vegetables for them.",
+      "classification": {
+        "label": "relevant",
+        "score": 0.7537224143743515,
+        "uncertain": false
+      }
+    },
+    {
+      "id": "social_15",
+      "text": "Our neighbour's daughter is graduating next week, we are all invited to the celebration.",
+      "classification": {
+        "label": "irrelevant",
+        "score": 0.38130026310682297,
+        "uncertain": true
+      }
+    }
+  ]
+}

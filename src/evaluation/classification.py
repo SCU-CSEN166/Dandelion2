@@ -34,7 +34,20 @@ def evaluate(records: list[dict], anonymizer: Anonymizer, classifier: RelevanceC
             decisions.append((classification["label"] == RELEVANT, label == RELEVANT))
     return {"records": outputs, "metrics": {
         "classification": scores(*binary_counts(decisions)) if decisions else None,
-        "classification_labeled_records": len(decisions)}}
+        "classification_labeled_records": len(decisions),
+        "review_flags": _review_flags(outputs, records)}}
+
+
+def _review_flags(outputs: list[dict], records: list[dict]) -> dict:
+    """How well the "uncertain" flag points a reviewer at the mistakes: share flagged vs mistakes caught."""
+    flagged = mistakes = caught = 0
+    for output, record in zip(outputs, records):
+        classification = output["classification"]
+        flagged += bool(classification.get("uncertain"))
+        if record.get("relevance") is not None and (classification["label"] == RELEVANT) != (record["relevance"] == RELEVANT):
+            mistakes += 1
+            caught += bool(classification.get("uncertain"))
+    return {"flagged": flagged, "records": len(outputs), "mistakes": mistakes, "mistakes_flagged": caught}
 
 
 def main() -> None:
