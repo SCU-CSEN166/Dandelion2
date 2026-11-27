@@ -17,14 +17,14 @@
         "f1": 0.43636363636363634
       },
       "activity_type": {
-        "TP": 5,
-        "FP": 8,
-        "FN": 10,
+        "TP": 6,
+        "FP": 7,
+        "FN": 9,
         "TN": 15,
-        "accuracy": 0.6451612903225806,
-        "precision": 0.38461538461538464,
-        "recall": 0.3333333333333333,
-        "f1": 0.35714285714285715
+        "accuracy": 0.6774193548387096,
+        "precision": 0.46153846153846156,
+        "recall": 0.4,
+        "f1": 0.42857142857142855
       },
       "activity_description": null,
       "location": {
@@ -91,12 +91,12 @@
           "null": 1,
           "community outreach": 1
         },
-        "women's savings group meeting": {
+        "savings group meeting": {
           "community health visit": 1,
           "other": 1,
           "null": 1
         },
-        "savings meeting and business training": {
+        "business training": {
           "business training": 1
         },
         "community health visit": {
@@ -424,7 +424,7 @@
       },
       "expected": {
         "status": "completed",
-        "activity_type": "women's savings group meeting",
+        "activity_type": "savings group meeting",
         "location": null,
         "participant_count": 19,
         "referrals": null
@@ -443,7 +443,7 @@
       },
       "expected": {
         "status": "completed",
-        "activity_type": "savings meeting and business training",
+        "activity_type": "business training",
         "location": null,
         "participant_count": null,
         "referrals": null
@@ -462,7 +462,7 @@
       },
       "expected": {
         "status": "completed",
-        "activity_type": "women's savings group meeting",
+        "activity_type": "savings group meeting",
         "location": null,
         "participant_count": null,
         "referrals": null
@@ -538,7 +538,7 @@
       },
       "expected": {
         "status": "planned",
-        "activity_type": "women's savings group meeting",
+        "activity_type": "savings group meeting",
         "location": null,
         "participant_count": null,
         "referrals": null

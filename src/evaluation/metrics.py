@@ -55,6 +55,15 @@ def slot_scores(pairs: list[tuple[Any, Any]]) -> dict:
     return {**scores(*slot_counts(pairs)), "accuracy": _ratio(exact, len(pairs))}
 
 
+def require_options(labels: Iterable[Any], options: list[str], source: str) -> None:
+    """Stop before any model runs if a label is not one of the template options: no model
+    could ever predict it, so it would silently count as a miss."""
+    unknown = sorted({label for label in labels if label is not None and label not in options})
+    if unknown:
+        raise SystemExit(f"{source}: labels that are not template options: {unknown}. "
+                         "Map them to an option in ACTIVITY_LABELS.")
+
+
 def confusion_matrix(pairs: Iterable[tuple[Any, Any]]) -> dict[str, dict[str, int]]:
     """{expected value: {predicted value: count}}."""
     matrix: dict[str, dict[str, int]] = {}

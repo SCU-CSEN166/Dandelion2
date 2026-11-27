@@ -24,8 +24,8 @@ import json
 import re
 from pathlib import Path
 
-from src.evaluation.metrics import binary_counts, scores, slot_scores
-from src.extract import EXTRACTORS, Extractor, make_extractor
+from src.evaluation.metrics import binary_counts, require_options, scores, slot_scores
+from src.extract import EXTRACTORS, TEMPLATE, Extractor, make_extractor
 from src.utils import write_json
 
 SOLUTION = Path("data/dandelion_audio/hidden_test_outputs.csv")
@@ -134,6 +134,8 @@ def main() -> None:
     args = parser.parse_args()
 
     solution = load_csv(args.solution)
+    require_options([activity(record["activity_type"]) for record in solution],
+                    TEMPLATE["activity_type"], str(args.solution))
     report = {"messages": len(solution),
               "pipeline": evaluate_pipeline(solution, load_csv(args.pipeline_output))}
     if args.models:

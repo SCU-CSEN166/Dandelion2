@@ -6,18 +6,37 @@
 Each message is extracted on its own, without context or anonymization, so this measures
 the model alone. A value is correct only when it equals the label exactly. Fields are
 scored as slot filling (see metrics.py); choice fields also get a confusion matrix.
+
+A few activity labels in data/whatsapp_labels.json aren't options in the template, so no model
+could ever match them; ACTIVITY_LABELS maps them to the options that mean the same thing.
 """
 
 import argparse
 import json
 from pathlib import Path
 
-from src.evaluation.metrics import confusion_matrix, slot_scores
-from src.extract import EXTRACTORS, Extractor, make_extractor
+from src.evaluation.metrics import confusion_matrix, require_options, slot_scores
+from src.extract import EXTRACTORS, TEMPLATE, Extractor, make_extractor
 from src.utils import write_json
 
 DEFAULT_MODEL = "nuextract"
 OUTPUT_DIR = Path("output/evaluations")
+
+# Activity label -> the template options that count as correct (the first is used when the
+# prediction is none of them). The labels themselves are left unchanged.
+ACTIVITY_LABELS = {
+    "women's savings group meeting": ("savings group meeting",),
+    # Both happened in the same meeting, so either category is right.
+    "savings meeting and business training": ("savings group meeting", "business training"),
+}
+
+
+def expected_value(field: str, label, predicted):
+    """The label as a template option: mapped through ACTIVITY_LABELS for activity_type."""
+    if field != "activity_type" or label not in ACTIVITY_LABELS:
+        return label
+    accepted = ACTIVITY_LABELS[label]
+    return predicted if predicted in accepted else accepted[0]
 
 
 def evaluate(records: list[dict], extractor: Extractor) -> dict:
@@ -28,7 +47,8 @@ def evaluate(records: list[dict], extractor: Extractor) -> dict:
         predicted = extractor.extract(record["text"])
         # New output fields may not have labels in older evaluation sets. Keep the
         # prediction for inspection, but only score fields with a ground-truth label.
-        expected = {field: record[field] for field in fields if field in record}
+        expected = {field: expected_value(field, record[field], predicted[field])
+                    for field in fields if field in record}
         outputs.append({"id": record.get("message_id", index), "predicted": predicted, "expected": expected})
         for field in fields:
             if field in expected:
@@ -54,6 +74,9 @@ def main() -> None:
     args = parser.parse_args()
 
     records = json.loads(args.input.read_text(encoding="utf-8"))
+    require_options([option for record in records if "activity_type" in record
+                     for option in ACTIVITY_LABELS.get(record["activity_type"], (record["activity_type"],))],
+                    TEMPLATE["activity_type"], str(args.input))
     extractor = make_extractor(args.model)
     result = evaluate(records, extractor)
     report = {"models": {"extraction": extractor.model_name}, "dataset": str(args.input),

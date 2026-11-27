@@ -34,12 +34,20 @@ VERBATIM_STRING = "verbatim-string"  # must be copied from the text
 
 TEMPLATE = {
     "status": ["completed", "planned", "neither"],
-    # The last five types were added for the voice notes in data/dandelion_audio.
+    # The pipeline and every evaluation use this one list; evaluation labels are mapped onto it
+    # (ACTIVITY_LABELS in src/evaluation), never the other way round. Where the categories came from:
+    # - family planning outreach ... community health visit: the labels in data/whatsapp_labels.json.
+    # - menstrual hygiene ... agriculture training: added after hearing the hidden-test voice notes
+    #   (data/dandelion_audio), so hidden-test activity scores are optimistic.
+    # - nutrition talk, maternal health session: specific program areas with no examples in our data yet.
+    # Broad types ("community outreach", "health education session") were removed: they overlapped the
+    # specific ones and took their answers on the dev set. activity_description keeps the detail.
     "activity_type": ["family planning outreach", "youth health session", "savings group meeting",
-                      "business training", "community health visit", "nutrition talk",
+                      "business training", "community health visit",
                       "menstrual hygiene session", "gender-based violence dialogue",
-                      "cancer screening", "agriculture training", "maternal health session",
-                      "health education session", "community outreach", "other"],
+                      "cancer screening", "agriculture training",
+                      "nutrition talk", "maternal health session",
+                      "other"],
     # Keep a useful, source-grounded description even when the category is broad or "other".
     "activity_description": VERBATIM_STRING,
     "location": VERBATIM_STRING,
