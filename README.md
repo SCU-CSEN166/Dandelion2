@@ -17,6 +17,7 @@ This public repository uses team-created synthetic WhatsApp examples and public 
 - The team does not have Dandelion's real WhatsApp data; synthetic and public test data may not represent its messages, languages, or audio conditions.
 - ASR can mishear Kenyan names and places and can format phone numbers inconsistently. Do not use transcripts as ground truth for names, locations, or contact details.
 - Anonymization can miss PII. The phone-number patterns cover tested examples, not every possible format.
+- Town and county names like Nakuru are kept visible on purpose so staff know where an activity happened. Misspelled names from ASR can still get through.
 - Relevance can confuse planned field activities with social plans. The relevance score is not a calibrated probability.
 - Extraction may omit details, choose an overly broad category, or return an incorrect count or status. `activity_description` and review flags are aids for a person, not guarantees.
 - Duplicate detection was evaluated on a small synthetic holdout; its result does not establish performance on real reports.
