@@ -1,118 +1,25 @@
-# Week 8 Hidden-Test Observations
+Week 8 Hidden Test Notes 
+These are my notes from looking through the 10-hidden. test audio messages before we were given the TA ground truth. 
 
-This file records preliminary observations from the 10-message hidden stress test before TA ground-truth metrics are available.
+msg01: detected as an event, family planning outreach, 42 participants, and the phone number was hidden.
+msg03: detected as not relevant. this was mostly casual/logistics conversation and the phone number was hidden.
+msg05: detected as an event, menstrual hygiene session, 60 participants, and the phone number was hidden. 
+msg06: detected as an event, gender-based violence dialogue, 35 participants, and phone number hidden.
+msg08: detected as not relevant. most of it was personal and social conversation but the phone number was still hidden. 
+msg09: detected as an event, agriculture training, with 18 participants. 
 
-## Current hidden-test run
+check on these:
+msg04: This message talked about a completed table banking meeting that had 25 members and 4 loans, the pipeline marked it as not relevant. Because of this, we didn't extract the activity type or participant count. This made me wonder about the relevance model and how it handles health related activties compared to activties related to finance or daily life. 
+msg01 and msg02: These looked like they were describing the same family planning outreach. Both mentioned: 42 women, 6 referrals, and the same general outreach. The pipeline didn't mark either one as a duplicate though. 
+msg07 and msg10: These two also looked like they could be two reports of the same event. Both of them mentioned cervical cancer screening, 28 women, and 3 referrals. The pipeline didn't end up marking these as duplicates either. 
 
-The system produced outputs for all 10 hidden voice messages.
+ASR observations:
+I also noticed some transcription mistakes in the audio results. Ex: "Rongai" became "wrong eye," some names were turned into English looking words or phrases. "Queue" became "key." These are important because a transcription mistake might also affect what happens later in anonymization or extraction. 
 
-Current pipeline output file:
-- `output/reports.csv`
+After the TA ground truth: for each message we will compare relevance, activity type, participant count, anonymization, and duplicate result. Then I can calculate the actual metrics instead of just looking at the outputs manually. 
 
-## Preliminary successes
-
-### msg01
-- Classified as Event
-- Activity type: Family planning outreach
-- Participants: 42
-- Phone number was masked
-
-### msg03
-- Classified as Not relevant
-- Casual/logistics conversation was filtered out
-- Phone number was masked
-
-### msg05
-- Classified as Event
-- Activity type: Menstrual hygiene session
-- Participants: 60
-- Phone number was masked
-
-### msg06
-- Classified as Event
-- Activity type: Gender-based violence dialogue
-- Participants: 35
-- Phone number was masked
-
-### msg08
-- Classified as Not relevant
-- Social/personal conversation was filtered out
-- Phone number was masked
-
-### msg09
-- Classified as Event
-- Activity type: Agriculture training
-- Participants: 18
-- Phone number was masked
-
-## Preliminary failure cases
-
-### msg04 — likely relevance failure
-The message reports a completed table-banking meeting with 25 members and four loans.
-
-Current output:
-- Relevance: Not relevant
-- Activity type: none
-- Participants: none
-
-Likely issue:
-The relevance classifier may generalize better to health/outreach examples than livelihood or finance activities such as table banking.
-
-Potential impact:
-A real field activity could be dropped before extraction.
-
-### msg01 and msg02 — likely duplicate event pair
-Both messages describe the same family-planning outreach:
-- 42 women
-- 6 referrals
-- same outreach context
-
-Current output:
-- `duplicate_of = none` for both
-
-Likely issue:
-The current pipeline does not yet perform event-level duplicate detection.
-
-### msg07 and msg10 — likely duplicate event pair
-Both messages describe the same cervical-cancer screening:
-- 28 women screened
-- 3 referrals
-- same screening context
-
-Current output:
-- `duplicate_of = none` for both
-
-Likely issue:
-The current pipeline does not yet compare extracted event details across messages.
-
-## Cross-pipeline observations
-
-Some transcription errors changed names, locations, or ordinary words. Examples include:
-- "Rongai" becoming "wrong eye" in one transcript
-- some names becoming English-looking phrases
-- "queue" becoming "key"
-
-These errors can propagate into later stages such as anonymization and extraction.
-
-## What to check once TA ground truth is available
-
-For every message, compare:
-- relevance label
-- activity type
-- participant count
-- anonymization
-- duplicate status
-
-Then calculate:
-- relevance accuracy, precision, recall, and F1
-- activity-type accuracy on events
-- participant-count accuracy on events
-- anonymization success / unnecessary masking
-- duplicate-status accuracy
-
-## Prioritized next improvements
-
-1. Add event-level duplicate detection using extracted fields and message context.
-2. Expand relevance examples to cover more Dandelion activity types, including livelihood and financial activities.
-3. Continue improving ASR on Kenyan/African-accented English so upstream transcription errors do not propagate.
-4. Re-test the full pipeline after each component change instead of evaluating only individual models.
+Main things to improve after this test: 
+1. Improve duplicate detection for messages that describe the same event. 
+2. Test relevance on more types of Dandelion activities, not just the health activities.
+3. Keep testing ASR on Kenyan/African-accented English, especially names, locations, and phone numbers.
+4. Re-run the full pipeline after changes so we can see whether a fix in one part of the pipeline affects another. 
