@@ -1,0 +1,49 @@
+[
+  {
+    "id": "qa_event_01",
+    "text": "Today we held a family planning outreach in Nakuru with 31 women.",
+    "expected": {
+      "relevance": "relevant",
+      "activity_type": "family planning outreach",
+      "participant_count": 31
+    }
+  },
+  {
+    "id": "qa_social_01",
+    "text": "Are we still getting tea on Saturday?",
+    "expected": {
+      "relevance": "irrelevant"
+    }
+  },
+  {
+    "id": "qa_pii_01",
+    "text": "Faith Achieng can be reached at 0712 345 678.",
+    "expected": {
+      "contains_masks": [
+        "[PERSON]",
+        "[PHONE]"
+      ]
+    }
+  },
+  {
+    "id": "qa_screening_01",
+    "text": "We held a cervical cancer screening camp with 18 women today.",
+    "expected": {
+      "relevance": "relevant",
+      "participant_count": 18,
+      "activity_phrase_should_remain": "cervical cancer screening camp"
+    }
+  },
+  {
+    "id": "qa_duplicate_01",
+    "text": "Today we trained 24 women on kitchen gardening in Baringo.",
+    "expected": {}
+  },
+  {
+    "id": "qa_duplicate_02",
+    "text": "Twenty-four women attended today's kitchen garden training in Baringo.",
+    "expected": {
+      "duplicate_of": "qa_duplicate_01"
+    }
+  }
+]
