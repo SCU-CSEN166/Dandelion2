@@ -13,35 +13,21 @@ dependencies = [
     "pillow>=13.0.0",
     "requests>=2.34.2",
     "sentence-transformers>=6.2.0",
+    # Plain PyPI builds so one `uv sync` works everywhere: on Linux (including Colab) this
+    # build includes CUDA and also runs on CPU-only machines; on Mac and Windows it is CPU.
+    "torch>=2.15.0",
+    "torchvision>=0.29.2",  # NuExtract's processor (Qwen2-VL) imports it
     "transformers>=5.22.1",
     "twilio>=9.12.0",
     "whatstk>=0.10.0",
     "word2number>=1.1",
 ]
 
-[project.optional-dependencies]
-# Choose one extra when syncing. CPU is the portable default for laptops and Mac; GPU avoids
-# installing CUDA libraries on machines that cannot use them.
-cpu = ["torch>=2.15.0", "torchvision>=0.29.2"]
-gpu = ["torch>=2.15.0", "torchvision>=0.29.2"]
-
+# PyPI's Windows build of torch has no CUDA, so Windows gets PyTorch's CUDA build instead.
+# Like the Linux build, it uses an NVIDIA GPU when there is one and the CPU otherwise.
 [tool.uv.sources]
-torch = [
-    { index = "pytorch-cpu", extra = "cpu" },
-    { index = "pytorch-cu132", extra = "gpu" },
-]
-torchvision = [
-    { index = "pytorch-cpu", extra = "cpu" },
-    { index = "pytorch-cu132", extra = "gpu" },
-]
-
-[tool.uv]
-conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
+torch = [{ index = "pytorch-cu132", marker = "sys_platform == 'win32'" }]
+torchvision = [{ index = "pytorch-cu132", marker = "sys_platform == 'win32'" }]
 
 [[tool.uv.index]]
 name = "pytorch-cu132"

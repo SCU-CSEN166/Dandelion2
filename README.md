@@ -389,42 +389,30 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 
 ---
 
-## Setup and Reproducibility (keep updated)
+## Setup and Reproducibility
 
 ### Requirements
 - Python 3.12 or newer and `uv`.
 - `ffmpeg` for audio and WhatsApp voice-note inputs (`brew install ffmpeg` on macOS; `apt install ffmpeg` on Ubuntu/Colab).
 - Internet access on first run to download the selected public Hugging Face models. No Hugging Face token is needed for the models used here.
-- CPU inference is supported, but model loading and transcription can take several minutes. On Apple Silicon the project uses CPU by default because NuExtract crashed on MPS in our smoke test. A compatible NVIDIA GPU is optional and speeds up inference.
+- GPU is recommended, however can run on CPU with slower inference times.
 
 ### Installation
-1) Install `uv` (`pip install uv`), clone the repository, and enter the repo folder. Install `ffmpeg` if processing audio.
-2) Choose exactly one PyTorch build. For a Mac or CPU-only machine:
-```bash
-uv sync --extra cpu
+1) Open a Colab Notebook by visiting https://colab.research.google.com and clicking "New notebook"
+2) From the top menu bar, go to Runtime -> Change Runtime Type -> T4 GPU -> Save
+3) Paste the following block into the first code section in colab:
 ```
-For Google Colab with a compatible NVIDIA GPU, select a GPU runtime first, then run:
-```bash
-uv sync --extra gpu
-```
-3) Run the commands below with `uv run` from the repository root. The first run downloads the required models.
-4) For a Colab notebook, the equivalent setup is:
-```python
-
 import os
 if not os.path.exists("/content/Dandelion2"):
     !git clone https://github.com/SCU-CSEN166/Dandelion2.git /content/Dandelion2
 %cd /content/Dandelion2
 !git pull
-```
-Then install the GPU dependencies:
-```bash
-!pip install -q uv
+!pip install uv
 !uv sync --extra gpu
 ```
 
 ### Run the system
-Example commands (Note: first time running these commands takes time since it has to download the model on huggingface. Subsequent runs on the same Colab will be faster):
+Example commands (Note: first time running these commands takes time since the models must be downloaded. Subsequent runs on the same Colab will be faster):
 
 ```bash
 !uv run main.py --input data/dandelion_audio
@@ -440,8 +428,6 @@ Example commands (Note: first time running these commands takes time since it ha
 ```
 
 ### Run evaluation
-For a local CPU setup, prepend `uv run --extra cpu`; in Colab with a GPU, use `uv run --extra gpu`.
-
 Compare ASR models on the Nigerian-accented development set. Use these results for model selection:
 ```bash
 uv run --extra gpu -m src.evaluation.transcription \

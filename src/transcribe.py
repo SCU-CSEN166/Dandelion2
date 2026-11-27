@@ -18,7 +18,9 @@ from pathlib import Path
 from .ingest import Message
 from .utils import torch_device, write_json
 
-DEFAULT_MODEL = "distil-whisper/distil-small.en"
+# Chosen on the development set (output/evaluations/transcription_dev.json): WER 0.363 vs 0.426 for
+# distil-whisper/distil-small.en, at about half its speed. Whisper Large was no more accurate and ~2.5x slower.
+DEFAULT_MODEL = "openai/whisper-small.en"
 DEFAULT_CHUNK_SECONDS = 15  # Whisper models read at most 30 s at a time
 
 

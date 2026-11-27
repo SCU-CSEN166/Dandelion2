@@ -32,8 +32,8 @@ Other options:
 
     # reuse transcripts from earlier runs (see below)
     uv run main.py --input data/dandelion_audio --transcript-cache
-    # a different speech-to-text model
-    uv run main.py --input data/dandelion_audio --asr-model openai/whisper-small.en
+    # a different speech-to-text model (the default is openai/whisper-small.en)
+    uv run main.py --input data/dandelion_audio --asr-model distil-whisper/distil-small.en
 
 --transcript-cache reuses audio already transcribed with the same model, from
 output/transcript_cache.json or the path given after it (see src/transcribe.py).

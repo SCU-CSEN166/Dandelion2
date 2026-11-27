@@ -17,15 +17,16 @@
         "f1": 0.43636363636363634
       },
       "activity_type": {
-        "TP": 6,
-        "FP": 7,
-        "FN": 9,
+        "TP": 5,
+        "FP": 8,
+        "FN": 10,
         "TN": 15,
-        "accuracy": 0.6774193548387096,
-        "precision": 0.46153846153846156,
-        "recall": 0.4,
-        "f1": 0.42857142857142855
+        "accuracy": 0.6451612903225806,
+        "precision": 0.38461538461538464,
+        "recall": 0.3333333333333333,
+        "f1": 0.35714285714285715
       },
+      "activity_description": null,
       "location": {
         "TP": 7,
         "FP": 0,
@@ -76,8 +77,9 @@
       },
       "activity_type": {
         "family planning outreach": {
-          "family planning outreach": 2,
-          "community health visit": 1
+          "family planning outreach": 1,
+          "community health visit": 1,
+          "community outreach": 1
         },
         "null": {
           "null": 15,
@@ -87,7 +89,7 @@
           "youth health session": 2,
           "menstrual hygiene session": 1,
           "null": 1,
-          "other": 1
+          "community outreach": 1
         },
         "women's savings group meeting": {
           "community health visit": 1,
@@ -110,6 +112,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "family planning outreach",
+        "activity_description": "Today we held a family planning out outreach in Nakuru.",
         "location": "Nakuru",
         "participant_count": 31,
         "referrals": 4,
@@ -128,6 +131,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -146,6 +150,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": null,
         "location": null,
         "participant_count": 31,
         "referrals": 4,
@@ -164,6 +169,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -182,6 +188,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": "other",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -200,6 +207,7 @@
       "predicted": {
         "status": "planned",
         "activity_type": "youth health session",
+        "activity_description": "We’re planning another youth health session on Friday morning.",
         "location": null,
         "participant_count": 25,
         "referrals": null,
@@ -218,6 +226,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -235,7 +244,8 @@
       "id": "msg_008",
       "predicted": {
         "status": "completed",
-        "activity_type": "family planning outreach",
+        "activity_type": "community outreach",
+        "activity_description": "Nakuru outreach",
         "location": "Nakuru",
         "participant_count": 31,
         "referrals": 4,
@@ -254,6 +264,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -272,6 +283,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "youth health session",
+        "activity_description": "we finished the youth health session in Baringo this afternoon, 42 students came",
         "location": "Baringo",
         "participant_count": 42,
         "referrals": null,
@@ -290,6 +302,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": "menstrual hygiene session",
+        "activity_description": "ya menstrual health + reproductive health. 2 students also asked for clinic referrals",
         "location": null,
         "participant_count": 2,
         "referrals": 2,
@@ -308,6 +321,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -326,6 +340,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -344,6 +359,7 @@
       "predicted": {
         "status": "planned",
         "activity_type": null,
+        "activity_description": null,
         "location": "Nakuru",
         "participant_count": null,
         "referrals": null,
@@ -362,6 +378,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -379,7 +396,8 @@
       "id": "msg_016",
       "predicted": {
         "status": "completed",
-        "activity_type": "other",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": 42,
         "referrals": 2,
@@ -398,6 +416,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": null,
         "location": null,
         "participant_count": 19,
         "referrals": null,
@@ -416,6 +435,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": "business training",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -434,6 +454,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": "other",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -452,6 +473,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -470,6 +492,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -488,6 +511,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": "Green Valley Village",
         "participant_count": null,
         "referrals": null,
@@ -506,6 +530,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -524,6 +549,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": "they visited 14 homes today and around 21 women received health information",
         "location": null,
         "participant_count": 21,
         "referrals": null,
@@ -542,6 +568,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -560,6 +587,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": "Kapkures area",
         "participant_count": null,
         "referrals": null,
@@ -578,6 +606,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -596,6 +625,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": "household visits done, 20+ women reached and 3 need follow up in Kapkures",
         "location": "Kapkures",
         "participant_count": 20,
         "referrals": 3,
@@ -614,6 +644,7 @@
       "predicted": {
         "status": null,
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -632,6 +663,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -650,6 +682,7 @@
       "predicted": {
         "status": "neither",
         "activity_type": null,
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,

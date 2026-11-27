@@ -17,15 +17,16 @@
         "f1": 0.6774193548387096
       },
       "activity_type": {
-        "TP": 6,
-        "FP": 25,
-        "FN": 9,
+        "TP": 5,
+        "FP": 26,
+        "FN": 10,
         "TN": 0,
-        "accuracy": 0.1935483870967742,
-        "precision": 0.1935483870967742,
-        "recall": 0.4,
-        "f1": 0.2608695652173913
+        "accuracy": 0.16129032258064516,
+        "precision": 0.16129032258064516,
+        "recall": 0.3333333333333333,
+        "f1": 0.21739130434782608
       },
+      "activity_description": null,
       "location": {
         "TP": 7,
         "FP": 2,
@@ -74,24 +75,26 @@
       "activity_type": {
         "family planning outreach": {
           "family planning outreach": 1,
-          "community health visit": 2
+          "community health visit": 1,
+          "community outreach": 1
         },
         "null": {
-          "community health visit": 15,
-          "youth health session": 1
+          "community outreach": 16
         },
         "youth health session": {
           "youth health session": 2,
-          "community health visit": 3
+          "community outreach": 3
         },
         "women's savings group meeting": {
-          "community health visit": 3
+          "community health visit": 1,
+          "community outreach": 2
         },
         "savings meeting and business training": {
-          "community health visit": 1
+          "community outreach": 1
         },
         "community health visit": {
-          "community health visit": 3
+          "community health visit": 2,
+          "community outreach": 1
         }
       }
     }
@@ -102,6 +105,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "family planning outreach",
+        "activity_description": null,
         "location": "Nakuru",
         "participant_count": 31,
         "referrals": 4,
@@ -119,7 +123,8 @@
       "id": "msg_002",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -138,6 +143,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": null,
         "location": "clinic",
         "participant_count": 31,
         "referrals": 4,
@@ -155,7 +161,8 @@
       "id": "msg_004",
       "predicted": {
         "status": "neither",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -173,7 +180,8 @@
       "id": "msg_005",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -192,6 +200,7 @@
       "predicted": {
         "status": "planned",
         "activity_type": "youth health session",
+        "activity_description": null,
         "location": null,
         "participant_count": 25,
         "referrals": null,
@@ -209,7 +218,8 @@
       "id": "msg_007",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -227,7 +237,8 @@
       "id": "msg_008",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": "Nakuru",
         "participant_count": 31,
         "referrals": 31,
@@ -245,7 +256,8 @@
       "id": "msg_009",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -264,6 +276,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "youth health session",
+        "activity_description": null,
         "location": "Baringo",
         "participant_count": 42,
         "referrals": 42,
@@ -281,7 +294,8 @@
       "id": "msg_011",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": 2,
         "referrals": 2,
@@ -299,7 +313,8 @@
       "id": "msg_012",
       "predicted": {
         "status": "neither",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -317,7 +332,8 @@
       "id": "msg_013",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -335,7 +351,8 @@
       "id": "msg_014",
       "predicted": {
         "status": "planned",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": "Nakuru",
         "participant_count": null,
         "referrals": null,
@@ -353,7 +370,8 @@
       "id": "msg_015",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -371,7 +389,8 @@
       "id": "msg_016",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": 42,
         "referrals": 42,
@@ -390,6 +409,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": null,
         "location": null,
         "participant_count": 19,
         "referrals": null,
@@ -407,7 +427,8 @@
       "id": "msg_018",
       "predicted": {
         "status": "neither",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -425,7 +446,8 @@
       "id": "msg_019",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -443,7 +465,8 @@
       "id": "msg_020",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -461,7 +484,8 @@
       "id": "msg_021",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -479,7 +503,8 @@
       "id": "msg_022",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": "Green Valley Village",
         "participant_count": null,
         "referrals": null,
@@ -497,7 +522,8 @@
       "id": "msg_023",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -516,6 +542,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": null,
         "location": "14 homes",
         "participant_count": 21,
         "referrals": 21,
@@ -533,7 +560,8 @@
       "id": "msg_025",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": 3,
@@ -551,7 +579,8 @@
       "id": "msg_026",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": "Kapkures area",
         "participant_count": null,
         "referrals": null,
@@ -569,7 +598,8 @@
       "id": "msg_027",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -588,6 +618,7 @@
       "predicted": {
         "status": "completed",
         "activity_type": "community health visit",
+        "activity_description": null,
         "location": "Kapkures",
         "participant_count": 20,
         "referrals": 3,
@@ -605,7 +636,8 @@
       "id": "msg_029",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -623,7 +655,8 @@
       "id": "msg_030",
       "predicted": {
         "status": "completed",
-        "activity_type": "youth health session",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
@@ -641,7 +674,8 @@
       "id": "msg_031",
       "predicted": {
         "status": "completed",
-        "activity_type": "community health visit",
+        "activity_type": "community outreach",
+        "activity_description": null,
         "location": null,
         "participant_count": null,
         "referrals": null,
