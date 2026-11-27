@@ -1,0 +1,32 @@
+{
+  "reproducibility_checks": {
+    "fresh_clone_and_install": "PASS",
+    "basic_end_to_end_pipeline": "PASS",
+    "classification_evaluation": "PASS",
+    "anonymization_evaluation": "PASS",
+    "asr_evaluation": "PASS",
+    "duplicate_unseen_evaluation": "PASS",
+    "integrated_duplicate_detection": "PASS"
+  },
+  "duplicate_unseen_metrics": {
+    "accuracy": 0.95,
+    "precision": 0.9091,
+    "recall": 1.0,
+    "f1": 0.9524,
+    "false_positives": 1,
+    "false_negatives": 0
+  },
+  "qa_findings": [
+    {
+      "case": "cervical cancer screening camp",
+      "result": "FAIL",
+      "issue": "Activity phrase was incorrectly anonymized as [LOCATION], causing activity extraction to be lost.",
+      "safeguard": "needs_review was triggered"
+    },
+    {
+      "case": "paraphrased duplicate family planning reports",
+      "result": "PASS",
+      "issue": "Second report was correctly linked to the first as a possible duplicate."
+    }
+  ]
+}
