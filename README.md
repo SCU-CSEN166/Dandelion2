@@ -380,13 +380,13 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 
 
 ### Final submission checklist
-- [ ] Code and final system/prototype are in the repository
-- [ ] Setup and run instructions are complete and tested
-- [ ] Data sources, model versions, and dependencies are documented
-- [ ] Evaluation results are reported and compared with the baseline
-- [ ] Important failures and limitations are explained
-- [ ] Hidden-test and peer-feedback findings are addressed
-- [ ] Responsible AI considerations and human oversight are discussed
+- [X] Code and final system/prototype are in the repository
+- [X] Setup and run instructions are complete and tested
+- [X] Data sources, model versions, and dependencies are documented
+- [X] Evaluation results are reported and compared with the baseline
+- [X] Important failures and limitations are explained
+- [X] Hidden-test and peer-feedback findings are addressed
+- [X] Responsible AI considerations and human oversight are discussed
 - [ ] Every team member's contributions are documented for every week
 
 **Final commit / release:** Add the merge commit hash after final review and code freeze.
@@ -399,7 +399,7 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 - Python 3.12 or newer and `uv`.
 - `ffmpeg` for audio and WhatsApp voice-note inputs (`brew install ffmpeg` on macOS; `apt install ffmpeg` on Ubuntu/Colab).
 - Internet access on first run to download the selected public Hugging Face models. No Hugging Face token is needed for the models used here.
-- GPU is recommended, however can run on CPU with slower inference times.
+- GPU is recommended, however it can run on CPU with slower inference times.
 
 ### Installation
 1) Open a Colab Notebook by visiting https://colab.research.google.com and clicking "New notebook"
@@ -407,12 +407,15 @@ Overall, participant extraction worked the best as it got every case correct. Ac
 3) Paste the following block into the first code section in colab:
 ```
 import os
+
 if not os.path.exists("/content/Dandelion2"):
     !git clone https://github.com/SCU-CSEN166/Dandelion2.git /content/Dandelion2
+
 %cd /content/Dandelion2
 !git pull
+!apt-get install -y ffmpeg
 !pip install uv
-!uv sync --extra gpu
+!uv sync
 ```
 
 ### Run the system
@@ -434,7 +437,7 @@ Example commands (Note: first time running these commands takes time since the m
 ### Run evaluation
 Compare ASR models on the Nigerian-accented development set. Use these results for model selection:
 ```bash
-uv run --extra gpu -m src.evaluation.transcription \
+!uv run -m src.evaluation.transcription \
   --audio-dir data/nigerian_accented \
   --ground-truth data/nigerian_accented/ground_truth.json \
   --models distil-small whisper-small whisper-large --device cuda \
@@ -443,7 +446,7 @@ uv run --extra gpu -m src.evaluation.transcription \
 
 After selecting a model, the released 10-clip set can be used for a post-selection check of WER/CER and exact name, location, and phone-number recall. Do not use these holdout results to tune or choose a model:
 ```bash
-uv run --extra gpu -m src.evaluation.transcription \
+!uv run -m src.evaluation.transcription \
   --audio-dir data/dandelion_audio \
   --ground-truth data/dandelion_audio/asr_ground_truth.json \
   --entity-targets data/dandelion_audio/asr_entity_targets.json \
@@ -453,22 +456,22 @@ uv run --extra gpu -m src.evaluation.transcription \
 
 Rerun component evaluations on the same labeled sets after changes:
 ```bash
-uv run --extra gpu -m src.evaluation.anonymization \
+!uv run -m src.evaluation.anonymization \
   data/synthetic_unanonymized.json data/whatsapp_labels.json \
   --ner both --public-entities data/public_entities.json \
   --output output/evaluations/anonymization_final.json
-uv run --extra gpu -m src.evaluation.classification data/whatsapp_relevance_full.json \
+!uv run -m src.evaluation.classification data/whatsapp_relevance_full.json \
   --count-plans --min-words 4 --skip-questions --public-entities data/public_entities.json \
   --output output/evaluations/classification_final.json
-uv run --extra gpu -m src.evaluation.duplicates \
+!uv run -m src.evaluation.duplicates \
   --input data/duplicate_unseen_cases.json \
   --output output/evaluations/duplicates_unseen_final.json
 ```
 
 For the final end-to-end check, set `--asr-model` to the model selected using development data, then run the released audio and score its CSV output. The command below shows the current default model; replace it if the development benchmark selects another model:
 ```bash
-uv run --extra gpu main.py --input data/dandelion_audio --limit 0 --asr-model openai/whisper-small.en
-uv run --extra gpu -m src.evaluation.hidden_test \
+!uv run main.py --input data/dandelion_audio --limit 0 --asr-model openai/whisper-small.en
+!uv run -m src.evaluation.hidden_test \
   --pipeline-output output/reports.csv \
   --output output/evaluations/hidden_test_final.json
 ```
@@ -477,12 +480,14 @@ uv run --extra gpu -m src.evaluation.hidden_test \
 ```text
 Dandelion2/
 ├── README.md
+├── main.py
 ├── pyproject.toml
 ├── src/
-    ├── anonymize.py, duplicates.py, extract.py, relevance.py, transcribe.py
-    ├── evaluation/ # .py scripts used for evaluation
-├── output/ # all RESULTS from running code (including evaluation results)
-├── data/ # all DATA used by code (raw data and solutions for evaluation data)
+│   ├── anonymize.py, duplicates.py, extract.py, relevance.py, transcribe.py
+│   └── evaluation/ # evaluation scripts
+├── data/ # development/test data and evaluation ground truth
+├── output/ # saved reports and evaluation results
+└── Archive/ # older prototypes and historical experiment files
 ```
 
 
